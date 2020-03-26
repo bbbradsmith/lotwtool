@@ -14,9 +14,12 @@ namespace lotwtool
     {
         // ROM state
 
-        bool changed = false;
-        byte[] rom = { };
-        string filename = "";
+        public bool changed = false;
+        public byte[] rom = { };
+        public string filename = "";
+        public int chr_offset = 0;
+        public int chr_count = 0;
+        public int map_count = 0;
 
         // Common code
 
@@ -41,9 +44,36 @@ namespace lotwtool
                 MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), "File open error!");
                 return false;
             }
+
+            // successful load: acquire the ROM
             rom = read_rom;
             filename = path; textBoxFilename.Text = filename;
             changed = false;
+
+            // set file boundaries
+            chr_offset = 0;
+            chr_count = 0;
+            map_count = 0;
+            if (rom.Length >= 16)
+            {
+                int ines_prg = rom[4];
+                int ines_chr = rom[5];
+                int prg_max = 16 + (ines_prg * 16 * 1024);
+                int chr_max = prg_max + (ines_chr * 8 * 1024);
+                if (prg_max > rom.Length) prg_max = rom.Length;
+                if (chr_max > rom.Length) chr_max = rom.Length;
+                map_count = 4 * 18;
+                chr_count = ines_chr * 8;
+                chr_offset = 16 + (ines_prg * 16 * 1024);
+                if (16 + (map_count * 1024) > prg_max)
+                    map_count = (prg_max - 16) / 1024;
+                if (16 + chr_offset + (chr_count * 1024) > chr_max)
+                    chr_max = (chr_max - chr_offset) / 1024;
+            }
+
+            textBoxCHRCount.Text = string.Format("{0}", chr_count);
+            textBoxMapCount.Text = string.Format("{0}", map_count);
+
             return true;
         }
 
@@ -125,6 +155,13 @@ namespace lotwtool
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             foreach (string file in files) openFile(file);
+        }
+
+        private void buttonCHREdit_Click(object sender, EventArgs e)
+        {
+            CHRSelect chr_select = new CHRSelect(this);
+            chr_select.Show();
+            // TODO keep track of children, have children notify on close
         }
     }
 }

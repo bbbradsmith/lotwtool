@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,26 @@ namespace lotwtool
         public int chr_offset = 0;
         public int chr_count = 0;
         public int map_count = 0;
+
+        public static readonly uint[] NES_PALETTE =
+        {
+            0x656665, 0x001E9C, 0x200DAC, 0x44049C,
+            0x6A036F, 0x71021D, 0x651000, 0x461E00,
+            0x232D00, 0x003900, 0x003C00, 0x003720,
+            0x003266, 0x000000, 0x000000, 0x000000,
+            0xB0B1B0, 0x0955EB, 0x473DFF, 0x7730FE,
+            0xAE2CCE, 0xBC2964, 0xB43900, 0x8F4B00,
+            0x635F00, 0x1B7000, 0x007700, 0x00733B,
+            0x006D99, 0x000000, 0x000000, 0x000000,
+            0xFFFFFF, 0x4DADFF, 0x8694FF, 0xB885FF,
+            0xF17FFF, 0xFF79D4, 0xFF865F, 0xF19710,
+            0xC8AB00, 0x7EBE00, 0x47C81F, 0x2BC86F,
+            0x2EC4CC, 0x50514D, 0x000000, 0x000000,
+            0xFFFFFF, 0xB9E5FF, 0xD0DBFF, 0xE6D5FF,
+            0xFDD1FF, 0xFFCEF5, 0xFFD4C5, 0xFFDAA3,
+            0xEEE290, 0xD0EB8E, 0xB9EFA5, 0xAEEFC7,
+            0xAEEEEE, 0xBABCB9, 0x000000, 0x000000,
+        };
 
         // Common code
 
@@ -92,6 +113,64 @@ namespace lotwtool
             return true;
         }
 
+        public void chr_cache(int rom_index, int cache_index, uint[] cache, uint[] palette)
+        {
+            // decodes a tile from the ROM, and stores it in cache with given palette
+            int ro = chr_offset + (rom_index * 16);
+            int co = cache_index * 64;
+            if ((ro + 16) > rom.Length)
+            {
+                for (int i=0; i<16; ++i) cache[co+i] = 0;
+                return;
+            }
+            for (int y = 0; y < 8; ++y)
+            {
+                byte p0 = rom[ro + y];
+                byte p1 = rom[ro + y + 8];
+                for (int x = 0; x < 8; ++x)
+                {
+                    int p = ((p0 >> 7) & 1) | ((p1 >> 6) & 2);
+                    cache[co + x + (y * 8)] = palette[p];
+                    p0 <<= 1;
+                    p1 <<= 1;
+                }
+            }
+        }
+
+        public void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        {
+            x *= zoom;
+            y *= zoom;
+            // draws a cached tile on a locked bitmap data
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                fixed (uint* fcc = cache)
+                {
+                    uint* scanline = braw + (stride * y) + x;
+                    uint* chrline = fcc + (tile * 64);
+                    for (int py = 0; py < 8; ++py)
+                    {
+                        for (int yz = 0; yz < zoom; ++yz)
+                        {
+                            int sx = 0;
+                            for (int px = 0; px < 8; ++px)
+                            {
+                                for (int xz = 0; xz < zoom; ++xz)
+                                {
+                                    scanline[sx] = chrline[px];
+                                    ++sx;
+                                }
+                            }
+                            scanline += stride;
+                        }
+                        chrline += 8;
+                    }
+                }
+            }
+        }
+
         // Form
 
         public Main()
@@ -160,7 +239,7 @@ namespace lotwtool
         private void buttonMapEdit_Click(object sender, EventArgs e)
         {
             // TODO this is just test editing the first map, should open selector
-            MapEdit map_edit = new MapEdit(this, 0); // HACK test on room 0 first
+            MapEdit map_edit = new MapEdit(this, 4); // HACK test on room 0 first
             map_edit.Show();
         }
 

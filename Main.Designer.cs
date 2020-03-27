@@ -58,7 +58,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(637, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(559, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -112,7 +112,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -131,7 +131,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 18.18182F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 81.81818F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(637, 165);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(559, 119);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // textBoxFilename
@@ -141,7 +141,7 @@
             this.textBoxFilename.Location = new System.Drawing.Point(3, 3);
             this.textBoxFilename.Name = "textBoxFilename";
             this.textBoxFilename.ReadOnly = true;
-            this.textBoxFilename.Size = new System.Drawing.Size(631, 20);
+            this.textBoxFilename.Size = new System.Drawing.Size(553, 20);
             this.textBoxFilename.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -149,9 +149,9 @@
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel2.Controls.Add(this.textBoxMapCount, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.textBoxCHRCount, 2, 1);
             this.tableLayoutPanel2.Controls.Add(this.labelMapCount, 1, 0);
@@ -159,12 +159,12 @@
             this.tableLayoutPanel2.Controls.Add(this.labelCHRCount, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.buttonCHREdit, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 33);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 24);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(631, 129);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(553, 92);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // textBoxMapCount
@@ -172,10 +172,10 @@
             this.textBoxMapCount.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMapCount.Location = new System.Drawing.Point(317, 3);
+            this.textBoxMapCount.Location = new System.Drawing.Point(417, 3);
             this.textBoxMapCount.Name = "textBoxMapCount";
             this.textBoxMapCount.ReadOnly = true;
-            this.textBoxMapCount.Size = new System.Drawing.Size(311, 20);
+            this.textBoxMapCount.Size = new System.Drawing.Size(133, 20);
             this.textBoxMapCount.TabIndex = 0;
             // 
             // textBoxCHRCount
@@ -183,19 +183,19 @@
             this.textBoxCHRCount.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCHRCount.Location = new System.Drawing.Point(317, 67);
+            this.textBoxCHRCount.Location = new System.Drawing.Point(417, 49);
             this.textBoxCHRCount.Name = "textBoxCHRCount";
             this.textBoxCHRCount.ReadOnly = true;
-            this.textBoxCHRCount.Size = new System.Drawing.Size(311, 20);
+            this.textBoxCHRCount.Size = new System.Drawing.Size(133, 20);
             this.textBoxCHRCount.TabIndex = 1;
             // 
             // labelMapCount
             // 
             this.labelMapCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMapCount.Location = new System.Drawing.Point(160, 0);
+            this.labelMapCount.Location = new System.Drawing.Point(279, 0);
             this.labelMapCount.Name = "labelMapCount";
-            this.labelMapCount.Size = new System.Drawing.Size(151, 20);
+            this.labelMapCount.Size = new System.Drawing.Size(132, 20);
             this.labelMapCount.TabIndex = 2;
             this.labelMapCount.Text = "Map Count:";
             this.labelMapCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -207,9 +207,9 @@
             this.buttonMapEdit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonMapEdit.Location = new System.Drawing.Point(3, 3);
             this.buttonMapEdit.Name = "buttonMapEdit";
-            this.buttonMapEdit.Size = new System.Drawing.Size(151, 20);
+            this.buttonMapEdit.Size = new System.Drawing.Size(270, 35);
             this.buttonMapEdit.TabIndex = 4;
-            this.buttonMapEdit.Text = "Edit Maps";
+            this.buttonMapEdit.Text = "Maps";
             this.buttonMapEdit.UseVisualStyleBackColor = true;
             this.buttonMapEdit.Click += new System.EventHandler(this.buttonMapEdit_Click);
             // 
@@ -217,9 +217,9 @@
             // 
             this.labelCHRCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCHRCount.Location = new System.Drawing.Point(160, 64);
+            this.labelCHRCount.Location = new System.Drawing.Point(279, 46);
             this.labelCHRCount.Name = "labelCHRCount";
-            this.labelCHRCount.Size = new System.Drawing.Size(151, 20);
+            this.labelCHRCount.Size = new System.Drawing.Size(132, 20);
             this.labelCHRCount.TabIndex = 3;
             this.labelCHRCount.Text = "CHR Count:";
             this.labelCHRCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -229,11 +229,11 @@
             this.buttonCHREdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCHREdit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonCHREdit.Location = new System.Drawing.Point(3, 67);
+            this.buttonCHREdit.Location = new System.Drawing.Point(3, 49);
             this.buttonCHREdit.Name = "buttonCHREdit";
-            this.buttonCHREdit.Size = new System.Drawing.Size(151, 20);
+            this.buttonCHREdit.Size = new System.Drawing.Size(270, 35);
             this.buttonCHREdit.TabIndex = 5;
-            this.buttonCHREdit.Text = "Edit CHR";
+            this.buttonCHREdit.Text = "CHR";
             this.buttonCHREdit.UseVisualStyleBackColor = true;
             this.buttonCHREdit.Click += new System.EventHandler(this.buttonCHREdit_Click);
             // 
@@ -242,7 +242,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(637, 189);
+            this.ClientSize = new System.Drawing.Size(559, 143);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

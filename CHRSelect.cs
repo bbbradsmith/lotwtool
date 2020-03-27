@@ -17,71 +17,65 @@ namespace lotwtool
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache = null;
+        int highlight = -1;
 
         static readonly uint[] GREY =
         {
             0xFF000000,
             0xFF555555,
             0xFFAAAAAA,
-            0xFFFFFFFF
+            0xFFFFFFFF,
         };
 
-        void cache_tile(int rom_index, int cache_index, uint[] palette)
+        static readonly uint[] RED =
         {
-            int ro = mp.chr_offset + (rom_index * 16);
-            int co = cache_index * 64;
-            for (int y=0; y<8; ++y)
-            {
-                byte p0 = mp.rom[ro + y];
-                byte p1 = mp.rom[ro + y + 8];
-                for (int x = 0; x < 8; ++x)
-                {
-                    int p = ((p0 >> 7) & 1) | ((p1 >> 6) & 2);
-                    chr_cache[co + x + (y * 8)] = palette[p];
-                    p0 <<= 1;
-                    p1 <<= 1;
-                }
-            }
-        }
+            0xFF331111,
+            0xFF663333,
+            0xFFCC4444,
+            0xFFFFCCCC,
+        };
 
         void cache()
         {
-            chr_cache = new uint[64 * mp.chr_count * 64];
+            int cc_tiles = 64 * mp.chr_count;
+            chr_cache = new uint[2 * cc_tiles * 64];
             for (int i = 0; i < (mp.chr_count * 64); ++i)
             {
-                cache_tile(i, i, GREY);
+                mp.chr_cache(i, i, chr_cache, GREY);
+                mp.chr_cache(i, cc_tiles + i, chr_cache, RED);
             }
         }
 
-        void blit(BitmapData bd, int tile, int x, int y)
+        void redraw_page(BitmapData d, int page, bool highlight)
         {
-            unsafe
+            if (page < 0 || page >= mp.chr_count) return;
+
+            int yo = page * 32;
+            int to = page * 64;
+            if (highlight) to += (64 * mp.chr_count); // use RED version
+            for (int y=0; y<4; ++y)
             {
-                uint* braw = (uint*)bd.Scan0.ToPointer();
-                int stride = bd.Stride / 4;
-                fixed (uint* fcc = chr_cache)
+                for (int x = 0; x < 16; ++x)
                 {
-                    uint* scanline = braw + (stride * y) + x;
-                    uint* chrline = fcc + (tile * 64);
-                    for (int py = 0; py < 8; ++py)
+                    int t = x + (y * 16);
+                    if (sprite)
                     {
-                        for (int yz = 0; yz < zoom; ++yz)
-                        {
-                            int sx = 0;
-                            for (int px = 0; px < 8; ++px)
-                            {
-                                for (int xz = 0; xz < zoom; ++xz)
-                                {
-                                    scanline[sx] = chrline[px];
-                                    ++sx;
-                                }
-                            }
-                            scanline += stride;
-                        }
-                        chrline += 8;
+                        t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
                     }
+                    mp.chr_blit(d, chr_cache, to + t, x * 8, yo + y * 8, zoom);
                 }
             }
+        }
+
+        BitmapData draw_lock()
+        {
+            return bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
+        }
+
+        void draw_unlock(BitmapData d)
+        {
+            bmp.UnlockBits(d);
+            pictureBox.Image = bmp;
         }
 
         void redraw()
@@ -96,23 +90,12 @@ namespace lotwtool
             int h = 32 * mp.chr_count * zoom;
 
             bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
-            BitmapData bmpd = bmp.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, bmp.PixelFormat);
-            for (int y = 0; y < (mp.chr_count * 4); ++y)
+            BitmapData d = draw_lock();
+            for (int page = 0; page < mp.chr_count; ++page)
             {
-                for (int x = 0; x < 16; ++x)
-                {
-                    int t = x + (y * 16);
-                    if (sprite)
-                    {
-                        t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
-                    }
-                    blit(bmpd, t, x * 8 * zoom, y * 8 * zoom);
-                }
+                redraw_page(d, page, page == highlight);
             }
-            bmp.UnlockBits(bmpd);
-            pictureBox.Image = bmp;
-            pictureBox.Width = w;
-            pictureBox.Height = h;
+            draw_unlock(d);
         }
 
         public CHRSelect(Main parent)
@@ -180,6 +163,14 @@ namespace lotwtool
                 t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
             }
             toolStripStatusLabel.Text = string.Format("CHR ${0:X2} {1:D}",page,t&63);
+            if (page != highlight)
+            {
+                BitmapData d = draw_lock();
+                redraw_page(d, highlight, false);
+                redraw_page(d, page, true);
+                draw_unlock(d);
+                highlight = page;
+            }
         }
     }
 }

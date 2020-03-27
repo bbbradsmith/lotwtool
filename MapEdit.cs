@@ -73,7 +73,7 @@ namespace lotwtool
             pictureBox.Image = bmp;
         }
 
-        void draw_bg(BitmapData d, int x, int y)
+        void draw_bg_tile(BitmapData d, int x, int y)
         {
             int ro = 16 + (1024 * room);
             byte t = mp.rom[ro+(x*12)+y];
@@ -95,20 +95,33 @@ namespace lotwtool
             }
         }
 
+        void draw_bg(BitmapData d)
+        {
+            for (int y=0; y<12; ++y)
+            {
+                for (int x=0; x<64; ++x)
+                {
+                    draw_bg_tile(d,x,y);
+                }
+            }
+        }
+
         void redraw()
         {
             int w = 256 * 4 * zoom;
             int h = 192 * zoom;
             bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             BitmapData d = draw_lock();
-            for (int y=0; y<12; ++y)
-            {
-                for (int x=0; x<64; ++x)
-                {
-                    draw_bg(d,x,y);
-                }
-            }
+            draw_bg(d);
             draw_unlock(d);
+        }
+
+        public void render_select(BitmapData d, int room_, int zoom_)
+        {
+            room = room_;
+            zoom = zoom_;
+            cache();
+            draw_bg(d);
         }
 
         public MapEdit(Main parent, int room_)
@@ -116,6 +129,9 @@ namespace lotwtool
             mp = parent;
             room = room_;
             InitializeComponent();
+            int x = room % 4;
+            int y = room / 4;
+            Text = string.Format("Map {0},{1} ({2})",x,y,(y*4)+x);
             cache();
             redraw();
         }

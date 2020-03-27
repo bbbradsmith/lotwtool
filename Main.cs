@@ -238,9 +238,9 @@ namespace lotwtool
 
         private void buttonMapEdit_Click(object sender, EventArgs e)
         {
-            // TODO this is just test editing the first map, should open selector
-            MapEdit map_edit = new MapEdit(this, 4); // HACK test on room 0 first
-            map_edit.Show();
+            MapSelect map_select = new MapSelect(this);
+            map_select.Show();
+            // TODO register this for updates
         }
 
         private void buttonCHREdit_Click(object sender, EventArgs e)

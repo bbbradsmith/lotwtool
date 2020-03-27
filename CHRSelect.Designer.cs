@@ -77,26 +77,26 @@
             this.backgroundToolStripMenuItem.Checked = true;
             this.backgroundToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.backgroundToolStripMenuItem.Name = "backgroundToolStripMenuItem";
-            this.backgroundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.backgroundToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.backgroundToolStripMenuItem.Text = "Background";
             this.backgroundToolStripMenuItem.Click += new System.EventHandler(this.backgroundToolStripMenuItem_Click);
             // 
             // spriteToolStripMenuItem
             // 
             this.spriteToolStripMenuItem.Name = "spriteToolStripMenuItem";
-            this.spriteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.spriteToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.spriteToolStripMenuItem.Text = "Sprite";
             this.spriteToolStripMenuItem.Click += new System.EventHandler(this.spriteToolStripMenuItem_Click);
             // 
             // toolStripMenuItem
             // 
             this.toolStripMenuItem.Name = "toolStripMenuItem";
-            this.toolStripMenuItem.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem.Size = new System.Drawing.Size(135, 6);
             // 
             // zoom1xToolStripMenuItem
             // 
             this.zoom1xToolStripMenuItem.Name = "zoom1xToolStripMenuItem";
-            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.zoom1xToolStripMenuItem.Text = "Zoom 1x";
             this.zoom1xToolStripMenuItem.Click += new System.EventHandler(this.zoom1xToolStripMenuItem_Click);
             // 
@@ -105,21 +105,21 @@
             this.zoom2xToolStripMenuItem.Checked = true;
             this.zoom2xToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.zoom2xToolStripMenuItem.Name = "zoom2xToolStripMenuItem";
-            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.zoom2xToolStripMenuItem.Text = "Zoom 2x";
             this.zoom2xToolStripMenuItem.Click += new System.EventHandler(this.zoom2xToolStripMenuItem_Click);
             // 
             // zoom3xToolStripMenuItem
             // 
             this.zoom3xToolStripMenuItem.Name = "zoom3xToolStripMenuItem";
-            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.zoom3xToolStripMenuItem.Text = "Zoom 3x";
             this.zoom3xToolStripMenuItem.Click += new System.EventHandler(this.zoom3xToolStripMenuItem_Click);
             // 
             // zoom4xToolStripMenuItem
             // 
             this.zoom4xToolStripMenuItem.Name = "zoom4xToolStripMenuItem";
-            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.zoom4xToolStripMenuItem.Text = "Zoom 4x";
             this.zoom4xToolStripMenuItem.Click += new System.EventHandler(this.zoom4xToolStripMenuItem_Click);
             // 
@@ -173,6 +173,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "CHRSelect";
             this.Text = "CHR Select";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CHRSelect_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);

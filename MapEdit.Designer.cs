@@ -36,9 +36,9 @@
             this.zoom3xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoom4xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -106,6 +106,12 @@
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
+            this.toolStripStatusLabel.Text = "...";
+            // 
             // flowLayoutPanel
             // 
             this.flowLayoutPanel.AutoScroll = true;
@@ -127,12 +133,6 @@
             this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
-            // toolStripStatusLabel
-            // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
-            this.toolStripStatusLabel.Text = "...";
-            // 
             // MapEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,6 +145,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MapEdit";
             this.Text = "Map Edit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapEdit_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);

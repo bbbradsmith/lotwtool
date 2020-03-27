@@ -11,7 +11,15 @@ using System.Windows.Forms;
 
 namespace lotwtool
 {
-    public partial class Main : Form
+    public interface RomRefresh
+    {
+        void refresh_all();
+        void refresh_chr(int tile);
+        void refresh_metatile(int page);
+        void refresh_close();
+    }
+
+    public partial class Main : Form, RomRefresh
     {
         // ROM state
 
@@ -21,6 +29,10 @@ namespace lotwtool
         public int chr_offset = 0;
         public int chr_count = 0;
         public int map_count = 0;
+
+        List<RomRefresh> refreshers = new List<RomRefresh>();
+        List<MapEdit> mapedits = new List<MapEdit>();
+        public MapSelect map_select = null;
 
         public static readonly uint[] NES_PALETTE =
         {
@@ -54,6 +66,8 @@ namespace lotwtool
         bool openFile(string path)
         {
             if (changePrevent("Open...")) return false;
+
+            close_children();
 
             byte[] read_rom;
             try
@@ -171,11 +185,87 @@ namespace lotwtool
             }
         }
 
+        // Children management
+
+        public void refresh_all() { } // TODO
+
+        public void refresh_chr(int tile)
+        {
+            foreach (RomRefresh r in refreshers) r.refresh_chr(tile);
+        }
+
+        public void refresh_metatile(int page)
+        {
+            foreach (RomRefresh r in refreshers) r.refresh_metatile(page);
+        }
+
+        public void refresh_close()
+        {
+            this.Close(); // shouldn't be used?
+        }
+
+        public void add_refresh(RomRefresh r)
+        {
+            refreshers.Add(r);
+        }
+
+        public void remove_refresh(RomRefresh r)
+        {
+            bool removed;
+            do
+            {
+                removed = refreshers.Remove(r);
+            } while (removed);
+        }
+
+        public void add_map_edit(int room)
+        {
+            if (room >= map_count) return;
+            foreach (MapEdit m in mapedits)
+            {
+                if (m.room == room)
+                {
+                    if (m.WindowState == FormWindowState.Minimized) m.WindowState = FormWindowState.Normal;
+                    m.Activate();
+                    return;
+                }
+            }
+            MapEdit me = new MapEdit(this, room);
+            me.Show();
+            mapedits.Add(me);
+            add_refresh(me);
+        }
+
+        public void remove_map_edit(MapEdit m)
+        {
+            bool removed;
+            do
+            {
+                removed = mapedits.Remove(m);
+            } while (removed);
+        }
+
+        public void close_children()
+        {
+            while (refreshers.Count > 0)
+                refreshers[0].refresh_close();
+        }
+
         // Form
 
         public Main()
         {
             InitializeComponent();
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            // open file from the command line
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                openFile(args[1]);
+            }
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -214,16 +304,6 @@ namespace lotwtool
             e.Cancel = changePrevent("Exit...");
         }
 
-        private void Main_Load(object sender, EventArgs e)
-        {
-            // open file from the command line
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length > 1)
-            {
-                openFile(args[1]);
-            }
-        }
-
         private void Main_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = (e.Data.GetDataPresent(DataFormats.FileDrop)) ?
@@ -238,16 +318,28 @@ namespace lotwtool
 
         private void buttonMapEdit_Click(object sender, EventArgs e)
         {
-            MapSelect map_select = new MapSelect(this);
+            if (map_count < 1) return;
+            if (map_select != null)
+            {
+                if (map_select.WindowState == FormWindowState.Minimized)
+                {
+                    // can't seem to easily check if it was maximized before minimize, unfortunately?
+                    map_select.WindowState = FormWindowState.Normal;
+                }
+                map_select.Activate();
+                return;
+            }
+            map_select = new MapSelect(this);
             map_select.Show();
-            // TODO register this for updates
+            add_refresh(map_select);
         }
 
         private void buttonCHREdit_Click(object sender, EventArgs e)
         {
+            if (chr_count < 1) return;
             CHRSelect chr_select = new CHRSelect(this);
             chr_select.Show();
-            // TODO keep track of children, have children notify on close
+            add_refresh(chr_select);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

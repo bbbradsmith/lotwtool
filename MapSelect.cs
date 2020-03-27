@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace lotwtool
 {
-    public partial class MapSelect : Form
+    public partial class MapSelect : Form, RomRefresh
     {
         int zoom = -4;
         Main mp;
@@ -46,6 +46,11 @@ namespace lotwtool
             }
             pictureBox.Image = bmp;
         }
+
+        public void refresh_all() { } // TODO
+        public void refresh_chr(int tile) { } // TODO
+        public void refresh_metatile(int page) { } // TODO
+        public void refresh_close() { this.Close(); }
 
         public MapSelect(Main parent)
         {
@@ -156,11 +161,13 @@ namespace lotwtool
             y /= 192;
 
             int room = (y * 4) + x;
-            if (room >= mp.map_count) return;
-            MapEdit map_edit = new MapEdit(mp, room);
-            map_edit.Show();
-            // TODO register this with mp for updates
-            // also Main should be the one to open it, and prevent opening duplicate MapEdit for the same room
+            mp.add_map_edit(room);
+        }
+
+        private void MapSelect_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mp.map_select = null;
+            mp.remove_refresh(this);
         }
     }
 }

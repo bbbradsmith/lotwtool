@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace lotwtool
 {
-    public partial class CHRSelect : Form
+    public partial class CHRSelect : Form, RomRefresh
     {
         bool sprite = false;
         int zoom = 2;
@@ -98,6 +98,11 @@ namespace lotwtool
             draw_unlock(d);
         }
 
+        public void refresh_all() { } // TODO
+        public void refresh_chr(int tile) { } // TODO
+        public void refresh_metatile(int page) { }
+        public void refresh_close() { this.Close(); }
+
         public CHRSelect(Main parent)
         {
             mp = parent;
@@ -171,6 +176,11 @@ namespace lotwtool
                 draw_unlock(d);
                 highlight = page;
             }
+        }
+
+        private void CHRSelect_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mp.remove_refresh(this);
         }
     }
 }

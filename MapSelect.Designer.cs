@@ -199,6 +199,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MapSelect";
             this.Text = "Map Select";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapSelect_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);

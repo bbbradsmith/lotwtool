@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace lotwtool
 {
-    public partial class MapEdit : Form
+    public partial class MapEdit : Form, RomRefresh
     {
         int zoom = 1;
-        int room = 0;
+        public int room = 0;
         Main mp;
         Bitmap bmp;
         uint[] chr_cache;
@@ -124,6 +124,11 @@ namespace lotwtool
             draw_bg(d);
         }
 
+        public void refresh_all() { } // TODO
+        public void refresh_chr(int tile) { } // TODO
+        public void refresh_metatile(int page) { } // TODO
+        public void refresh_close() { this.Close(); }
+
         public MapEdit(Main parent, int room_)
         {
             mp = parent;
@@ -174,6 +179,12 @@ namespace lotwtool
         {
             //toolStripStatusLabel.Text = string.Format("{0}, {1}",this.Width,this.Height);
             // TODO
+        }
+
+        private void MapEdit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mp.remove_refresh(this);
+            mp.remove_map_edit(this);
         }
     }
 }

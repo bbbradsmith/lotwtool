@@ -13,8 +13,10 @@ namespace lotwtool
     public partial class CHRSelect : Form
     {
         bool sprite = false;
-        Main parent;
+        int zoom = 2;
+        Main mp;
         Bitmap bmp = null;
+        uint[] chr_cache = null;
 
         static readonly uint[] GREY =
         {
@@ -24,70 +26,100 @@ namespace lotwtool
             0xFFFFFFFF
         };
 
+        void cache_tile(int rom_index, int cache_index, uint[] palette)
+        {
+            int ro = mp.chr_offset + (rom_index * 16);
+            int co = cache_index * 64;
+            for (int y=0; y<8; ++y)
+            {
+                byte p0 = mp.rom[ro + y];
+                byte p1 = mp.rom[ro + y + 8];
+                for (int x = 0; x < 8; ++x)
+                {
+                    int p = ((p0 >> 7) & 1) | ((p1 >> 6) & 2);
+                    chr_cache[co + x + (y * 8)] = palette[p];
+                    p0 <<= 1;
+                    p1 <<= 1;
+                }
+            }
+        }
+
+        void cache()
+        {
+            chr_cache = new uint[64 * mp.chr_count * 64];
+            for (int i = 0; i < (mp.chr_count * 64); ++i)
+            {
+                cache_tile(i, i, GREY);
+            }
+        }
+
+        void blit(BitmapData bd, int tile, int x, int y)
+        {
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                fixed (uint* fcc = chr_cache)
+                {
+                    uint* scanline = braw + (stride * y) + x;
+                    uint* chrline = fcc + (tile * 64);
+                    for (int py = 0; py < 8; ++py)
+                    {
+                        for (int yz = 0; yz < zoom; ++yz)
+                        {
+                            int sx = 0;
+                            for (int px = 0; px < 8; ++px)
+                            {
+                                for (int xz = 0; xz < zoom; ++xz)
+                                {
+                                    scanline[sx] = chrline[px];
+                                    ++sx;
+                                }
+                            }
+                            scanline += stride;
+                        }
+                        chrline += 8;
+                    }
+                }
+            }
+        }
+
         void redraw()
         {
-            if (parent.chr_count < 1)
+            if (mp.chr_count < 1)
             {
                 bmp = null;
                 return;
             }
 
-            const int w = 128;
-            int h = 32 * parent.chr_count;
+            int w = 128 * zoom;
+            int h = 32 * mp.chr_count * zoom;
 
             bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             BitmapData bmpd = bmp.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, bmp.PixelFormat);
-            unsafe
+            for (int y = 0; y < (mp.chr_count * 4); ++y)
             {
-                uint* braw = (uint*)bmpd.Scan0.ToPointer();
-                int stride = bmpd.Stride / 4;
-
-                fixed (byte* rom = parent.rom)
+                for (int x = 0; x < 16; ++x)
                 {
-                    for (int page = 0; page < parent.chr_count; ++page)
+                    int t = x + (y * 16);
+                    if (sprite)
                     {
-                        for (int ty = 0; ty < 4; ++ty)
-                        {
-                            for (int tx = 0; tx < 16; ++tx)
-                            {
-                                int ti = tx + (ty * 16);
-                                if (sprite) // rearrange tile pairs vertically for sprite mode
-                                {
-                                    ti = (((tx << 1) & 31) ^ (ty & 1)) + ((ty & 2) * 16);
-                                }
-
-                                byte* chr = rom + parent.chr_offset + (ti * 16) + (page * 1024);
-                                int ox = tx * 8;
-                                int oy = (ty * 8) + (page * 32);
-
-                                uint* pix = braw + (stride * oy) + ox;
-                                for (int y=0; y<8; ++y)
-                                {
-                                    byte p0 = chr[y];
-                                    byte p1 = chr[y + 8];
-                                    for (int x=0; x<8; ++x)
-                                    {
-                                        int p = ((p0 >> 7) & 1) | ((p1 >> 6) & 2);
-                                        pix[x] = GREY[p];
-                                        p0 <<= 1;
-                                        p1 <<= 1;
-                                    }
-                                    pix += stride;
-                                }
-                            }
-                        }
+                        t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
                     }
+                    blit(bmpd, t, x * 8 * zoom, y * 8 * zoom);
                 }
             }
             bmp.UnlockBits(bmpd);
             pictureBox.Image = bmp;
-            // TODO how do we make this scrolly?
+            pictureBox.Width = w;
+            pictureBox.Height = h;
         }
 
-        public CHRSelect(Main parent_)
+        public CHRSelect(Main parent)
         {
-            parent = parent_;
+            mp = parent;
             InitializeComponent();
+            cache();
             redraw();
         }
 
@@ -106,6 +138,48 @@ namespace lotwtool
         private void spriteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             sprite = true; updateSpriteMode();
+        }
+
+        private void updateZoom()
+        {
+            zoom1xToolStripMenuItem.Checked = zoom == 1;
+            zoom2xToolStripMenuItem.Checked = zoom == 2;
+            zoom3xToolStripMenuItem.Checked = zoom == 3;
+            zoom4xToolStripMenuItem.Checked = zoom == 4;
+            redraw();
+        }
+
+        private void zoom1xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoom = 1; updateZoom();
+        }
+
+        private void zoom2xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoom = 2; updateZoom();
+        }
+
+        private void zoom3xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoom = 3; updateZoom();
+        }
+
+        private void zoom4xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoom = 4; updateZoom();
+        }
+
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            int x = e.X / (zoom * 8);
+            int y = e.Y / (zoom * 8);
+            int page = y / 4;
+            int t = x + (y * 16);
+            if (sprite)
+            {
+                t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
+            }
+            toolStripStatusLabel.Text = string.Format("CHR ${0:X2} {1:D}",page,t&63);
         }
     }
 }

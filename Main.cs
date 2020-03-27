@@ -157,11 +157,23 @@ namespace lotwtool
             foreach (string file in files) openFile(file);
         }
 
+        private void buttonMapEdit_Click(object sender, EventArgs e)
+        {
+            // TODO this is just test editing the first map, should open selector
+            MapEdit map_edit = new MapEdit(this, 0); // HACK test on room 0 first
+            map_edit.Show();
+        }
+
         private void buttonCHREdit_Click(object sender, EventArgs e)
         {
             CHRSelect chr_select = new CHRSelect(this);
             chr_select.Show();
             // TODO keep track of children, have children notify on close
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO
         }
     }
 }

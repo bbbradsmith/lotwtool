@@ -13,11 +13,14 @@ namespace lotwtool
     public partial class MapEdit : Form, RomRefresh
     {
         int zoom = 1;
+        int mode = 0; // 0 terrain edit, 1 item edit
+        bool secret = true;
         public int room = 0;
         Main mp;
         Bitmap bmp;
         uint[] chr_cache;
         uint[][] palette;
+        public MapEditHex infohex = null;
 
         void cache_page(int slot, int page)
         {
@@ -79,6 +82,8 @@ namespace lotwtool
             byte t = mp.rom[ro+(x*12)+y];
             int attribute = t >> 6;
             int metatile = t & 63;
+            int st = mp.rom[ro+0x302];
+            if (!secret) st = -1;
 
             // metatile tables are in 256 byte pages in bank 9
             byte metatile_page = mp.rom[ro+0x300];
@@ -91,7 +96,10 @@ namespace lotwtool
             for (int i=0; i<4; ++i)
             {
                 int mt = mp.rom[mto+(metatile*4)+i];
-                mp.chr_blit(d, chr_cache, mt + (attribute * 512), (x*16)+XO[i], (y*16)+YO[i], zoom);
+                if (metatile != st)
+                    mp.chr_blit(d, chr_cache, mt + (attribute * 512), (x*16)+XO[i], (y*16)+YO[i], zoom);
+                else
+                    mp.chr_blit_dark(d, chr_cache, mt + (attribute * 512), (x*16)+XO[i], (y*16)+YO[i], zoom);
             }
         }
 
@@ -116,10 +124,11 @@ namespace lotwtool
             draw_unlock(d);
         }
 
-        public void render_select(BitmapData d, int room_, int zoom_)
+        public void render_select(BitmapData d, int room_, int zoom_, bool secret_)
         {
             room = room_;
             zoom = zoom_;
+            secret = secret_;
             cache();
             draw_bg(d);
         }
@@ -183,8 +192,59 @@ namespace lotwtool
 
         private void MapEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (infohex != null) infohex.Close();
             mp.remove_refresh(this);
             mp.remove_map_edit(this);
+        }
+
+        private void showSecretToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            secret = !secret;
+            showSecretToolStripMenuItem.Checked = secret;
+            redraw();
+        }
+
+        private void infoHexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Main.raise_child(infohex)) return;
+            infohex = new MapEditHex(this, mp);
+            infohex.Show();
+        }
+
+        private void saveImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save Image";
+            d.DefaultExt = "png";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + string.Format(".map.{0}.png",room);
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    bmp.Save(d.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                }
+            }
+        }
+
+        private void updateMode()
+        {
+            terrainToolStripMenuItem.Checked = mode == 0;
+            itemsToolStripMenuItem.Checked   = mode == 1;
+        }
+
+        private void terrainToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mode = 0; updateMode();
+        }
+
+        private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mode = 1; updateMode();
         }
     }
 }

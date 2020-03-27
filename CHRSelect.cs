@@ -182,5 +182,27 @@ namespace lotwtool
         {
             mp.remove_refresh(this);
         }
+
+        private void saveImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save Image";
+            d.DefaultExt = "png";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + ".chr.png";
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                highlight = -1;
+                redraw();
+                try
+                {
+                    bmp.Save(d.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                }
+            }
+        }
     }
 }

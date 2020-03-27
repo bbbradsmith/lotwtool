@@ -185,6 +185,75 @@ namespace lotwtool
             }
         }
 
+        public void chr_blit_dark(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        {
+            x *= zoom;
+            y *= zoom;
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                fixed (uint* fcc = cache)
+                {
+                    uint* scanline = braw + (stride * y) + x;
+                    uint* chrline = fcc + (tile * 64);
+                    for (int py = 0; py < 8; ++py)
+                    {
+                        for (int yz = 0; yz < zoom; ++yz)
+                        {
+                            int sx = 0;
+                            for (int px = 0; px < 8; ++px)
+                            {
+                                for (int xz = 0; xz < zoom; ++xz)
+                                {
+                                    //scanline[sx] = ((chrline[px] >> 1) & 0x7F7F7F7F) | 0xFF000000; // 1/2 bright
+                                    scanline[sx] = ((chrline[px] >> 2) & 0x3F3F3F3F) | 0xFF000000; // 1/4 bright
+                                    ++sx;
+                                }
+                            }
+                            scanline += stride;
+                        }
+                        chrline += 8;
+                    }
+                }
+            }
+        }
+
+        public void chr_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        {
+            x *= zoom;
+            y *= zoom;
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                fixed (uint* fcc = cache)
+                {
+                    uint* scanline = braw + (stride * y) + x;
+                    uint* chrline = fcc + (tile * 64);
+                    for (int py = 0; py < 8; ++py)
+                    {
+                        for (int yz = 0; yz < zoom; ++yz)
+                        {
+                            int sx = 0;
+                            for (int px = 0; px < 8; ++px)
+                            {
+                                for (int xz = 0; xz < zoom; ++xz)
+                                {
+                                    uint c = chrline[px];
+                                    if (c != 0)
+                                        scanline[sx] = c;
+                                    ++sx;
+                                }
+                            }
+                            scanline += stride;
+                        }
+                        chrline += 8;
+                    }
+                }
+            }
+        }
+
         // Children management
 
         public void refresh_all() { } // TODO
@@ -225,9 +294,7 @@ namespace lotwtool
             {
                 if (m.room == room)
                 {
-                    if (m.WindowState == FormWindowState.Minimized) m.WindowState = FormWindowState.Normal;
-                    m.Activate();
-                    return;
+                    if (raise_child(m)) return;
                 }
             }
             MapEdit me = new MapEdit(this, room);
@@ -249,6 +316,18 @@ namespace lotwtool
         {
             while (refreshers.Count > 0)
                 refreshers[0].refresh_close();
+        }
+
+        public static bool raise_child(Form c) // convenient way to wake a child
+        {
+            if (c == null) return false;
+            if (c.WindowState == FormWindowState.Minimized)
+            {
+                // can't seem to easily check if it was maximized before minimize, unfortunately?
+                c.WindowState = FormWindowState.Normal;
+            }
+            c.Activate();
+            return true;
         }
 
         // Form
@@ -319,16 +398,7 @@ namespace lotwtool
         private void buttonMapEdit_Click(object sender, EventArgs e)
         {
             if (map_count < 1) return;
-            if (map_select != null)
-            {
-                if (map_select.WindowState == FormWindowState.Minimized)
-                {
-                    // can't seem to easily check if it was maximized before minimize, unfortunately?
-                    map_select.WindowState = FormWindowState.Normal;
-                }
-                map_select.Activate();
-                return;
-            }
+            if (raise_child(map_select)) return;
             map_select = new MapSelect(this);
             map_select.Show();
             add_refresh(map_select);

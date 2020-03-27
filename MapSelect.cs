@@ -13,6 +13,7 @@ namespace lotwtool
     public partial class MapSelect : Form, RomRefresh
     {
         int zoom = -4;
+        bool secret = false;
         Main mp;
         Bitmap bmp;
 
@@ -31,7 +32,7 @@ namespace lotwtool
                 int x = r & 3;
                 int y = r / 4;
                 BitmapData d = bmp.LockBits(new Rectangle(x*rw, y*rh, rw, rh), ImageLockMode.WriteOnly, bmp.PixelFormat);
-                temp_map.render_select(d, r, z);
+                temp_map.render_select(d, r, z, secret);
                 bmp.UnlockBits(d);
             }
             if (zoom < 0) // downscale
@@ -168,6 +169,13 @@ namespace lotwtool
         {
             mp.map_select = null;
             mp.remove_refresh(this);
+        }
+
+        private void showSecretToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            secret = !secret;
+            showSecretToolStripMenuItem.Checked = secret;
+            redraw();
         }
     }
 }

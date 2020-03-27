@@ -79,6 +79,12 @@
     <Compile Include="MapEdit.Designer.cs">
       <DependentUpon>MapEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapEditHex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapEditHex.Designer.cs">
+      <DependentUpon>MapEditHex.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapEdit.resx">
       <DependentUpon>MapEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapEditHex.resx">
+      <DependentUpon>MapEditHex.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MapSelect.resx">
       <DependentUpon>MapSelect.cs</DependentUpon>

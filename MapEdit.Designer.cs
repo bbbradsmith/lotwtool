@@ -48,6 +48,7 @@
             this.terrainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -88,6 +89,7 @@
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showSecretToolStripMenuItem,
+            this.showItemsToolStripMenuItem,
             this.toolStripMenuItem2,
             this.zoom1xToolStripMenuItem,
             this.zoom2xToolStripMenuItem,
@@ -216,6 +218,15 @@
             this.saveImageToolStripMenuItem.Text = "Save Image...";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
             // 
+            // showItemsToolStripMenuItem
+            // 
+            this.showItemsToolStripMenuItem.Checked = true;
+            this.showItemsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showItemsToolStripMenuItem.Name = "showItemsToolStripMenuItem";
+            this.showItemsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showItemsToolStripMenuItem.Text = "Show Items";
+            this.showItemsToolStripMenuItem.Click += new System.EventHandler(this.showItemsToolStripMenuItem_Click);
+            // 
             // MapEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,5 +273,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem terrainToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem itemsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showItemsToolStripMenuItem;
     }
 }

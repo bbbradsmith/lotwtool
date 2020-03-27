@@ -21,9 +21,7 @@ namespace lotwtool
             for (int l=0; l<16; ++l)
             {
                 int o = 0x300 + (l * 16);
-                s += string.Format("{0:X3}:",o);
-                for (int i=0; i<16; ++i)
-                    s += string.Format(" {0:X2}",mp.rom[ro+o+i]);
+                s += string.Format("{0:X3}: ",o) + mp.romhex(ro+o,16);
                 if (l != 15) s += "\r\n";
             }
             textBox.Text = s;

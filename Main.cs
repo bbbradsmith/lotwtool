@@ -254,6 +254,18 @@ namespace lotwtool
             }
         }
 
+        public string romhex(int start, int length)
+        {
+            string s = "";
+            for (int i=0; i<length; ++i)
+            {
+                if (i!=0) s += " ";
+                if (start+i < rom.Length)
+                    s += string.Format("{0:X2}",rom[start+i]);
+            }
+            return s;
+        }
+
         // Children management
 
         public void refresh_all() { } // TODO

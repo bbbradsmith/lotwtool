@@ -15,6 +15,7 @@ namespace lotwtool
         int zoom = 1;
         int mode = 0; // 0 terrain edit, 1 item edit
         bool secret = true;
+        bool items = true;
         public int room = 0;
         Main mp;
         Bitmap bmp;
@@ -114,6 +115,51 @@ namespace lotwtool
             }
         }
 
+        void draw_sprite(BitmapData d, int s, int a, int x, int y)
+        {
+            if (s>=256) return;
+            if ((x+16) > 1024) return;
+            if ((y+16) > 192) return;
+
+            int t = ((s & 1)<<8) | (s & 0xFE); // NES 16px sprite tile selector
+            t |= (512 * (a & 3)); // select palette
+
+            mp.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom);
+            mp.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom);
+            mp.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom);
+            mp.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom);
+        }
+
+        void draw_items(BitmapData d)
+        {
+            if (!items) return;
+
+            int ro = 16 + (1024 * room);
+            for (int i=0; i<12; ++i)
+            {
+                int eo = ro + 0x320 + (i*16);
+                int s = mp.rom[eo+0]; // sprite
+                int a = mp.rom[eo+1]; // palette
+                int x = mp.rom[eo+2]; // x grid
+                int y = mp.rom[eo+3]; // y pixel
+                x *= 16;
+                if (s == 0) continue;
+                draw_sprite(d,s,a,x,y);
+            }
+
+            // treasure
+            {
+                int a = mp.rom[ro+0x307]; // 1 = active?
+                int x = mp.rom[ro+0x308]; // x grid
+                int y = mp.rom[ro+0x309]; // y pixel
+                int s = mp.rom[ro+0x30A]; // contents
+                x *= 16;
+                s = 0x81 + (s*4);
+                if (a == 1)
+                    draw_sprite(d,s,1,x,y);
+            }
+        }
+
         void redraw()
         {
             int w = 256 * 4 * zoom;
@@ -121,16 +167,62 @@ namespace lotwtool
             bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             BitmapData d = draw_lock();
             draw_bg(d);
+            draw_items(d);
             draw_unlock(d);
         }
 
-        public void render_select(BitmapData d, int room_, int zoom_, bool secret_)
+        public void render_select(BitmapData d, int room_, int zoom_, bool secret_, bool items_)
         {
             room = room_;
             zoom = zoom_;
             secret = secret_;
+            items = items_;
             cache();
             draw_bg(d);
+            draw_items(d);
+            //debug_room(); // easy way to query all the rooms
+        }
+
+        public void debug_room()
+        {
+            // for investigating a few questions about the format
+
+            int ro = 16 + (1024 * room);
+            int rx = room % 4;
+            int ry = room / 4;
+            string h = string.Format("debug_room {0:D2},{1:D2} {2:D2}\n",rx,ry,room);
+
+            string s = "";
+
+            // Is 307 treasure chest active = 1, inactive = 0?
+            /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("Treasure 307: {0:X2}\n",mp.rom[ro+0x307]);*/
+
+            // querying unused item data fields
+            /*
+            for (int i=0; i<12; ++i)
+            {
+                int eo = ro + 0x320 + (i*16);
+                bool tail0 = true; // is 6 byte tail always empty? Yes.
+                bool all0 = true; // is everything empty if byte 0 is empty? No, boss rooms are an exception.
+                for (int j=0; j<16; ++j)
+                {
+                    bool now0 = mp.rom[eo+j] == 0;
+                    all0 &= now0;
+                    if (j >= 0xA) tail0 &= now0;
+                }
+                if ((mp.rom[eo+0] == 0 && !all0) || !tail0)
+                    s += string.Format("Enemy {0:D2}: ",i) + mp.romhex(eo,16) + "\n";
+            }*/
+
+            // unused space in control data 0x300 - 0x31F
+            /*{
+                bool room0 = true;
+                //for (int i=0x30C; i<=0x30F; ++i) room0 &= mp.rom[ro+i] == 0; // used for princess portrait teleportZ
+                for (int i=0x317; i<=0x31F; ++i) room0 &= mp.rom[ro+i] == 0;
+                if (!room0) s += "Non-empty room control?\n" + mp.romhex(ro+0x300,16) + "\n" + mp.romhex(ro+0x310,16) + "\n";
+            }*/
+
+            if (s.Length > 0) Console.WriteLine(h+s);
         }
 
         public void refresh_all() { } // TODO
@@ -245,6 +337,13 @@ namespace lotwtool
         private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mode = 1; updateMode();
+        }
+
+        private void showItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            items = !items;
+            showItemsToolStripMenuItem.Checked = items;
+            redraw();
         }
     }
 }

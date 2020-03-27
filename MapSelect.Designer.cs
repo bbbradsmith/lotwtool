@@ -47,6 +47,7 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.showSecretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -83,6 +84,7 @@
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showSecretToolStripMenuItem,
+            this.showItemsToolStripMenuItem,
             this.toolStripMenuItem1,
             this.zoomr16xToolStripMenuItem,
             this.zoomr8xToolStripMenuItem,
@@ -203,6 +205,13 @@
             this.showSecretToolStripMenuItem.Text = "Show Secret Walls";
             this.showSecretToolStripMenuItem.Click += new System.EventHandler(this.showSecretToolStripMenuItem_Click);
             // 
+            // showItemsToolStripMenuItem
+            // 
+            this.showItemsToolStripMenuItem.Name = "showItemsToolStripMenuItem";
+            this.showItemsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showItemsToolStripMenuItem.Text = "Show Items";
+            this.showItemsToolStripMenuItem.Click += new System.EventHandler(this.showItemsToolStripMenuItem_Click);
+            // 
             // MapSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,5 +257,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showSecretToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem showItemsToolStripMenuItem;
     }
 }

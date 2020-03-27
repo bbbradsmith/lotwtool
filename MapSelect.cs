@@ -14,6 +14,7 @@ namespace lotwtool
     {
         int zoom = -4;
         bool secret = false;
+        bool items = false;
         Main mp;
         Bitmap bmp;
 
@@ -32,7 +33,7 @@ namespace lotwtool
                 int x = r & 3;
                 int y = r / 4;
                 BitmapData d = bmp.LockBits(new Rectangle(x*rw, y*rh, rw, rh), ImageLockMode.WriteOnly, bmp.PixelFormat);
-                temp_map.render_select(d, r, z, secret);
+                temp_map.render_select(d, r, z, secret, items);
                 bmp.UnlockBits(d);
             }
             if (zoom < 0) // downscale
@@ -175,6 +176,13 @@ namespace lotwtool
         {
             secret = !secret;
             showSecretToolStripMenuItem.Checked = secret;
+            redraw();
+        }
+
+        private void showItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            items = !items;
+            showItemsToolStripMenuItem.Checked = items;
             redraw();
         }
     }

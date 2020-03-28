@@ -23,6 +23,11 @@ namespace lotwtool
         uint[][] palette;
         public MapEditHex infohex = null;
 
+        byte draw_tile = 0;
+        int drag_item = -1;
+        int drag_y;
+        int drag_item_y;
+
         void cache_page(int slot, int page)
         {
             for (int i = 0; i < 64; ++i)
@@ -32,6 +37,21 @@ namespace lotwtool
                     mp.chr_cache((page * 64) + i, (slot * 64) + i + (p * 512), chr_cache, palette[p + (slot & 4)]);
                 }
             }
+        }
+
+        int[] chr_set()
+        {
+            int ro = 16 + (1024 * room);
+            int[] chri = new int[8];
+            chri[0] = mp.rom[ro + 0x305];
+            chri[2] = mp.rom[ro + 0x306];
+            chri[5] = mp.rom[ro + 0x301];
+            chri[1] = chri[0] + 1;
+            chri[3] = chri[2] + 1;
+            chri[4] = 0x3A; // always Roas
+            chri[6] = 0x3E; // always items 0
+            chri[7] = 0x3F; // always items 0
+            return chri;
         }
 
         void cache()
@@ -51,15 +71,7 @@ namespace lotwtool
             }
 
             chr_cache = new uint[4 * 8 * 64 * 64];
-            int[] chri = new int[8];
-            chri[0] = mp.rom[ro + 0x305];
-            chri[2] = mp.rom[ro + 0x306];
-            chri[5] = mp.rom[ro + 0x301];
-            chri[1] = chri[0] + 1;
-            chri[3] = chri[2] + 1;
-            chri[4] = 0x3A; // always Roas
-            chri[6] = 0x3E; // always items 0
-            chri[7] = 0x3F; // always items 0
+            int[] chri = chr_set();
             for (int i=0; i<8; ++i)
             {
                 cache_page(i, chri[i]);
@@ -142,9 +154,9 @@ namespace lotwtool
         void draw_items(BitmapData d)
         {
             if (!items) return;
-
             int ro = 16 + (1024 * room);
-            for (int i=0; i<12; ++i)
+
+            for (int i=11; i>=0; --i)
             {
                 int eo = ro + 0x320 + (i*16);
                 int s = mp.rom[eo+0]; // sprite
@@ -157,16 +169,63 @@ namespace lotwtool
             }
 
             // treasure
+            if (mp.rom[ro+0x307] != 0) // 1 = active
             {
-                int a = mp.rom[ro+0x307]; // 1 = active?
                 int x = mp.rom[ro+0x308]; // x grid
                 int y = mp.rom[ro+0x309]; // y pixel
                 int s = mp.rom[ro+0x30A]; // contents
                 x *= 16;
                 s = 0x81 + (s*4);
-                if (a == 1)
-                    draw_sprite(d,s,1,x,y);
+                draw_sprite(d,s,1,x,y);
             }
+        }
+
+        int pick_item(int x, int y) // pick item under pixel
+        {
+            int ro = 16 + (1024 * room);
+
+            // treasure
+            if (mp.rom[ro+0x307] != 0)
+            {
+                int ox = mp.rom[ro+0x308] * 16;
+                int oy = mp.rom[ro+0x309];
+                if (x >= ox && x < (ox+16) && y >= oy && y < (oy+16)) return 12;
+            }
+
+            // items
+            for (int i=0; i<12; ++i)
+            {
+                int eo = ro + 0x320 + (i*16);
+                if (mp.rom[eo+0] == 0) continue;
+                int ox = mp.rom[eo+2] * 16;
+                int oy = mp.rom[eo+3];
+                if (x >= ox && x < (ox+16) && y >= oy && y < (oy+16)) return i;
+            }
+
+            return -1;
+        }
+
+        Tuple<int,int> pos_item(int item)
+        {
+            int ro = 16 + (1024 * room);
+            int tx,ty;
+            if (item < 0 || item > 12)
+            {
+                tx = -1;
+                ty = -1;
+            }
+            else if (item == 12) // treasure
+            {
+                tx = mp.rom[ro+0x308] * 16;
+                ty = mp.rom[ro+0x309];
+            }
+            else
+            {
+                int eo = ro + 0x320 + (item*16);
+                tx = mp.rom[eo+2] * 16;
+                ty = mp.rom[eo+3];
+            }
+            return new Tuple<int,int>(tx,ty);
         }
 
         void redraw()
@@ -237,9 +296,28 @@ namespace lotwtool
             if (s.Length > 0) Console.WriteLine(h+s);
         }
 
-        public void refresh_all() { } // TODO
-        public void refresh_chr(int tile) { } // TODO
-        public void refresh_metatile(int page) { } // TODO
+        public void refresh_all()
+        {
+            cache();
+            redraw();
+        }
+
+        public void refresh_chr(int tile)
+        {
+            int page = tile / 64;
+            if (chr_set().Contains(page))
+            {
+                cache();
+                redraw();
+            }
+        }
+
+        public void refresh_metatile(int page)
+        {
+            int ro = 16 + (1024 * room);
+            if (page == mp.rom[ro+0x300]) redraw();
+        }
+
         public void refresh_close() { this.Close(); }
 
         public MapEdit(Main parent, int room_)
@@ -286,12 +364,6 @@ namespace lotwtool
         private void pictureBox_Click(object sender, EventArgs e)
         {
             // TODO editing
-        }
-
-        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            //toolStripStatusLabel.Text = string.Format("{0}, {1}",this.Width,this.Height);
-            // TODO
         }
 
         private void MapEdit_FormClosing(object sender, FormClosingEventArgs e)
@@ -363,6 +435,9 @@ namespace lotwtool
         private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mode = 1; updateMode();
+            items = true; // force items display
+            showItemsToolStripMenuItem.Checked = items;
+            redraw();
         }
 
         private void showItemsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -370,6 +445,125 @@ namespace lotwtool
             items = !items;
             showItemsToolStripMenuItem.Checked = items;
             redraw();
+        }
+
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            int x = e.X / zoom;
+            int y = e.Y / zoom;
+            drag_item = -1;
+            if (mode == 0) // terrain
+            {
+                if (e.Button == MouseButtons.Left) // start a draw
+                    mp.rom_modify_start();
+            }
+            else if (mode == 1) // item
+            {
+                if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
+                {
+                    // TODO
+                    // look for empty slot, fill with a basic enemy, then fill drag_item/drag_x/etc. and proceed
+                }
+                else // try to pick up an item
+                {
+                    drag_item = pick_item(x,y);
+                    if (drag_item >= 0)
+                    {
+                        mp.rom_modify_start();
+                        Tuple<int,int> ipos = pos_item(drag_item);
+                        drag_y = y;
+                        drag_item_y = ipos.Item2;
+                    }
+                }
+            }
+            pictureBox_MouseMove(sender, e);
+        }
+
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            int x = e.X / zoom;
+            int y = e.Y / zoom;
+            int tx = x / 16;
+            int ty = y / 16;
+            int ro = 16 + (1024 * room);
+
+            if (e.Button != MouseButtons.None)
+            {
+                int ti = ro+(tx*12)+ty;
+                if (mode == 0)
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        if (tx >= 0 && tx < 64 && ty >= 0 && ty < 12)
+                        {
+                            if (draw_tile != mp.rom[ti])
+                            {
+                                mp.rom_modify(ti,draw_tile,true);
+                                redraw();
+                            }
+                        }
+                    }
+                    else if (e.Button == MouseButtons.Right)
+                    {
+                        if (tx >= 0 && tx < 64 && ty >= 0 && ty < 12)
+                            draw_tile = mp.rom[ti];
+                    }
+                }
+                else if (mode == 1 && drag_item >= 0)
+                {
+                    int nx = x & (~15); // snap to grid
+                    int ny = y & (~15);
+                    if (ModifierKeys.HasFlag(Keys.Shift)) // Y can move freely with shift
+                        ny = drag_item_y + (y - drag_y);
+
+                    byte bx = (byte)(nx >> 4);
+                    byte by = (byte)(ny);
+                    bool changed = false;
+
+                    int romx = ro + 0x320 + (drag_item*16) + 2; // item
+                    if (drag_item == 12) romx = ro + 0x308; // treasure
+                    int romy = romx + 1;
+
+                    if (bx != mp.rom[romx]) { mp.rom_modify(romx,bx); changed = true; }
+                    if (by != mp.rom[romy]) { mp.rom_modify(romy,by); changed = true; }
+                    if (changed)
+                    {
+                        redraw();
+                        if (infohex != null) infohex.redraw();
+                    }
+                }
+            }
+
+            string tileinfo = "";
+            string iteminfo = "";
+
+            if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
+            {
+                byte tile = mp.rom[ro+(tx*12)+ty];
+                tileinfo = string.Format("{0,2:D}, {1,2:D}, {2:X2} ({3:X1}:{4:X2})",tx,ty,tile,tile>>6,tile&63);
+            }
+
+            int item = pick_item(x,y);
+            if (item == 12) // treasure
+            {
+                iteminfo = " Treasure: " + mp.romhex(ro + 0x307, 4);
+            }
+            else if (item >= 0) // item
+            {
+                iteminfo = string.Format(" Item {0,2:D}: ",item) + mp.romhex(ro + 0x320 + (item*16),10);
+            }
+
+            toolStripStatusLabel.Text = tileinfo + iteminfo;
+        }
+
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            drag_item = -1;
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.undo();
         }
     }
 }

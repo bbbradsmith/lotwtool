@@ -23,8 +23,8 @@ namespace lotwtool
     {
         // ROM state
 
-        public bool changed = false;
         public byte[] rom = { };
+        byte[] rom_unchanged = null;
         public string filename = "";
         public int chr_offset = 0;
         public int chr_count = 0;
@@ -33,6 +33,7 @@ namespace lotwtool
         List<RomRefresh> refreshers = new List<RomRefresh>();
         List<MapEdit> mapedits = new List<MapEdit>();
         public MapSelect map_select = null;
+        Stack<List<int>> undo_stack = new Stack<List<int>>();
 
         public static readonly uint[] NES_PALETTE =
         {
@@ -56,9 +57,15 @@ namespace lotwtool
 
         // Common code
 
+        bool changed()
+        {
+            if (rom.Length < 1) return false;
+            return !rom.SequenceEqual(rom_unchanged);
+        }
+
         bool changePrevent(string caption)
         {
-            if (!changed) return false;
+            if (!changed()) return false;
             DialogResult result = MessageBox.Show("You have unsaved changes. Proceed?", caption, MessageBoxButtons.OKCancel);
             return result != DialogResult.OK;
         }
@@ -83,7 +90,8 @@ namespace lotwtool
             // successful load: acquire the ROM
             rom = read_rom;
             filename = path; textBoxFilename.Text = filename;
-            changed = false;
+            rom_unchanged = (byte[])rom.Clone();
+            undo_stack.Clear();
 
             // set file boundaries
             chr_offset = 0;
@@ -123,7 +131,7 @@ namespace lotwtool
                 MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), "File open error!");
                 return false;
             }
-            changed = false;
+            rom_unchanged = (byte[])rom.Clone();
             return true;
         }
 
@@ -270,9 +278,58 @@ namespace lotwtool
             return s;
         }
 
+        // ROM modification and undo
+
+        public void undo()
+        {
+            if (undo_stack.Count < 1) return;
+            List<int> a = undo_stack.Pop();
+            if (a.Count < 1) { undo(); return; } // skip any null undo
+
+            for (int i=0; i<a.Count; i+=2)
+            {
+                int addr = a[i+0];
+                byte value =  (byte)a[i+1];
+                rom[addr] = value;
+            }
+            refresh_all();
+        }
+
+        public void rom_modify(int address, byte value, bool append = false)
+        {
+            byte old = rom[address];
+            List<int> a;
+            if (!append || undo_stack.Count < 1)
+            {
+                if (undo_stack.Count < 1 || undo_stack.Peek().Count > 0)
+                    a = new List<int>();
+                else // append anyway if we've got an empty step
+                    a = undo_stack.Pop();
+            }
+            else // append adds to last undo step
+            {
+                a = undo_stack.Pop();
+            }
+            if (old != value)
+            {
+                a.Add(address);
+                a.Add(old);
+            }
+            undo_stack.Push(a);
+            rom[address] = value;
+        }
+
+        public void rom_modify_start() // begins a new undo step
+        {
+            rom_modify(0,rom[0],false); // dummy non-change to start an empty step
+        }
+
         // Children management
 
-        public void refresh_all() { } // TODO
+        public void refresh_all()
+        {
+            foreach (RomRefresh r in refreshers) r.refresh_all();
+        }
 
         public void refresh_chr(int tile)
         {
@@ -431,6 +488,11 @@ namespace lotwtool
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            undo();
         }
     }
 }

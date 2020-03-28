@@ -14,7 +14,7 @@ namespace lotwtool
         MapEdit me;
         Main mp;
 
-        void redraw()
+        public void redraw()
         {
             int ro = 16 + (1024 * me.room);
             string s = "";

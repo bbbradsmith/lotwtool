@@ -49,9 +49,9 @@ namespace lotwtool
             pictureBox.Image = bmp;
         }
 
-        public void refresh_all() { } // TODO
-        public void refresh_chr(int tile) { } // TODO
-        public void refresh_metatile(int page) { } // TODO
+        public void refresh_all() { } // ignored, use F5 refresh
+        public void refresh_chr(int tile) { } // ignored, use F5 refresh
+        public void refresh_metatile(int page) { } // ignored, use F5 refresh
         public void refresh_close() { this.Close(); }
 
         public MapSelect(Main parent)
@@ -197,6 +197,16 @@ namespace lotwtool
         {
             items = !items;
             showItemsToolStripMenuItem.Checked = items;
+            redraw();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.undo();
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             redraw();
         }
     }

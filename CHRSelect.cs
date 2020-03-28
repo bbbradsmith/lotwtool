@@ -204,5 +204,10 @@ namespace lotwtool
                 }
             }
         }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.undo();
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace lotwtool
     public partial class MapSelect : Form, RomRefresh
     {
         int zoom = -4;
-        bool secret = false;
+        int secret = 2;
         bool items = false;
         Main mp;
         Bitmap bmp;
@@ -172,11 +172,25 @@ namespace lotwtool
             mp.remove_refresh(this);
         }
 
+        private void updateSecret()
+        {
+            showSecretToolStripMenuItem.Checked = secret == 1;
+            halfSecretToolStripMenuItem.Checked = secret == 2;
+            redraw();
+        }
+
         private void showSecretToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            secret = !secret;
-            showSecretToolStripMenuItem.Checked = secret;
-            redraw();
+            if (secret != 1) secret = 1;
+            else             secret = 0;
+            updateSecret();
+        }
+
+        private void halfSecretToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (secret != 2) secret = 2;
+            else             secret = 0;
+            updateSecret();
         }
 
         private void showItemsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -153,9 +153,9 @@ namespace lotwtool
 
         public void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
         {
+            // draws a cached tile on a locked bitmap data
             x *= zoom;
             y *= zoom;
-            // draws a cached tile on a locked bitmap data
             unsafe
             {
                 uint* braw = (uint*)bd.Scan0.ToPointer();
@@ -185,8 +185,9 @@ namespace lotwtool
             }
         }
 
-        public void chr_blit_dark(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        public void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom)
         {
+            // draws a blend of two cached tiles
             x *= zoom;
             y *= zoom;
             unsafe
@@ -196,7 +197,8 @@ namespace lotwtool
                 fixed (uint* fcc = cache)
                 {
                     uint* scanline = braw + (stride * y) + x;
-                    uint* chrline = fcc + (tile * 64);
+                    uint* chrline0 = fcc + (tile0 * 64);
+                    uint* chrline1 = fcc + (tile1 * 64);
                     for (int py = 0; py < 8; ++py)
                     {
                         for (int yz = 0; yz < zoom; ++yz)
@@ -206,14 +208,16 @@ namespace lotwtool
                             {
                                 for (int xz = 0; xz < zoom; ++xz)
                                 {
-                                    //scanline[sx] = ((chrline[px] >> 1) & 0x7F7F7F7F) | 0xFF000000; // 1/2 bright
-                                    scanline[sx] = ((chrline[px] >> 2) & 0x3F3F3F3F) | 0xFF000000; // 1/4 bright
+                                    uint c0 = chrline0[px];
+                                    uint c1 = chrline1[px];
+                                    scanline[sx] = (((c0>>1)&0x7F7F7F) + ((c1>>1)&0x7F7F7F)) | 0xFF000000;
                                     ++sx;
                                 }
                             }
                             scanline += stride;
                         }
-                        chrline += 8;
+                        chrline0 += 8;
+                        chrline1 += 8;
                     }
                 }
             }

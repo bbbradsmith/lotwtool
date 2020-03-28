@@ -14,7 +14,7 @@ namespace lotwtool
     {
         int zoom = 1;
         int mode = 0; // 0 terrain edit, 1 item edit
-        bool secret = true;
+        int secret = 2; // 0 none, 1 replace, 2 blend
         bool items = true;
         public int room = 0;
         Main mp;
@@ -80,27 +80,36 @@ namespace lotwtool
         void draw_bg_tile(BitmapData d, int x, int y)
         {
             int ro = 16 + (1024 * room);
-            byte t = mp.rom[ro+(x*12)+y];
+
+            int st = mp.rom[ro+0x302]; // secret tile (no palette)
+            int str = mp.rom[ro+0x303]; // secret tile replacement (with palette)
+            int t = mp.rom[ro+(x*12)+y];
+            bool replace = (t & 63) == st;
+
+            if (replace && secret == 1) t = str;
             int attribute = t >> 6;
             int metatile = t & 63;
-            int st = mp.rom[ro+0x302];
-            if (!secret) st = -1;
 
             // metatile tables are in 256 byte pages in bank 9
             byte metatile_page = mp.rom[ro+0x300];
             int mto = 16 + (1024 * 8 * 9) + (metatile_page * 256);
-            if ((mto+4) > mp.rom.Length) return;
+            if ((mto+256) > mp.rom.Length) return;
 
             int[] XO = { 0, 0, 8, 8 };
             int[] YO = { 0, 8, 0, 8 };
 
             for (int i=0; i<4; ++i)
             {
-                int mt = mp.rom[mto+(metatile*4)+i];
-                if (metatile != st)
-                    mp.chr_blit(d, chr_cache, mt + (attribute * 512), (x*16)+XO[i], (y*16)+YO[i], zoom);
-                else
-                    mp.chr_blit_dark(d, chr_cache, mt + (attribute * 512), (x*16)+XO[i], (y*16)+YO[i], zoom);
+                int mt = mp.rom[mto+(metatile*4)+i] + (attribute * 512);
+                if (secret != 2 || !replace)
+                {
+                    mp.chr_blit(d, chr_cache, mt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                }
+                else // blend original and secret replacement
+                {
+                    int smt = mp.rom[mto+((str&63)*4)+i] + ((str>>6) * 512);
+                    mp.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                }
             }
         }
 
@@ -171,7 +180,7 @@ namespace lotwtool
             draw_unlock(d);
         }
 
-        public void render_select(BitmapData d, int room_, int zoom_, bool secret_, bool items_)
+        public void render_select(BitmapData d, int room_, int zoom_, int secret_, bool items_)
         {
             room = room_;
             zoom = zoom_;
@@ -180,7 +189,7 @@ namespace lotwtool
             cache();
             draw_bg(d);
             draw_items(d);
-            //debug_room(); // easy way to query all the rooms
+            debug_room(); // easy way to query all the rooms // HACK TODO comment this out
         }
 
         public void debug_room()
@@ -190,12 +199,15 @@ namespace lotwtool
             int ro = 16 + (1024 * room);
             int rx = room % 4;
             int ry = room / 4;
-            string h = string.Format("debug_room {0:D2},{1:D2} {2:D2}\n",rx,ry,room);
+            string h = string.Format("debug_room {0:D2},{1:D2} {2:D2}",rx,ry,room);
 
             string s = "";
 
+            // 302/303 secret tile possible values
+            /*s += string.Format("secret tile {0:X2} -> {1:X2}",mp.rom[ro+0x302],mp.rom[ro+0x303]);*/
+
             // Is 307 treasure chest active = 1, inactive = 0?
-            /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("Treasure 307: {0:X2}\n",mp.rom[ro+0x307]);*/
+            /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("\nTreasure 307: {0:X2}",mp.rom[ro+0x307]);*/
 
             // querying unused item data fields
             /*
@@ -211,7 +223,7 @@ namespace lotwtool
                     if (j >= 0xA) tail0 &= now0;
                 }
                 if ((mp.rom[eo+0] == 0 && !all0) || !tail0)
-                    s += string.Format("Enemy {0:D2}: ",i) + mp.romhex(eo,16) + "\n";
+                    s += string.Format("\nEnemy {0:D2}: ",i) + mp.romhex(eo,16);
             }*/
 
             // unused space in control data 0x300 - 0x31F
@@ -219,7 +231,7 @@ namespace lotwtool
                 bool room0 = true;
                 //for (int i=0x30C; i<=0x30F; ++i) room0 &= mp.rom[ro+i] == 0; // used for princess portrait teleportZ
                 for (int i=0x317; i<=0x31F; ++i) room0 &= mp.rom[ro+i] == 0;
-                if (!room0) s += "Non-empty room control?\n" + mp.romhex(ro+0x300,16) + "\n" + mp.romhex(ro+0x310,16) + "\n";
+                if (!room0) s += "\nNon-empty room control?\n" + mp.romhex(ro+0x300,16) + "\n" + mp.romhex(ro+0x310,16);
             }*/
 
             if (s.Length > 0) Console.WriteLine(h+s);
@@ -289,11 +301,25 @@ namespace lotwtool
             mp.remove_map_edit(this);
         }
 
+        private void updateSecret()
+        {
+            showSecretToolStripMenuItem.Checked = secret == 1;
+            halfSecretToolStripMenuItem.Checked = secret == 2;
+            redraw();
+        }
+
         private void showSecretToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            secret = !secret;
-            showSecretToolStripMenuItem.Checked = secret;
-            redraw();
+            if (secret != 1) secret = 1;
+            else             secret = 0;
+            updateSecret();
+        }
+
+        private void halfSecretToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (secret != 2) secret = 2;
+            else             secret = 0;
+            updateSecret();
         }
 
         private void infoHexToolStripMenuItem_Click(object sender, EventArgs e)

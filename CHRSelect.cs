@@ -18,6 +18,7 @@ namespace lotwtool
         Bitmap bmp = null;
         uint[] chr_cache = null;
         int highlight = -1;
+        public bool dualpage = false; // for selecting 2k CHR pages
 
         static readonly uint[] GREY =
         {
@@ -35,14 +36,20 @@ namespace lotwtool
             0xFFFFCCCC,
         };
 
+        void cache_tile(int i)
+        {
+            int cc_tiles = 64 * mp.chr_count;
+            mp.chr_cache(i, i, chr_cache, GREY);
+            mp.chr_cache(i, cc_tiles + i, chr_cache, RED);
+        }
+
         void cache()
         {
             int cc_tiles = 64 * mp.chr_count;
             chr_cache = new uint[2 * cc_tiles * 64];
             for (int i = 0; i < (mp.chr_count * 64); ++i)
             {
-                mp.chr_cache(i, i, chr_cache, GREY);
-                mp.chr_cache(i, cc_tiles + i, chr_cache, RED);
+                cache_tile(i);
             }
         }
 
@@ -89,18 +96,32 @@ namespace lotwtool
             int w = 128 * zoom;
             int h = 32 * mp.chr_count * zoom;
 
-            bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+            if (bmp == null || bmp.Width != w || bmp.Height != h)
+            {
+                bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+            }
             BitmapData d = draw_lock();
             for (int page = 0; page < mp.chr_count; ++page)
             {
-                redraw_page(d, page, page == highlight);
+                redraw_page(d, page, page == highlight || (dualpage && page == (highlight^1)));
             }
             draw_unlock(d);
         }
 
-        public void refresh_all() { } // TODO
-        public void refresh_chr(int tile) { } // TODO
-        public void refresh_metatile(int page) { }
+        public void refresh_all()
+        {
+            cache();
+            redraw();
+        }
+
+        public void refresh_chr(int tile)
+        {
+            cache_tile(tile);
+            redraw();
+        }
+
+        public void refresh_metatile(int page) { } // ignore
+
         public void refresh_close() { this.Close(); }
 
         public CHRSelect(Main parent)
@@ -172,7 +193,9 @@ namespace lotwtool
             {
                 BitmapData d = draw_lock();
                 redraw_page(d, highlight, false);
+                if (dualpage) redraw_page(d, highlight^1, false);
                 redraw_page(d, page, true);
+                if (dualpage) redraw_page(d, page^1, true);
                 draw_unlock(d);
                 highlight = page;
             }

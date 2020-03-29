@@ -21,6 +21,8 @@ namespace lotwtool
 
     public partial class Main : Form, RomRefresh
     {
+        const string VERSION = "0"; // TODO set this
+
         // ROM state
 
         public byte[] rom = { };
@@ -114,8 +116,14 @@ namespace lotwtool
                     chr_max = (chr_max - chr_offset) / 1024;
             }
 
-            textBoxCHRCount.Text = string.Format("{0}", chr_count);
-            textBoxMapCount.Text = string.Format("{0}", map_count);
+            labelCHRCountValue.Text = string.Format("{0}", chr_count);
+            labelMapCountValue.Text = string.Format("{0}", map_count);
+
+            buttonMapEdit.Enabled = map_count > 0;
+            buttonCHREdit.Enabled = chr_count > 1;
+
+            mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
+            CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;
 
             return true;
         }
@@ -470,7 +478,6 @@ namespace lotwtool
 
         private void buttonMapEdit_Click(object sender, EventArgs e)
         {
-            if (map_count < 1) return;
             if (raise_child(map_select)) return;
             map_select = new MapSelect(this);
             map_select.Show();
@@ -479,7 +486,6 @@ namespace lotwtool
 
         private void buttonCHREdit_Click(object sender, EventArgs e)
         {
-            if (chr_count < 1) return;
             CHRSelect chr_select = new CHRSelect(this);
             chr_select.Show();
             add_refresh(chr_select);
@@ -487,12 +493,38 @@ namespace lotwtool
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
+            string ABOUT_TEXT =
+                "LotW Tool\r\n" +
+                "\r\n" +
+                "An editor for Legacy of the Wizard (NES)\r\n" +
+                "and Dragon Slayer IV (Famicom).\r\n" +
+                "\r\n" +
+                "Brad Smith\r\n" +
+                "Version: " + VERSION;
+            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             undo();
+        }
+
+        private void saveAndTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFile(filename))
+            {
+                System.Diagnostics.Process.Start(filename); // run the .NES file
+            }
+        }
+
+        private void mapsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonMapEdit_Click(sender, e);
+        }
+
+        private void CHRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonCHREdit_Click(sender, e);
         }
     }
 }

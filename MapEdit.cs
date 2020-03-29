@@ -18,7 +18,7 @@ namespace lotwtool
         bool items = true;
         public int room = 0;
         Main mp;
-        Bitmap bmp;
+        Bitmap bmp = null;
         uint[] chr_cache;
         uint[][] palette;
         public MapEditHex infohex = null;
@@ -27,6 +27,8 @@ namespace lotwtool
         int drag_item = -1;
         int drag_y;
         int drag_item_y;
+        int last_status_x = 0;
+        int last_status_y = 0;
 
         void cache_page(int slot, int page)
         {
@@ -228,15 +230,23 @@ namespace lotwtool
             return new Tuple<int,int>(tx,ty);
         }
 
-        void redraw()
+        void redraw() // redraws just the map window
         {
             int w = 256 * 4 * zoom;
             int h = 192 * zoom;
-            bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+            if (bmp == null || bmp.Width != w || bmp.Height != h)
+            {
+                bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+            }
             BitmapData d = draw_lock();
             draw_bg(d);
             draw_items(d);
             draw_unlock(d);
+        }
+
+        void redraw_info() // redraws info windows when stuff outside the terrain data changes
+        {
+            if (infohex != null) infohex.redraw();
         }
 
         public void render_select(BitmapData d, int room_, int zoom_, int secret_, bool items_)
@@ -248,7 +258,7 @@ namespace lotwtool
             cache();
             draw_bg(d);
             draw_items(d);
-            debug_room(); // easy way to query all the rooms // HACK TODO comment this out
+            //debug_room(); // easy way to query all the rooms
         }
 
         public void debug_room()
@@ -300,6 +310,7 @@ namespace lotwtool
         {
             cache();
             redraw();
+            redraw_info();
         }
 
         public void refresh_chr(int tile)
@@ -330,6 +341,7 @@ namespace lotwtool
             Text = string.Format("Map {0},{1} ({2})",x,y,(y*4)+x);
             cache();
             redraw();
+            updateStatus();
         }
 
         private void updateZoom()
@@ -425,6 +437,7 @@ namespace lotwtool
         {
             terrainToolStripMenuItem.Checked = mode == 0;
             itemsToolStripMenuItem.Checked   = mode == 1;
+            updateStatus();
         }
 
         private void terrainToolStripMenuItem_Click(object sender, EventArgs e)
@@ -447,11 +460,70 @@ namespace lotwtool
             redraw();
         }
 
+        private void updateStatus(int x=~0, int y=~0)
+        {
+            if (x == ~0) x = last_status_x;
+            if (y == ~0) y = last_status_y;
+            last_status_x = x;
+            last_status_y = y;
+
+            int ro = 16 + (1024 * room);
+            int tx = x / 16;
+            int ty = y / 16;
+
+            string modeinfo = "";
+            string tileinfo = "";
+            string iteminfo = "";
+            string modetips = "";
+
+            if (mode == 0)
+            {
+                modeinfo = string.Format("TERRAIN {0:X2} ({1:X1}:{2:X2}) => ",draw_tile,draw_tile>>6,draw_tile&63);
+                if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
+                {
+                    byte tile = mp.rom[ro+(tx*12)+ty];
+                    tileinfo = string.Format("{0,2:D},{1,2:D} = {2:X2} ({3:X1}:{4:X2})",tx,ty,tile,tile>>6,tile&63);
+                }
+                modetips = "LMB = Draw, RMB = Pick";
+            }
+            else if (mode == 1)
+            {
+                modeinfo = string.Format("ITEMS");
+                iteminfo = " None";
+            }
+
+            int item = pick_item(x,y);
+            if (item == 12) // treasure
+            {
+                iteminfo = " Treasure: " + mp.romhex(ro + 0x307, 4);
+            }
+            else if (item >= 0) // item
+            {
+                iteminfo = string.Format(" Item {0:D}: ",item) + mp.romhex(ro + 0x320 + (item*16),10);
+            }
+
+            if (mode == 1)
+            {
+                if (drag_item >= 0)
+                    modetips = "Shift = Free Y";
+                else if (item >= 0)
+                    modetips = "MB = Drag, Ctrl+LMB = Create";
+                else
+                    modetips = "Ctrl+LMB = Create";
+            }
+
+            toolStripStatusLabel.Text = modeinfo + tileinfo + iteminfo;
+            toolStripTipLabel.Text = modetips;
+        }
+
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             int x = e.X / zoom;
             int y = e.Y / zoom;
+            int ro = 16 + (1024 * room);
+
             drag_item = -1;
+
             if (mode == 0) // terrain
             {
                 if (e.Button == MouseButtons.Left) // start a draw
@@ -461,19 +533,39 @@ namespace lotwtool
             {
                 if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
                 {
-                    // TODO
-                    // look for empty slot, fill with a basic enemy, then fill drag_item/drag_x/etc. and proceed
+                    for (int i=0; i<12; ++i)
+                    {
+                        bool empty = true;
+                        for (int j=0; j<16; ++j) empty &= mp.rom[ro+0x320+(i*16)+j] == 0;
+                        if (empty)
+                        {
+                            drag_item = i;
+                            break;
+                        }
+                    }
+                    if (drag_item >= 0)
+                    {
+                        mp.rom_modify_start();
+                        byte[] monster = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
+                        monster[2] = (byte)(x / 16);
+                        monster[3] = (byte)(y & (~15));
+                        for (int i=0; i<monster.Length; ++i)
+                            mp.rom_modify(ro+0x320+(drag_item*16)+i, monster[i], true);
+                        redraw();
+                        redraw_info();
+                    }
                 }
                 else // try to pick up an item
                 {
                     drag_item = pick_item(x,y);
-                    if (drag_item >= 0)
-                    {
-                        mp.rom_modify_start();
-                        Tuple<int,int> ipos = pos_item(drag_item);
-                        drag_y = y;
-                        drag_item_y = ipos.Item2;
-                    }
+                    if (drag_item >= 0) mp.rom_modify_start();
+                }
+
+                if (drag_item >= 0)
+                {
+                    Tuple<int,int> ipos = pos_item(drag_item);
+                    drag_y = y;
+                    drag_item_y = ipos.Item2;
                 }
             }
             pictureBox_MouseMove(sender, e);
@@ -524,36 +616,17 @@ namespace lotwtool
                     if (drag_item == 12) romx = ro + 0x308; // treasure
                     int romy = romx + 1;
 
-                    if (bx != mp.rom[romx]) { mp.rom_modify(romx,bx); changed = true; }
-                    if (by != mp.rom[romy]) { mp.rom_modify(romy,by); changed = true; }
+                    if (bx != mp.rom[romx]) { mp.rom_modify(romx,bx,true); changed = true; }
+                    if (by != mp.rom[romy]) { mp.rom_modify(romy,by,true); changed = true; }
                     if (changed)
                     {
                         redraw();
-                        if (infohex != null) infohex.redraw();
+                        redraw_info();
                     }
                 }
             }
 
-            string tileinfo = "";
-            string iteminfo = "";
-
-            if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
-            {
-                byte tile = mp.rom[ro+(tx*12)+ty];
-                tileinfo = string.Format("{0,2:D}, {1,2:D}, {2:X2} ({3:X1}:{4:X2})",tx,ty,tile,tile>>6,tile&63);
-            }
-
-            int item = pick_item(x,y);
-            if (item == 12) // treasure
-            {
-                iteminfo = " Treasure: " + mp.romhex(ro + 0x307, 4);
-            }
-            else if (item >= 0) // item
-            {
-                iteminfo = string.Format(" Item {0,2:D}: ",item) + mp.romhex(ro + 0x320 + (item*16),10);
-            }
-
-            toolStripStatusLabel.Text = tileinfo + iteminfo;
+            updateStatus(x,y);
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)

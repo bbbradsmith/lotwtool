@@ -51,6 +51,7 @@
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -83,14 +84,14 @@
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
-            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveImageToolStripMenuItem.Text = "Save &Image...";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
             // 
@@ -108,14 +109,16 @@
             this.terrainToolStripMenuItem.Checked = true;
             this.terrainToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.terrainToolStripMenuItem.Name = "terrainToolStripMenuItem";
-            this.terrainToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.terrainToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.terrainToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.terrainToolStripMenuItem.Text = "&Terrain";
             this.terrainToolStripMenuItem.Click += new System.EventHandler(this.terrainToolStripMenuItem_Click);
             // 
             // itemsToolStripMenuItem
             // 
             this.itemsToolStripMenuItem.Name = "itemsToolStripMenuItem";
-            this.itemsToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.itemsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.itemsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.itemsToolStripMenuItem.Text = "&Items";
             this.itemsToolStripMenuItem.Click += new System.EventHandler(this.itemsToolStripMenuItem_Click);
             // 
@@ -137,7 +140,7 @@
             // showSecretToolStripMenuItem
             // 
             this.showSecretToolStripMenuItem.Name = "showSecretToolStripMenuItem";
-            this.showSecretToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.showSecretToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showSecretToolStripMenuItem.Text = "Show &Secret Walls";
             this.showSecretToolStripMenuItem.Click += new System.EventHandler(this.showSecretToolStripMenuItem_Click);
             // 
@@ -146,7 +149,7 @@
             this.halfSecretToolStripMenuItem.Checked = true;
             this.halfSecretToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.halfSecretToolStripMenuItem.Name = "halfSecretToolStripMenuItem";
-            this.halfSecretToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.halfSecretToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.halfSecretToolStripMenuItem.Text = "&Half Secret Walls";
             this.halfSecretToolStripMenuItem.Click += new System.EventHandler(this.halfSecretToolStripMenuItem_Click);
             // 
@@ -155,42 +158,42 @@
             this.showItemsToolStripMenuItem.Checked = true;
             this.showItemsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showItemsToolStripMenuItem.Name = "showItemsToolStripMenuItem";
-            this.showItemsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.showItemsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showItemsToolStripMenuItem.Text = "Show &Items";
             this.showItemsToolStripMenuItem.Click += new System.EventHandler(this.showItemsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(166, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // zoom1xToolStripMenuItem
             // 
             this.zoom1xToolStripMenuItem.Checked = true;
             this.zoom1xToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.zoom1xToolStripMenuItem.Name = "zoom1xToolStripMenuItem";
-            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoom1xToolStripMenuItem.Text = "Zoom &1x";
             this.zoom1xToolStripMenuItem.Click += new System.EventHandler(this.zoom1xToolStripMenuItem_Click);
             // 
             // zoom2xToolStripMenuItem
             // 
             this.zoom2xToolStripMenuItem.Name = "zoom2xToolStripMenuItem";
-            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoom2xToolStripMenuItem.Text = "Zoom &2x";
             this.zoom2xToolStripMenuItem.Click += new System.EventHandler(this.zoom2xToolStripMenuItem_Click);
             // 
             // zoom3xToolStripMenuItem
             // 
             this.zoom3xToolStripMenuItem.Name = "zoom3xToolStripMenuItem";
-            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoom3xToolStripMenuItem.Text = "Zoom &3x";
             this.zoom3xToolStripMenuItem.Click += new System.EventHandler(this.zoom3xToolStripMenuItem_Click);
             // 
             // zoom4xToolStripMenuItem
             // 
             this.zoom4xToolStripMenuItem.Name = "zoom4xToolStripMenuItem";
-            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoom4xToolStripMenuItem.Text = "Zoom &4x";
             this.zoom4xToolStripMenuItem.Click += new System.EventHandler(this.zoom4xToolStripMenuItem_Click);
             // 
@@ -205,19 +208,20 @@
             // infoHexToolStripMenuItem
             // 
             this.infoHexToolStripMenuItem.Name = "infoHexToolStripMenuItem";
-            this.infoHexToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.infoHexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.infoHexToolStripMenuItem.Text = "Info &Hex";
             this.infoHexToolStripMenuItem.Click += new System.EventHandler(this.infoHexToolStripMenuItem_Click);
             // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel});
+            this.toolStripStatusLabel,
+            this.toolStripTipLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 222);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1030, 22);
             this.statusStrip.TabIndex = 1;
-            this.statusStrip.Text = "statusStrip1";
+            this.statusStrip.Text = "statusStrip";
             // 
             // toolStripStatusLabel
             // 
@@ -248,6 +252,14 @@
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
+            // 
+            // toolStripTipLabel
+            // 
+            this.toolStripTipLabel.Name = "toolStripTipLabel";
+            this.toolStripTipLabel.Size = new System.Drawing.Size(952, 17);
+            this.toolStripTipLabel.Spring = true;
+            this.toolStripTipLabel.Text = "...";
+            this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MapEdit
             // 
@@ -298,5 +310,6 @@
         private System.Windows.Forms.ToolStripMenuItem showItemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem halfSecretToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripTipLabel;
     }
 }

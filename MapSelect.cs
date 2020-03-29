@@ -13,6 +13,7 @@ namespace lotwtool
     public partial class MapSelect : Form, RomRefresh
     {
         int zoom = -4;
+        static int default_zoom = -4;
         int secret = 2;
         bool items = false;
         bool auto_refresh = false;
@@ -51,7 +52,6 @@ namespace lotwtool
         }
 
         public void refresh_all() { if (auto_refresh) redraw(); }
-
         public void refresh_chr(int tile) { if (auto_refresh) redraw(); }
         public void refresh_metatile(int page) { if (auto_refresh) redraw(); }
         public void refresh_map(int map) { if (auto_refresh) redraw(); }
@@ -60,12 +60,16 @@ namespace lotwtool
         public MapSelect(Main parent)
         {
             mp = parent;
+            zoom = default_zoom;
             InitializeComponent();
-            redraw();
+            toolStripTipLabel.Text = "Double Click = Open Map";
+            updateZoom();
+            //redraw(); // drawn by updateZoom
         }
 
         private void updateZoom()
         {
+            default_zoom = zoom;
             zoom1xToolStripMenuItem.Checked = zoom == 1;
             zoom2xToolStripMenuItem.Checked = zoom == 2;
             zoom3xToolStripMenuItem.Checked = zoom == 3;
@@ -74,6 +78,23 @@ namespace lotwtool
             zoomr4xToolStripMenuItem.Checked = zoom == -4;
             zoomr8xToolStripMenuItem.Checked = zoom == -8;
             zoomr16xToolStripMenuItem.Checked = zoom == -16;
+
+            int m = (zoom >= 0) ? zoom : 1;
+            int d = (zoom <  0) ? (-zoom) : 1;
+            
+            const int dspan = (1024 * 4 * 1) / 4;
+            int span = (1024 * 4 * m) / d;
+            int w = (1063-dspan)+span;
+            if (w > 1063) w = 1063;
+
+            const int dhspan = 614;
+            int hspan = (192 * (72/4) * m) / d;
+            int h = (704 - dhspan) + hspan;
+            if (h > 704) h = 704;
+            else w -= 16; // no vertical scrollbar needed
+
+            Size = new Size(w,h);
+
             redraw();
         }
 
@@ -152,7 +173,7 @@ namespace lotwtool
             toolStripStatusLabel.Text = string.Format("Map {0},{1} ({2})",x,y,(y*4)+x);
         }
 
-        private void pictureBox_MouseClick(object sender, MouseEventArgs e)
+        private void pictureBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int z = (zoom > 0) ? zoom : 1;
             int x = e.X / z;

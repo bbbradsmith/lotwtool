@@ -20,10 +20,11 @@ namespace lotwtool
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache;
-        uint[][] palette;
+        public uint[][] palette;
         public MapEditHex infohex = null;
+        public MapEditTile tilepal = null;
 
-        byte draw_tile = 0;
+        public byte draw_tile = 0;
         int drag_item = -1;
         int drag_y;
         int drag_item_y;
@@ -41,7 +42,7 @@ namespace lotwtool
             }
         }
 
-        int[] chr_set()
+        public int[] chr_set()
         {
             int ro = 16 + (1024 * room);
             int[] chri = new int[8];
@@ -176,9 +177,10 @@ namespace lotwtool
                 int x = mp.rom[ro+0x308]; // x grid
                 int y = mp.rom[ro+0x309]; // y pixel
                 int s = mp.rom[ro+0x30A]; // contents
+                int a = (s >= 8) ? 1 : 0; // palette is selected by type
                 x *= 16;
                 s = 0x81 + (s*4);
-                draw_sprite(d,s,1,x,y);
+                draw_sprite(d,s,a,x,y);
             }
         }
 
@@ -377,6 +379,7 @@ namespace lotwtool
 
         private void MapEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (tilepal != null) tilepal.Close();
             if (infohex != null) infohex.Close();
             mp.remove_refresh(this);
             mp.remove_map_edit(this);
@@ -481,7 +484,7 @@ namespace lotwtool
                     byte tile = mp.rom[ro+(tx*12)+ty];
                     tileinfo = string.Format("{0,2:D},{1,2:D} = {2:X2} ({3:X1}:{4:X2})",tx,ty,tile,tile>>6,tile&63);
                 }
-                modetips = "LMB = Draw, RMB = Pick";
+                modetips = "LMB = Draw, RMB = Pick, Ctrl+RMB = Tiles";
             }
             else if (mode == 1)
             {
@@ -524,7 +527,13 @@ namespace lotwtool
             if (mode == 0) // terrain
             {
                 if (e.Button == MouseButtons.Left) // start a draw
+                {
                     mp.rom_modify_start();
+                }
+                else if (e.Button == MouseButtons.Right && ModifierKeys.HasFlag(Keys.Control))
+                {
+                    tilesToolStripMenuItem_Click(sender, e);
+                }
             }
             else if (mode == 1) // item
             {
@@ -597,7 +606,14 @@ namespace lotwtool
                     else if (e.Button == MouseButtons.Right)
                     {
                         if (tx >= 0 && tx < 64 && ty >= 0 && ty < 12)
-                            draw_tile = mp.rom[ti];
+                        {
+                            byte ndt = mp.rom[ti];
+                            if (draw_tile != ndt)
+                            {
+                                draw_tile = ndt;
+                                if (tilepal != null) tilepal.redraw();
+                            }
+                        }
                     }
                 }
                 else if (mode == 1 && drag_item >= 0)
@@ -637,6 +653,13 @@ namespace lotwtool
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mp.undo();
+        }
+
+        private void tilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Main.raise_child(tilepal)) return;
+            tilepal = new MapEditTile(this, mp);
+            tilepal.Show();
         }
     }
 }

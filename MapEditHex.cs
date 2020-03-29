@@ -25,7 +25,6 @@ namespace lotwtool
                 if (l != 15) s += "\r\n";
             }
             textBox.Text = s;
-            
         }
 
         public MapEditHex(MapEdit me_, Main parent)

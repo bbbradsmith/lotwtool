@@ -14,6 +14,7 @@ namespace lotwtool
     {
         bool sprite = false;
         int zoom = 2;
+        static int default_zoom = 2;
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache = null;
@@ -119,10 +120,12 @@ namespace lotwtool
 
         public CHRSelect(Main parent)
         {
+            zoom = default_zoom;
             mp = parent;
             InitializeComponent();
             cache();
-            redraw();
+            updateZoom();
+            //redraw(); // updateZoom redraws
         }
 
         private void updateSpriteMode()
@@ -144,10 +147,18 @@ namespace lotwtool
 
         private void updateZoom()
         {
+            default_zoom = zoom;
             zoom1xToolStripMenuItem.Checked = zoom == 1;
             zoom2xToolStripMenuItem.Checked = zoom == 2;
             zoom3xToolStripMenuItem.Checked = zoom == 3;
             zoom4xToolStripMenuItem.Checked = zoom == 4;
+
+            const int dspan = 2 * 128;
+            int span = zoom * 128;
+            int w = (295-dspan)+span;
+            if (w < 187) w = 187; // make sure options are visible
+            Width = w;
+
             redraw();
         }
 

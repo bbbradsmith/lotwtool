@@ -19,7 +19,7 @@ namespace lotwtool
         Bitmap bmp = null;
         Bitmap bpal = null;
         int color_select = 0;
-        const uint GRID = 0xFF880000;
+        const uint GRID = 0xFF664400;
         const uint SELECT = 0xFFFF0000;
         bool drawing = false;
         int zoom = 8;
@@ -273,9 +273,12 @@ namespace lotwtool
             zoom12xToolStripMenuItem.Checked = zoom == 12;
             zoom16xToolStripMenuItem.Checked = zoom == 16;
 
+            int dspan = 8 * 24;
             int span = zoom * 24;
-            paletteBox.Top = (225-192)+span;
-            Size = new Size((208-192)+span, (336-(192+48))+(span+span/4));
+            paletteBox.Top = (225-dspan)+span;
+            int w = (208-dspan)+span;
+            if (w < 137) w = 137; // keep Options menu visible
+            Size = new Size(w, (336-(dspan+dspan/4))+(span+span/4));
             redraw();
         }
 

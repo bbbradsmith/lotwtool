@@ -117,12 +117,12 @@ namespace lotwtool
                 int mt = mp.rom[mto+(metatile*4)+i] + (attribute * 512);
                 if (secret != 2 || !replace)
                 {
-                    mp.chr_blit(d, chr_cache, mt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    Main.chr_blit(d, chr_cache, mt, (x*16)+XO[i], (y*16)+YO[i], zoom);
                 }
                 else // blend original and secret replacement
                 {
                     int smt = mp.rom[mto+((str&63)*4)+i] + ((str>>6) * 512);
-                    mp.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    Main.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
                 }
             }
         }
@@ -147,10 +147,10 @@ namespace lotwtool
             int t = ((s & 1)<<8) | (s & 0xFE); // NES 16px sprite tile selector
             t |= (512 * (a & 3)); // select palette
 
-            mp.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom);
-            mp.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom);
-            mp.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom);
-            mp.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom);
+            Main.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom);
+            Main.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom);
+            Main.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom);
+            Main.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom);
         }
 
         void draw_items(BitmapData d)

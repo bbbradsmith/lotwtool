@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CHREdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CHREdit.Designer.cs">
+      <DependentUpon>CHREdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="CHRSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +99,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CHREdit.resx">
+      <DependentUpon>CHREdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CHRSelect.resx">
       <DependentUpon>CHRSelect.cs</DependentUpon>
     </EmbeddedResource>

@@ -60,7 +60,7 @@ namespace lotwtool
                     {
                         t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
                     }
-                    mp.chr_blit(d, chr_cache, to + t, x * 8, yo + y * 8, z);
+                    Main.chr_blit(d, chr_cache, to + t, x * 8, yo + y * 8, z);
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace lotwtool
         public void refresh_chr(int tile)
         {
             cache_tile(tile);
-            redraw(); // TODO might redraw just one page?
+            redraw();
         }
 
         public void refresh_metatile(int page) { } // ignore
@@ -181,7 +181,7 @@ namespace lotwtool
             {
                 t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
             }
-            toolStripStatusLabel.Text = string.Format("CHR ${0:X2} {1:D}",page,t&63);
+            toolStripStatusLabel.Text = string.Format("CHR {0:X2}:{1:X2}",page,t&63);
             if (page != highlight)
             {
                 BitmapData d = draw_lock();
@@ -325,6 +325,20 @@ namespace lotwtool
                     MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
                 }
             }
+        }
+
+        private void pictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            int x = e.X / (zoom * 8);
+            int y = e.Y / (zoom * 8);
+            int page = y / 4;
+            int t = x + (y * 16);
+            if (sprite)
+            {
+                t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
+            }
+            if (t >= 0 && t < (mp.chr_count * 64))
+                mp.add_chr_edit(t,sprite);
         }
     }
 }

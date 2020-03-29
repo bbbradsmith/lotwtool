@@ -168,7 +168,7 @@ namespace lotwtool
             // decodes a tile from the ROM, and stores it in cache with given palette
             int ro = chr_offset + (rom_index * 16);
             int co = cache_index * 64;
-            if ((ro + 16) > rom.Length)
+            if ((ro + 16) > rom.Length || ro < chr_offset)
             {
                 for (int i=0; i<16; ++i) cache[co+i] = 0;
                 return;
@@ -187,7 +187,7 @@ namespace lotwtool
             }
         }
 
-        public void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        public static void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
         {
             // draws a cached tile on a locked bitmap data
             x *= zoom;
@@ -221,7 +221,7 @@ namespace lotwtool
             }
         }
 
-        public void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom)
+        public static void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom)
         {
             // draws a blend of two cached tiles
             x *= zoom;
@@ -259,7 +259,7 @@ namespace lotwtool
             }
         }
 
-        public void chr_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        public static void chr_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
         {
             x *= zoom;
             y *= zoom;
@@ -294,6 +294,64 @@ namespace lotwtool
             }
         }
 
+        public static void draw_hline(BitmapData bd, int x, int y, int w, uint c) // draws a horizontal line
+        {
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                int o = (stride * y) + x;
+                for (int i=0; i<w; ++i)
+                {
+                    braw[o] = c;
+                    ++o;
+                }
+            }
+        }
+
+        public static void draw_vline(BitmapData bd, int x, int y, int h, uint c) // draws a vertical line
+        {
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                int o = (stride * y) + x;
+                for (int i=0; i<h; ++i)
+                {
+                    braw[o] = c;
+                    o += stride;
+                }
+            }
+        }
+
+        public static void draw_box(BitmapData bd, int x, int y, int w, int h, uint c) // draws a box
+        {
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                int o = (stride * y) + x;
+                for (int j=0; j<h; ++j)
+                {
+                    int ol = o;
+                    for (int i=0; i<w; ++i)
+                    {
+                        braw[ol] = c;
+                        ++ol;
+                    }
+                    o += stride;
+                }
+            }
+        }
+
+        public static void draw_outbox(BitmapData bd, int x, int y, int w, int h, uint c) // draws a box outline
+        {
+            draw_hline(bd,x,y,w,c);
+            draw_vline(bd,x,y,h,c);
+            draw_hline(bd,x,y+h-1,w,c);
+            draw_vline(bd,x+w-1,y,h,c);
+        }
+
         public string romhex(int start, int length)
         {
             string s = "";
@@ -314,7 +372,7 @@ namespace lotwtool
             List<int> a = undo_stack.Pop();
             if (a.Count < 1) { undo(); return; } // skip any null undo
 
-            for (int i=0; i<a.Count; i+=2)
+            for (int i=a.Count-2; i>=0; i-=2)
             {
                 int addr = a[i+0];
                 byte value =  (byte)a[i+1];
@@ -416,6 +474,13 @@ namespace lotwtool
             {
                 removed = mapedits.Remove(m);
             } while (removed);
+        }
+
+        public void add_chr_edit(int tile, bool sprite)
+        {
+            CHREdit ce = new CHREdit(this, tile, sprite);
+            ce.Show();
+            add_refresh(ce);
         }
 
         public void close_children()

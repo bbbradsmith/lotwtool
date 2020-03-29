@@ -225,15 +225,15 @@
             // 
             // toolStripStatusLabel
             // 
-            this.toolStripStatusLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripStatusLabel.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(32, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabel.Text = "...";
             // 
             // toolStripTipLabel
             // 
             this.toolStripTipLabel.Name = "toolStripTipLabel";
-            this.toolStripTipLabel.Size = new System.Drawing.Size(983, 17);
+            this.toolStripTipLabel.Size = new System.Drawing.Size(956, 17);
             this.toolStripTipLabel.Spring = true;
             this.toolStripTipLabel.Text = "...";
             this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

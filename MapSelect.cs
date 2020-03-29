@@ -15,6 +15,7 @@ namespace lotwtool
         int zoom = -4;
         int secret = 2;
         bool items = false;
+        bool auto_refresh = false;
         Main mp;
         Bitmap bmp;
 
@@ -49,9 +50,11 @@ namespace lotwtool
             pictureBox.Image = bmp;
         }
 
-        public void refresh_all() { } // ignored, use F5 refresh
-        public void refresh_chr(int tile) { } // ignored, use F5 refresh
-        public void refresh_metatile(int page) { } // ignored, use F5 refresh
+        public void refresh_all() { if (auto_refresh) redraw(); }
+
+        public void refresh_chr(int tile) { if (auto_refresh) redraw(); }
+        public void refresh_metatile(int page) { if (auto_refresh) redraw(); }
+        public void refresh_map(int map) { if (auto_refresh) redraw(); }
         public void refresh_close() { this.Close(); }
 
         public MapSelect(Main parent)
@@ -207,6 +210,13 @@ namespace lotwtool
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            redraw();
+        }
+
+        private void autoRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            auto_refresh = !auto_refresh;
+            autoRefreshToolStripMenuItem.Checked = auto_refresh;
             redraw();
         }
     }

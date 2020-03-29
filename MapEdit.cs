@@ -329,6 +329,8 @@ namespace lotwtool
             if (page == mp.rom[ro+0x300]) redraw();
         }
 
+        public void refresh_map(int map) { } // ignore, a map edit always comes from here
+
         public void refresh_close() { this.Close(); }
 
         public MapEdit(Main parent, int room_)
@@ -371,11 +373,6 @@ namespace lotwtool
         private void zoom4xToolStripMenuItem_Click(object sender, EventArgs e)
         {
             zoom = 4; updateZoom();
-        }
-
-        private void pictureBox_Click(object sender, EventArgs e)
-        {
-            // TODO editing
         }
 
         private void MapEdit_FormClosing(object sender, FormClosingEventArgs e)
@@ -553,6 +550,7 @@ namespace lotwtool
                             mp.rom_modify(ro+0x320+(drag_item*16)+i, monster[i], true);
                         redraw();
                         redraw_info();
+                        mp.refresh_map(room);
                     }
                 }
                 else // try to pick up an item
@@ -592,6 +590,7 @@ namespace lotwtool
                             {
                                 mp.rom_modify(ti,draw_tile,true);
                                 redraw();
+                                mp.refresh_map(room);
                             }
                         }
                     }
@@ -622,6 +621,7 @@ namespace lotwtool
                     {
                         redraw();
                         redraw_info();
+                        mp.refresh_map(room);
                     }
                 }
             }

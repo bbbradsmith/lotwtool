@@ -16,6 +16,7 @@ namespace lotwtool
         void refresh_all();
         void refresh_chr(int tile);
         void refresh_metatile(int page);
+        void refresh_map(int map);
         void refresh_close();
     }
 
@@ -43,18 +44,37 @@ namespace lotwtool
             0x6A036F, 0x71021D, 0x651000, 0x461E00,
             0x232D00, 0x003900, 0x003C00, 0x003720,
             0x003266, 0x000000, 0x000000, 0x000000,
+
             0xB0B1B0, 0x0955EB, 0x473DFF, 0x7730FE,
             0xAE2CCE, 0xBC2964, 0xB43900, 0x8F4B00,
             0x635F00, 0x1B7000, 0x007700, 0x00733B,
             0x006D99, 0x000000, 0x000000, 0x000000,
+
             0xFFFFFF, 0x4DADFF, 0x8694FF, 0xB885FF,
             0xF17FFF, 0xFF79D4, 0xFF865F, 0xF19710,
             0xC8AB00, 0x7EBE00, 0x47C81F, 0x2BC86F,
             0x2EC4CC, 0x50514D, 0x000000, 0x000000,
+
             0xFFFFFF, 0xB9E5FF, 0xD0DBFF, 0xE6D5FF,
             0xFDD1FF, 0xFFCEF5, 0xFFD4C5, 0xFFDAA3,
             0xEEE290, 0xD0EB8E, 0xB9EFA5, 0xAEEFC7,
             0xAEEEEE, 0xBABCB9, 0x000000, 0x000000,
+        };
+
+        public static readonly uint[] GREY =
+        {
+            0xFF000000,
+            0xFF555555,
+            0xFFAAAAAA,
+            0xFFFFFFFF,
+        };
+
+        public static readonly uint[] HIGHLIGHT =
+        {
+            0xFF331111,
+            0xFF663333,
+            0xFFCC4444,
+            0xFFFFCCCC,
         };
 
         // Common code
@@ -349,6 +369,11 @@ namespace lotwtool
             foreach (RomRefresh r in refreshers) r.refresh_metatile(page);
         }
 
+        public void refresh_map(int map)
+        {
+            foreach (RomRefresh r in refreshers) r.refresh_map(map);
+        }
+
         public void refresh_close()
         {
             this.Close(); // shouldn't be used?
@@ -494,12 +519,12 @@ namespace lotwtool
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ABOUT_TEXT =
-                "LotW Tool\r\n" +
-                "\r\n" +
-                "An editor for Legacy of the Wizard (NES)\r\n" +
-                "and Dragon Slayer IV (Famicom).\r\n" +
-                "\r\n" +
-                "Brad Smith\r\n" +
+                "LotW Tool\n" +
+                "\n" +
+                "An editor for Legacy of the Wizard (NES)\n" +
+                "and Dragon Slayer IV (Famicom).\n" +
+                "\n" +
+                "Brad Smith\n" +
                 "Version: " + VERSION;
             MessageBox.Show(ABOUT_TEXT, "About the LotW Tool");
         }

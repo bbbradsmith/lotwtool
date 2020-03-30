@@ -58,7 +58,7 @@ namespace lotwtool
             return chri;
         }
 
-        void cache()
+        public void cache()
         {
             int ro = 16 + (1024 * room);
 
@@ -68,7 +68,7 @@ namespace lotwtool
                 palette[i] = new uint[4];
                 for (int j=0; j<4; ++j)
                 {
-                    int p = mp.rom[ro+0x3E0+(i*4)+j];
+                    int p = mp.rom[ro+0x3E0+(i*4)+j] & 63;
                     palette[i][j] = Main.NES_PALETTE[p] | 0xFF000000;
                     if (i>=4 && j==0) palette[i][j] = 0x00000000;
                 }
@@ -233,7 +233,7 @@ namespace lotwtool
             return new Tuple<int,int>(tx,ty);
         }
 
-        void redraw() // redraws just the map window
+        public void redraw() // redraws just the map window
         {
             int w = 256 * 4 * zoom;
             int h = 192 * zoom;

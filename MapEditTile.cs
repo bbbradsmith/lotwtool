@@ -197,9 +197,25 @@ namespace lotwtool
 
         private void paletteBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            int px = e.X / (8 * zoom);
+            if (e.Button == MouseButtons.Right && px >= 0 && px < 16)
             {
-                // TODO open editor
+                int ro = 16 + (1024 * me.room) + 0x3E0 + px;
+                byte old = mp.rom[ro];
+                PalettePick p = new PalettePick(old & 63);
+                p.StartPosition = FormStartPosition.CenterParent;
+                if (p.ShowDialog() == DialogResult.OK)
+                {
+                    byte np = (byte)p.picked;
+                    if (old != np)
+                    {
+                        mp.rom_modify(ro, np);
+                        mp.refresh_map(me.room);
+                        me.cache();
+                        me.redraw(); // not covered by refresh_map
+                        redraw();
+                    }
+                }
             }
             else paletteBox_MouseMove(sender,e);
         }

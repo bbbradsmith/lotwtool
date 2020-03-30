@@ -39,20 +39,20 @@
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxFilename = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelCHRCountValue = new System.Windows.Forms.Label();
             this.labelMapCount = new System.Windows.Forms.Label();
             this.buttonMapEdit = new System.Windows.Forms.Button();
             this.labelCHRCount = new System.Windows.Forms.Label();
             this.buttonCHREdit = new System.Windows.Forms.Button();
             this.labelMapCountValue = new System.Windows.Forms.Label();
-            this.labelCHRCountValue = new System.Windows.Forms.Label();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -144,6 +144,33 @@
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mapsToolStripMenuItem,
+            this.CHRToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // mapsToolStripMenuItem
+            // 
+            this.mapsToolStripMenuItem.Enabled = false;
+            this.mapsToolStripMenuItem.Name = "mapsToolStripMenuItem";
+            this.mapsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.mapsToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.mapsToolStripMenuItem.Text = "&Maps";
+            this.mapsToolStripMenuItem.Click += new System.EventHandler(this.mapsToolStripMenuItem_Click);
+            // 
+            // CHRToolStripMenuItem
+            // 
+            this.CHRToolStripMenuItem.Enabled = false;
+            this.CHRToolStripMenuItem.Name = "CHRToolStripMenuItem";
+            this.CHRToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.CHRToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.CHRToolStripMenuItem.Text = "&CHR";
+            this.CHRToolStripMenuItem.Click += new System.EventHandler(this.CHRToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -155,7 +182,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -208,6 +235,19 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(553, 87);
             this.tableLayoutPanel2.TabIndex = 1;
+            // 
+            // labelCHRCountValue
+            // 
+            this.labelCHRCountValue.AutoSize = true;
+            this.labelCHRCountValue.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.labelCHRCountValue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.labelCHRCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelCHRCountValue.Location = new System.Drawing.Point(417, 43);
+            this.labelCHRCountValue.Name = "labelCHRCountValue";
+            this.labelCHRCountValue.Size = new System.Drawing.Size(133, 44);
+            this.labelCHRCountValue.TabIndex = 7;
+            this.labelCHRCountValue.Text = "0";
+            this.labelCHRCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelMapCount
             // 
@@ -268,46 +308,6 @@
             this.labelMapCountValue.Text = "0";
             this.labelMapCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // labelCHRCountValue
-            // 
-            this.labelCHRCountValue.AutoSize = true;
-            this.labelCHRCountValue.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.labelCHRCountValue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.labelCHRCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCHRCountValue.Location = new System.Drawing.Point(417, 43);
-            this.labelCHRCountValue.Name = "labelCHRCountValue";
-            this.labelCHRCountValue.Size = new System.Drawing.Size(133, 44);
-            this.labelCHRCountValue.TabIndex = 7;
-            this.labelCHRCountValue.Text = "0";
-            this.labelCHRCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mapsToolStripMenuItem,
-            this.CHRToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "&Tools";
-            // 
-            // mapsToolStripMenuItem
-            // 
-            this.mapsToolStripMenuItem.Enabled = false;
-            this.mapsToolStripMenuItem.Name = "mapsToolStripMenuItem";
-            this.mapsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.mapsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mapsToolStripMenuItem.Text = "&Maps";
-            this.mapsToolStripMenuItem.Click += new System.EventHandler(this.mapsToolStripMenuItem_Click);
-            // 
-            // CHRToolStripMenuItem
-            // 
-            this.CHRToolStripMenuItem.Enabled = false;
-            this.CHRToolStripMenuItem.Name = "CHRToolStripMenuItem";
-            this.CHRToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.CHRToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.CHRToolStripMenuItem.Text = "&CHR";
-            this.CHRToolStripMenuItem.Click += new System.EventHandler(this.CHRToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AllowDrop = true;
@@ -321,7 +321,6 @@
             this.Name = "Main";
             this.Text = "LotW Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
-            this.Load += new System.EventHandler(this.Main_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Main_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Main_DragEnter);
             this.menuStrip.ResumeLayout(false);

@@ -103,6 +103,12 @@
     <Compile Include="MapSelect.Designer.cs">
       <DependentUpon>MapSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Metatile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Metatile.Designer.cs">
+      <DependentUpon>Metatile.cs</DependentUpon>
+    </Compile>
     <Compile Include="PalettePick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapSelect.resx">
       <DependentUpon>MapSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Metatile.resx">
+      <DependentUpon>Metatile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PalettePick.resx">
       <DependentUpon>PalettePick.cs</DependentUpon>

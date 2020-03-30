@@ -211,8 +211,8 @@ namespace lotwtool
                     if ((color_select & 2) != 0) np1 |= bit;
 
                     bool changed = false;
-                    if (np0 != p0) { mp.rom_modify(co+0,np0,true); changed = true; }
-                    if (np1 != p1) { mp.rom_modify(co+8,np1,true); changed = true; }
+                    changed |= mp.rom_modify(co+0,np0,true);
+                    changed |= mp.rom_modify(co+8,np1,true);
                     if (changed)
                     {
                         //redraw(); // refresh_chr will do this

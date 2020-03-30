@@ -160,9 +160,39 @@ namespace lotwtool
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            int tx = e.X / (16 * zoom);
+            int ty = e.Y / (16 * zoom);
+            int t = (ty * 8) + tx;
+
+            if (e.Button == MouseButtons.Right && tx >= 0 && tx < 8 && ty >= 0 && ty < 8)
             {
-                // TODO open editor
+                int ro = 16 + (1024 * me.room);
+                byte mt_page = mp.rom[ro+0x300];
+                byte chr0 = mp.rom[ro+0x305];
+                byte chr1 = mp.rom[ro+0x306];
+                Metatile m = new Metatile(mp,(mt_page*64)+t,chr0,chr1);
+                m.StartPosition = FormStartPosition.CenterParent;
+                if (m.ShowDialog() == DialogResult.OK)
+                {
+                    int mto = 16 + (1024 * 8 * 9) + (mt_page * 256) + (t * 4);
+
+                    bool chrchgd = false;
+                    mp.rom_modify_start();
+                    chrchgd |= mp.rom_modify(ro+0x305,(byte)m.chr[0],true);
+                    chrchgd |= mp.rom_modify(ro+0x306,(byte)m.chr[1],true);
+                    bool changed = chrchgd;
+                    changed |= mp.rom_modify(mto+0,(byte)m.mt[0],true);
+                    changed |= mp.rom_modify(mto+1,(byte)m.mt[1],true);
+                    changed |= mp.rom_modify(mto+2,(byte)m.mt[2],true);
+                    changed |= mp.rom_modify(mto+3,(byte)m.mt[3],true);
+                    if (changed)
+                    {
+                        cache();
+                        me.cache();
+                    }
+                    if (changed)
+                        mp.refresh_metatile(mt_page);
+                }
             }
             else pictureBox_MouseMove(sender,e);
         }
@@ -207,9 +237,8 @@ namespace lotwtool
                 if (p.ShowDialog() == DialogResult.OK)
                 {
                     byte np = (byte)p.picked;
-                    if (old != np)
+                    if (mp.rom_modify(ro, np))
                     {
-                        mp.rom_modify(ro, np);
                         mp.refresh_map(me.room);
                         me.cache();
                         me.redraw(); // not covered by refresh_map

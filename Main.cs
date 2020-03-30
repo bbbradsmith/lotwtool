@@ -68,10 +68,10 @@ namespace lotwtool
 
         public static readonly uint[] HIGHLIGHT =
         {
-            0xFF331111,
-            0xFF663333,
-            0xFFCC4444,
-            0xFFFFCCCC,
+            0xFF662244,
+            0xFF883366,
+            0xFFCC4488,
+            0xFFFFCCDD,
         };
 
         // Common code
@@ -378,7 +378,7 @@ namespace lotwtool
             refresh_all();
         }
 
-        public void rom_modify(int address, byte value, bool append = false)
+        public bool rom_modify(int address, byte value, bool append = false) // true if a byte was changed
         {
             byte old = rom[address];
             List<int> a;
@@ -400,6 +400,7 @@ namespace lotwtool
             }
             undo_stack.Push(a);
             rom[address] = value;
+            return old != value;
         }
 
         public void rom_modify_start() // begins a new undo step

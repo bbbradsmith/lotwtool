@@ -261,7 +261,7 @@ namespace lotwtool
             cache();
             draw_bg(d);
             draw_items(d);
-            //debug_room(); // easy way to query all the rooms
+            debug_room(); // easy way to query all the rooms
         }
 
         public void debug_room()
@@ -274,6 +274,9 @@ namespace lotwtool
             string h = string.Format("debug_room {0:D2},{1:D2} {2:D2}",rx,ry,room);
 
             string s = "";
+
+            // 300 possible metatile pages
+            /*s += string.Format("metatile: {0:X2}",mp.rom[ro+0x300]);*/
 
             // 302/303 secret tile possible values
             /*s += string.Format("secret tile {0:X2} -> {1:X2}",mp.rom[ro+0x302],mp.rom[ro+0x303]);*/
@@ -314,6 +317,11 @@ namespace lotwtool
             cache();
             redraw();
             redraw_info();
+            if (tilepal != null)
+            {
+                tilepal.cache();
+                tilepal.redraw();
+            }
         }
 
         public void refresh_chr(int tile)
@@ -329,7 +337,11 @@ namespace lotwtool
         public void refresh_metatile(int page)
         {
             int ro = 16 + (1024 * room);
-            if (page == mp.rom[ro+0x300]) redraw();
+            if (page == mp.rom[ro+0x300])
+            {
+                redraw();
+                if (tilepal != null) tilepal.redraw();
+            }
         }
 
         public void refresh_map(int map) { } // ignore, a map edit always comes from here
@@ -613,9 +625,8 @@ namespace lotwtool
                     {
                         if (tx >= 0 && tx < 64 && ty >= 0 && ty < 12)
                         {
-                            if (draw_tile != mp.rom[ti])
+                            if (mp.rom_modify(ti,draw_tile,true))
                             {
-                                mp.rom_modify(ti,draw_tile,true);
                                 redraw();
                                 mp.refresh_map(room);
                             }
@@ -653,8 +664,8 @@ namespace lotwtool
                     if (drag_item == 12) romx = ro + 0x308; // treasure
                     int romy = romx + 1;
 
-                    if (bx != mp.rom[romx]) { mp.rom_modify(romx,bx,true); changed = true; }
-                    if (by != mp.rom[romy]) { mp.rom_modify(romy,by,true); changed = true; }
+                    changed |= mp.rom_modify(romx,bx,true);
+                    changed |= mp.rom_modify(romy,by,true);
                     if (changed)
                     {
                         redraw();

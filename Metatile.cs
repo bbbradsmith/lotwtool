@@ -107,8 +107,19 @@ namespace lotwtool
 
             if (e.Button == MouseButtons.Right && c >= 0 && c < 2)
             {
-                // TODO
-                // select CHR!
+                CHRSelect cs = new CHRSelect(mp,true);
+                cs.preselect = chr[c];
+                cs.dualpage = true;
+                cs.sprite = false;
+                if (cs.ShowDialog() == DialogResult.OK)
+                {
+                    if (cs.highlight >= 0 && cs.highlight < mp.chr_count)
+                    {
+                        chr[c] = cs.highlight;
+                        cache();
+                        redraw();
+                    }
+                }
             }
             tileBox_MouseMove(sender,e);
         }

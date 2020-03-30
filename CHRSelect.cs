@@ -12,26 +12,29 @@ namespace lotwtool
 {
     public partial class CHRSelect : Form, RomRefresh
     {
-        bool sprite = false;
+        public bool sprite = false;
         int zoom = 2;
         static int default_zoom = 2;
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache = null;
-        int highlight = -1;
+        public int highlight = -1;
+        public int preselect = -1;
         public bool dualpage = false; // for selecting 2k CHR pages
+        bool modal = false;
 
         void cache_tile(int i)
         {
             int cc_tiles = 64 * mp.chr_count;
             mp.chr_cache(i, i, chr_cache, Main.GREY);
             mp.chr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
+            mp.chr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
         }
 
         void cache()
         {
             int cc_tiles = 64 * mp.chr_count;
-            chr_cache = new uint[2 * cc_tiles * 64];
+            chr_cache = new uint[3 * cc_tiles * 64];
             for (int i = 0; i < (mp.chr_count * 64); ++i)
             {
                 cache_tile(i);
@@ -45,7 +48,11 @@ namespace lotwtool
             int z = zoom;
             int yo = page * 32;
             int to = page * 64;
-            if (highlight) to += (64 * mp.chr_count); // use HIGHLIGHT version
+            if (highlight)
+                to += (64 * mp.chr_count); // use HIGHLIGHT version
+            else if (page == preselect || (dualpage && page == (preselect ^ 1)))
+                to += (2 * 64 * mp.chr_count); // use PRESELECT version
+
             if (export)
             {
                 yo = 0;
@@ -118,14 +125,28 @@ namespace lotwtool
 
         public void refresh_close() { this.Close(); }
 
-        public CHRSelect(Main parent)
+        public CHRSelect(Main parent, bool modal_=false)
         {
             zoom = default_zoom;
             mp = parent;
+            modal = modal_;
             InitializeComponent();
+            if (modal)
+            {
+                actionToolStripMenuItem.Enabled = false;
+                modeToolStripMenuItem.Enabled = false;
+                undoToolStripMenuItem.Enabled = false; // just in case action doesn't disable it too
+                pictureBox.ContextMenuStrip = null;
+            }
+        }
+
+        private void CHRSelect_Shown(object sender, EventArgs e)
+        {
             cache();
             updateZoom();
             //redraw(); // updateZoom redraws
+            if (preselect >= 0)
+                flowLayoutPanel.AutoScrollPosition = new Point(0,(preselect * 32 * zoom)-64);
         }
 
         private void updateSpriteMode()
@@ -155,7 +176,7 @@ namespace lotwtool
 
             const int dspan = 2 * 128;
             int span = zoom * 128;
-            int w = (295-dspan)+span;
+            int w = (301-dspan)+span;
             if (w < 187) w = 187; // make sure options are visible
             Width = w;
 
@@ -349,7 +370,26 @@ namespace lotwtool
                 t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
             }
             if (t >= 0 && t < (mp.chr_count * 64))
-                mp.add_chr_edit(t,sprite);
+            {
+                if (!modal)
+                {
+                    mp.add_chr_edit(t,sprite);
+                }
+                else
+                {
+                    highlight = t / 64;
+                    Close();
+                    DialogResult = DialogResult.OK;
+                }
+            }
+        }
+
+        private void CHRSelect_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape ||
+                e.KeyCode == Keys.Enter ||
+                e.KeyCode == Keys.Return)
+                Close();
         }
     }
 }

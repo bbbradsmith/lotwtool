@@ -34,7 +34,7 @@
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.spriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +49,7 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelDummy = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -60,11 +61,11 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.actionToolStripMenuItem,
-            this.zoomToolStripMenuItem,
+            this.modeToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(279, 24);
+            this.menuStrip.Size = new System.Drawing.Size(285, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -92,14 +93,14 @@
             this.saveImageToolStripMenuItem.Text = "Save &Image...";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
             // 
-            // zoomToolStripMenuItem
+            // modeToolStripMenuItem
             // 
-            this.zoomToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.backgroundToolStripMenuItem,
             this.spriteToolStripMenuItem});
-            this.zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.zoomToolStripMenuItem.Text = "&Mode";
+            this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.modeToolStripMenuItem.Text = "&Mode";
             // 
             // backgroundToolStripMenuItem
             // 
@@ -132,7 +133,7 @@
             // 
             this.zoom1xToolStripMenuItem.Name = "zoom1xToolStripMenuItem";
             this.zoom1xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
-            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom1xToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.zoom1xToolStripMenuItem.Text = "Zoom &1x";
             this.zoom1xToolStripMenuItem.Click += new System.EventHandler(this.zoom1xToolStripMenuItem_Click);
             // 
@@ -142,7 +143,7 @@
             this.zoom2xToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.zoom2xToolStripMenuItem.Name = "zoom2xToolStripMenuItem";
             this.zoom2xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom2xToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.zoom2xToolStripMenuItem.Text = "Zoom &2x";
             this.zoom2xToolStripMenuItem.Click += new System.EventHandler(this.zoom2xToolStripMenuItem_Click);
             // 
@@ -150,7 +151,7 @@
             // 
             this.zoom3xToolStripMenuItem.Name = "zoom3xToolStripMenuItem";
             this.zoom3xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom3xToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.zoom3xToolStripMenuItem.Text = "Zoom &3x";
             this.zoom3xToolStripMenuItem.Click += new System.EventHandler(this.zoom3xToolStripMenuItem_Click);
             // 
@@ -158,7 +159,7 @@
             // 
             this.zoom4xToolStripMenuItem.Name = "zoom4xToolStripMenuItem";
             this.zoom4xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
-            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.zoom4xToolStripMenuItem.Text = "Zoom &4x";
             this.zoom4xToolStripMenuItem.Click += new System.EventHandler(this.zoom4xToolStripMenuItem_Click);
             // 
@@ -168,7 +169,7 @@
             this.toolStripStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 420);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(279, 22);
+            this.statusStrip.Size = new System.Drawing.Size(285, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -183,10 +184,11 @@
             this.flowLayoutPanel.AutoScroll = true;
             this.flowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel.Controls.Add(this.pictureBox);
+            this.flowLayoutPanel.Controls.Add(this.labelDummy);
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 24);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(279, 396);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(285, 396);
             this.flowLayoutPanel.TabIndex = 3;
             // 
             // pictureBox
@@ -224,19 +226,30 @@
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
+            // labelDummy
+            // 
+            this.labelDummy.AutoSize = true;
+            this.labelDummy.Location = new System.Drawing.Point(109, 0);
+            this.labelDummy.Name = "labelDummy";
+            this.labelDummy.Size = new System.Drawing.Size(0, 13);
+            this.labelDummy.TabIndex = 1;
+            // 
             // CHRSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(279, 442);
+            this.ClientSize = new System.Drawing.Size(285, 442);
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "CHRSelect";
             this.Text = "CHR Select";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CHRSelect_FormClosing);
+            this.Shown += new System.EventHandler(this.CHRSelect_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CHRSelect_KeyDown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -262,7 +275,7 @@
         private System.Windows.Forms.ToolStripMenuItem zoom2xToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoom3xToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoom4xToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zoomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundToolStripMenuItem;
@@ -271,5 +284,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.Label labelDummy;
     }
 }

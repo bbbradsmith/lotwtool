@@ -74,6 +74,14 @@ namespace lotwtool
             0xFFFFCCDD,
         };
 
+        public static readonly uint[] PRESELECT =
+        {
+            0xFF446622,
+            0xFF668833,
+            0xFF88CC44,
+            0xFFDDFFCC,
+        };
+
         // Common code
 
         bool changed()

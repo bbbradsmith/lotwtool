@@ -112,6 +112,8 @@ namespace lotwtool
             cache();
             updateZoom();
             //redraw(); // done by updateZoom
+            toolStripTipLabel.Text = "LMB = Pick, RMB = Edit";
+            updateTileStatus(me.draw_tile);
         }
 
         private void MapEditTile_FormClosing(object sender, FormClosingEventArgs e)
@@ -131,8 +133,8 @@ namespace lotwtool
             const int dpspan = 16;
             int span = zoom * 128;
             int pspan = zoom * 8;
-            paletteBox.Top = (287-dspan)+span;
-            Size = new Size((272-dspan)+span, (364-(dspan+dpspan))+(span+pspan));
+            paletteBox.Top = (283-dspan)+span;
+            Size = new Size((272-dspan)+span, (360-(dspan+dpspan))+(span+pspan));
             redraw();
         }
 
@@ -156,5 +158,65 @@ namespace lotwtool
             zoom = 4; updateZoom();
         }
 
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // TODO open editor
+            }
+            else pictureBox_MouseMove(sender,e);
+        }
+
+        public void updateTileStatus(byte t, int p = -1)
+        {
+            string s = string.Format("{0:X2} ({1:X1}:{2:X2})",t,t>>6,t&63);
+            if (p >= 0 && p < 16)
+            {
+                int ro = 16 + (1024 * me.room);
+                s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
+            }
+            toolStripStatusLabel.Text = s;
+        }
+
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            int tx = e.X / (16 * zoom);
+            int ty = e.Y / (16 * zoom);
+            int t = (ty * 8) + tx;
+
+            byte new_tile = (byte)((me.draw_tile & 0xC0) | t);
+
+            if (e.Button == MouseButtons.Left)
+            {
+                me.draw_tile = new_tile;
+                redraw();
+            }
+
+            updateTileStatus(new_tile);
+        }
+
+        private void paletteBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // TODO open editor
+            }
+            else paletteBox_MouseMove(sender,e);
+        }
+
+        private void paletteBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            int px = e.X / (8 * zoom);
+            int p = px / 4;
+            byte new_tile = (byte)((me.draw_tile & 63) | (p<<6));
+
+            if (e.Button == MouseButtons.Left)
+            {
+                me.draw_tile = new_tile;
+                redraw();
+            }
+
+            updateTileStatus(new_tile,px);
+        }
     }
 }

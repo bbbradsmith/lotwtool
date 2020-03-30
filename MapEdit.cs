@@ -13,6 +13,7 @@ namespace lotwtool
     public partial class MapEdit : Form, RomRefresh
     {
         int zoom = 1;
+        static int default_zoom = 1;
         int mode = 0; // 0 terrain edit, 1 item edit
         int secret = 2; // 0 none, 1 replace, 2 blend
         bool items = true;
@@ -339,21 +340,38 @@ namespace lotwtool
         {
             mp = parent;
             room = room_;
+            zoom = default_zoom;
             InitializeComponent();
+
             int x = room % 4;
             int y = room / 4;
             Text = string.Format("Map {0},{1} ({2})",x,y,(y*4)+x);
+            upToolStripMenuItem.Enabled = y > 0;
+            downToolStripMenuItem.Enabled = (room+4) < mp.map_count;
+            leftToolStripMenuItem.Enabled = x > 0;
+            rightToolStripMenuItem.Enabled = (x < 3) && ((room+1) < mp.map_count);
+
             cache();
-            redraw();
+            updateZoom();
+            //redraw(); // updateZoom does this
             updateStatus();
         }
 
         private void updateZoom()
         {
+            default_zoom = zoom;
             zoom1xToolStripMenuItem.Checked = zoom == 1;
             zoom2xToolStripMenuItem.Checked = zoom == 2;
             zoom3xToolStripMenuItem.Checked = zoom == 3;
             zoom4xToolStripMenuItem.Checked = zoom == 4;
+
+            int dspan = 192;
+            int span = 192 * zoom;
+            int h = (282-dspan)+span;
+            if (zoom > 1) // scrollbar
+                h += 18;
+            Height = h;
+
             redraw();
         }
 
@@ -611,7 +629,11 @@ namespace lotwtool
                             if (draw_tile != ndt)
                             {
                                 draw_tile = ndt;
-                                if (tilepal != null) tilepal.redraw();
+                                if (tilepal != null)
+                                {
+                                    tilepal.updateTileStatus(draw_tile);
+                                    tilepal.redraw();
+                                }
                             }
                         }
                     }
@@ -660,6 +682,26 @@ namespace lotwtool
             if (Main.raise_child(tilepal)) return;
             tilepal = new MapEditTile(this, mp);
             tilepal.Show();
+        }
+
+        private void upToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.add_map_edit(room-4);
+        }
+
+        private void downToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.add_map_edit(room+4);
+        }
+
+        private void leftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.add_map_edit(room-1);
+        }
+
+        private void rightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.add_map_edit(room+1);
         }
     }
 }

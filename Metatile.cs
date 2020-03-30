@@ -108,6 +108,7 @@ namespace lotwtool
             if (e.Button == MouseButtons.Right && c >= 0 && c < 2)
             {
                 CHRSelect cs = new CHRSelect(mp,true);
+                cs.StartPosition = FormStartPosition.CenterParent;
                 cs.preselect = chr[c];
                 cs.dualpage = true;
                 cs.sprite = false;

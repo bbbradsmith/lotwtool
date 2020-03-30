@@ -178,10 +178,11 @@ namespace lotwtool
                 int x = mp.rom[ro+0x308]; // x grid
                 int y = mp.rom[ro+0x309]; // y pixel
                 int s = mp.rom[ro+0x30A]; // contents
-                int a = (s >= 8) ? 1 : 0; // palette is selected by type
+                //int a = (s >= 8) ? 1 : 0; // palette is selected by type
+                // (using palette 1 always instead, colour 0 is replaced by player anyway and not really valid in map data)
                 x *= 16;
                 s = 0x81 + (s*4);
-                draw_sprite(d,s,a,x,y);
+                draw_sprite(d,s,1,x,y);
             }
         }
 

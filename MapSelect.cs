@@ -84,13 +84,13 @@ namespace lotwtool
             
             const int dspan = (1024 * 4 * 1) / 4;
             int span = (1024 * 4 * m) / d;
-            int w = (1063-dspan)+span;
-            if (w > 1063) w = 1063;
+            int w = (1065-dspan)+span;
+            if (w > 1065) w = 1065;
 
             const int dhspan = 614;
             int hspan = (192 * (72/4) * m) / d;
-            int h = (704 - dhspan) + hspan;
-            if (h > 704) h = 704;
+            int h = (706 - dhspan) + hspan;
+            if (h > 706) h = 706;
             else w -= 16; // no vertical scrollbar needed
 
             Size = new Size(w,h);

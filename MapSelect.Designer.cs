@@ -67,7 +67,7 @@
             this.optionsToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1047, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1049, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -240,9 +240,9 @@
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
             this.toolStripTipLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 644);
+            this.statusStrip.Location = new System.Drawing.Point(0, 645);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1047, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1049, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -255,7 +255,7 @@
             // toolStripTipLabel
             // 
             this.toolStripTipLabel.Name = "toolStripTipLabel";
-            this.toolStripTipLabel.Size = new System.Drawing.Size(1016, 17);
+            this.toolStripTipLabel.Size = new System.Drawing.Size(1018, 17);
             this.toolStripTipLabel.Spring = true;
             this.toolStripTipLabel.Text = "...";
             this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -267,7 +267,7 @@
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 24);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(1047, 620);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(1049, 621);
             this.flowLayoutPanel.TabIndex = 2;
             // 
             // pictureBox
@@ -285,7 +285,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1047, 666);
+            this.ClientSize = new System.Drawing.Size(1049, 667);
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);

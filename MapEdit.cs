@@ -437,7 +437,7 @@ namespace lotwtool
 
             int dspan = 192;
             int span = 192 * zoom;
-            int h = (282-dspan)+span;
+            int h = (284-dspan)+span;
             if (zoom > 1) // scrollbar
                 h += 18;
             Height = h;

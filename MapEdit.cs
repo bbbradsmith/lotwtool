@@ -24,6 +24,7 @@ namespace lotwtool
         public uint[][] palette;
         public MapEditHex infohex = null;
         public MapEditTile tilepal = null;
+        public MapEditProperties props = null;
 
         public byte draw_tile = 0;
         int drag_item = -1;
@@ -248,9 +249,22 @@ namespace lotwtool
             draw_unlock(d);
         }
 
-        void redraw_info() // redraws info windows when stuff outside the terrain data changes
+        public void redraw_info() // redraws info windows when stuff outside the terrain data changes
         {
             if (infohex != null) infohex.redraw();
+            if (props != null) props.redraw();
+        }
+
+        public void reload_chr()
+        {
+            cache();
+            redraw();
+            if (tilepal != null)
+            {
+                tilepal.cache();
+                tilepal.redraw();
+            }
+            mp.refresh_map(room);
         }
 
         public void render_select(BitmapData d, int room_, int zoom_, int secret_, bool items_)
@@ -449,6 +463,7 @@ namespace lotwtool
         {
             if (tilepal != null) tilepal.Close();
             if (infohex != null) infohex.Close();
+            if (props != null) props.Close();
             mp.remove_refresh(this);
             mp.remove_map_edit(this);
         }
@@ -472,13 +487,6 @@ namespace lotwtool
             if (secret != 2) secret = 2;
             else             secret = 0;
             updateSecret();
-        }
-
-        private void infoHexToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Main.raise_child(infohex)) return;
-            infohex = new MapEditHex(this, mp);
-            infohex.Show();
         }
 
         private void saveImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -609,44 +617,57 @@ namespace lotwtool
             }
             else if (mode == 1) // item
             {
-                // TODO if right click, edit else... (what is already below)
-
-                if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
+                if (e.Button == MouseButtons.Right) // edit
                 {
-                    for (int i=0; i<12; ++i)
+                    int item = pick_item(x,y);
+                    if (item == 12) // treasure
                     {
-                        bool empty = true;
-                        for (int j=0; j<16; ++j) empty &= mp.rom[ro+0x320+(i*16)+j] == 0;
-                        if (empty)
+                        propertiesToolStripMenuItem_Click(sender,e);
+                    }
+                    else
+                    {
+                        // TODO
+                    }
+                }
+                else if (e.Button == MouseButtons.Left)
+                {
+                    if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
+                    {
+                        for (int i=0; i<12; ++i)
                         {
-                            drag_item = i;
-                            break;
+                            bool empty = true;
+                            for (int j=0; j<16; ++j) empty &= mp.rom[ro+0x320+(i*16)+j] == 0;
+                            if (empty)
+                            {
+                                drag_item = i;
+                                break;
+                            }
+                        }
+                        if (drag_item >= 0)
+                        {
+                            mp.rom_modify_start();
+                            byte[] monster = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
+                            monster[2] = (byte)(x / 16);
+                            monster[3] = (byte)(y & (~15));
+                            for (int i=0; i<monster.Length; ++i)
+                                mp.rom_modify(ro+0x320+(drag_item*16)+i, monster[i], true);
+                            redraw();
+                            redraw_info();
+                            mp.refresh_map(room);
                         }
                     }
+                    else // try to pick up an item
+                    {
+                        drag_item = pick_item(x,y);
+                        if (drag_item >= 0) mp.rom_modify_start();
+                    }
+
                     if (drag_item >= 0)
                     {
-                        mp.rom_modify_start();
-                        byte[] monster = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
-                        monster[2] = (byte)(x / 16);
-                        monster[3] = (byte)(y & (~15));
-                        for (int i=0; i<monster.Length; ++i)
-                            mp.rom_modify(ro+0x320+(drag_item*16)+i, monster[i], true);
-                        redraw();
-                        redraw_info();
-                        mp.refresh_map(room);
+                        Tuple<int,int> ipos = pos_item(drag_item);
+                        drag_y = y;
+                        drag_item_y = ipos.Item2;
                     }
-                }
-                else // try to pick up an item
-                {
-                    drag_item = pick_item(x,y);
-                    if (drag_item >= 0) mp.rom_modify_start();
-                }
-
-                if (drag_item >= 0)
-                {
-                    Tuple<int,int> ipos = pos_item(drag_item);
-                    drag_y = y;
-                    drag_item_y = ipos.Item2;
                 }
             }
             pictureBox_MouseMove(sender, e);
@@ -725,11 +746,25 @@ namespace lotwtool
             mp.undo();
         }
 
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Main.raise_child(props)) return;
+            props = new MapEditProperties(this, mp);
+            props.Show();
+        }
+
         private void tilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Main.raise_child(tilepal)) return;
             tilepal = new MapEditTile(this, mp);
             tilepal.Show();
+        }
+
+        private void infoHexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Main.raise_child(infohex)) return;
+            infohex = new MapEditHex(this, mp);
+            infohex.Show();
         }
 
         private void upToolStripMenuItem_Click(object sender, EventArgs e)

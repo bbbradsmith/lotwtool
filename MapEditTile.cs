@@ -185,11 +185,8 @@ namespace lotwtool
                     changed |= mp.rom_modify(mto+1,(byte)m.mt[1],true);
                     changed |= mp.rom_modify(mto+2,(byte)m.mt[2],true);
                     changed |= mp.rom_modify(mto+3,(byte)m.mt[3],true);
-                    if (changed)
-                    {
-                        cache();
-                        me.cache();
-                    }
+                    if (chrchgd)
+                        me.reload_chr();
                     if (changed)
                         mp.refresh_metatile(mt_page);
                 }

@@ -279,7 +279,7 @@ namespace lotwtool
             cache();
             draw_bg(d);
             draw_items(d);
-            debug_room(); // easy way to query all the rooms
+            //debug_room(); // easy way to query all the rooms
         }
 
         public void debug_room()
@@ -289,7 +289,7 @@ namespace lotwtool
             int ro = 16 + (1024 * room);
             int rx = room % 4;
             int ry = room / 4;
-            string h = string.Format("debug_room {0:D2},{1:D2} {2:D2}",rx,ry,room);
+            string h = string.Format("debug_room {0:D2},{1:D2} {2:D2} ",rx,ry,room);
 
             string s = "";
 
@@ -298,6 +298,9 @@ namespace lotwtool
 
             // 302/303 secret tile possible values
             /*s += string.Format("secret tile {0:X2} -> {1:X2}",mp.rom[ro+0x302],mp.rom[ro+0x303]);*/
+
+            // 314,316 what are these?
+            //s += string.Format("= {0:X2} {1:X2}",mp.rom[ro+0x314],mp.rom[ro+0x316]);
 
             // Is 307 treasure chest active = 1, inactive = 0?
             /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("\nTreasure 307: {0:X2}",mp.rom[ro+0x307]);*/
@@ -575,11 +578,13 @@ namespace lotwtool
             int item = pick_item(x,y);
             if (item == 12) // treasure
             {
-                iteminfo = " Treasure: " + mp.romhex(ro + 0x307, 4);
+                iteminfo = " Treasure";
+                if (mode == 1) iteminfo += ": " + mp.romhex(ro + 0x307, 4);
             }
             else if (item >= 0) // item
             {
-                iteminfo = string.Format(" Item {0:D}: ",item) + mp.romhex(ro + 0x320 + (item*16),10);
+                iteminfo = string.Format(" Item {0:D}",item);
+                if(mode == 1) iteminfo += ": " + mp.romhex(ro + 0x320 + (item*16),10);
             }
 
             if (mode == 0 && iteminfo.Length > 0)

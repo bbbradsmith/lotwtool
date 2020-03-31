@@ -291,7 +291,7 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Secret Wall Replacement")]
+        [DisplayName("Secret Wall Replace")]
         [Category("Secret Wall")]
         [Description("303 - The tile which will replace the secret wall when touched.")]
         public int SecretWallReplace
@@ -302,6 +302,19 @@ namespace lotwtool
                 mp.rom_modify(ro+0x303,(byte)value);
                 mp.refresh_map(me.room);
                 me.redraw();
+                me.redraw_info();
+            }
+        }
+
+        [DisplayName("Block Replace")]
+        [Category("Secret Wall")]
+        [Description("304 - The tile which will replace a block when moved or destroyed.")]
+        public int BlockReplace
+        {
+            get { return mp.rom[ro+0x304]; }
+            set
+            {
+                mp.rom_modify(ro+0x304,(byte)value);
                 me.redraw_info();
             }
         }
@@ -328,19 +341,6 @@ namespace lotwtool
             set
             {
                 mp.rom_modify(ro+0x315,(byte)value);
-                me.redraw_info();
-            }
-        }
-
-        [DisplayName("Unknown 304")]
-        [Category("Unknown")]
-        [Description("304 - Affects treasure chest?")]
-        public int Unknown304
-        {
-            get { return mp.rom[ro+0x304]; }
-            set
-            {
-                mp.rom_modify(ro+0x304,(byte)value);
                 me.redraw_info();
             }
         }

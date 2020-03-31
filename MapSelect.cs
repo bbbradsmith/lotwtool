@@ -12,8 +12,8 @@ namespace lotwtool
 {
     public partial class MapSelect : Form, RomRefresh
     {
-        int zoom = -4;
-        static int default_zoom = -4;
+        int zoom = -8;
+        static int default_zoom = -8;
         int secret = 2;
         bool items = false;
         bool auto_refresh = false;

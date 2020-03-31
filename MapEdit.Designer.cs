@@ -45,6 +45,11 @@
             this.zoom2xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoom3xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoom4xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adjacentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.upToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoHexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,11 +58,7 @@
             this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.adjacentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.upToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.downToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -71,7 +72,8 @@
             this.modeToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.adjacentToolStripMenuItem,
-            this.toolsToolStripMenuItem});
+            this.toolsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(1030, 24);
@@ -117,7 +119,7 @@
             this.terrainToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.terrainToolStripMenuItem.Name = "terrainToolStripMenuItem";
             this.terrainToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.terrainToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.terrainToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.terrainToolStripMenuItem.Text = "&Terrain";
             this.terrainToolStripMenuItem.Click += new System.EventHandler(this.terrainToolStripMenuItem_Click);
             // 
@@ -125,7 +127,7 @@
             // 
             this.itemsToolStripMenuItem.Name = "itemsToolStripMenuItem";
             this.itemsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.itemsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.itemsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.itemsToolStripMenuItem.Text = "&Items";
             this.itemsToolStripMenuItem.Click += new System.EventHandler(this.itemsToolStripMenuItem_Click);
             // 
@@ -208,6 +210,49 @@
             this.zoom4xToolStripMenuItem.Text = "Zoom &4x";
             this.zoom4xToolStripMenuItem.Click += new System.EventHandler(this.zoom4xToolStripMenuItem_Click);
             // 
+            // adjacentToolStripMenuItem
+            // 
+            this.adjacentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.upToolStripMenuItem,
+            this.downToolStripMenuItem,
+            this.leftToolStripMenuItem,
+            this.rightToolStripMenuItem});
+            this.adjacentToolStripMenuItem.Name = "adjacentToolStripMenuItem";
+            this.adjacentToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.adjacentToolStripMenuItem.Text = "Ad&jacent";
+            // 
+            // upToolStripMenuItem
+            // 
+            this.upToolStripMenuItem.Name = "upToolStripMenuItem";
+            this.upToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.upToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.upToolStripMenuItem.Text = "&Up";
+            this.upToolStripMenuItem.Click += new System.EventHandler(this.upToolStripMenuItem_Click);
+            // 
+            // downToolStripMenuItem
+            // 
+            this.downToolStripMenuItem.Name = "downToolStripMenuItem";
+            this.downToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.downToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.downToolStripMenuItem.Text = "&Down";
+            this.downToolStripMenuItem.Click += new System.EventHandler(this.downToolStripMenuItem_Click);
+            // 
+            // leftToolStripMenuItem
+            // 
+            this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
+            this.leftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Left)));
+            this.leftToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.leftToolStripMenuItem.Text = "&Left";
+            this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
+            // 
+            // rightToolStripMenuItem
+            // 
+            this.rightToolStripMenuItem.Name = "rightToolStripMenuItem";
+            this.rightToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Right)));
+            this.rightToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.rightToolStripMenuItem.Text = "&Right";
+            this.rightToolStripMenuItem.Click += new System.EventHandler(this.rightToolStripMenuItem_Click);
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -280,48 +325,12 @@
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
             // 
-            // adjacentToolStripMenuItem
+            // helpToolStripMenuItem
             // 
-            this.adjacentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.upToolStripMenuItem,
-            this.downToolStripMenuItem,
-            this.leftToolStripMenuItem,
-            this.rightToolStripMenuItem});
-            this.adjacentToolStripMenuItem.Name = "adjacentToolStripMenuItem";
-            this.adjacentToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
-            this.adjacentToolStripMenuItem.Text = "Ad&jacent";
-            // 
-            // upToolStripMenuItem
-            // 
-            this.upToolStripMenuItem.Name = "upToolStripMenuItem";
-            this.upToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
-            this.upToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.upToolStripMenuItem.Text = "&Up";
-            this.upToolStripMenuItem.Click += new System.EventHandler(this.upToolStripMenuItem_Click);
-            // 
-            // downToolStripMenuItem
-            // 
-            this.downToolStripMenuItem.Name = "downToolStripMenuItem";
-            this.downToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.downToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.downToolStripMenuItem.Text = "&Down";
-            this.downToolStripMenuItem.Click += new System.EventHandler(this.downToolStripMenuItem_Click);
-            // 
-            // leftToolStripMenuItem
-            // 
-            this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
-            this.leftToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Left)));
-            this.leftToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.leftToolStripMenuItem.Text = "&Left";
-            this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
-            // 
-            // rightToolStripMenuItem
-            // 
-            this.rightToolStripMenuItem.Name = "rightToolStripMenuItem";
-            this.rightToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Right)));
-            this.rightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rightToolStripMenuItem.Text = "&Right";
-            this.rightToolStripMenuItem.Click += new System.EventHandler(this.rightToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // MapEdit
             // 
@@ -332,10 +341,12 @@
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MapEdit";
             this.Text = "Map Edit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapEdit_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapEdit_KeyDown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -379,5 +390,6 @@
         private System.Windows.Forms.ToolStripMenuItem downToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }

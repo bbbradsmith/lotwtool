@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -258,7 +259,7 @@ namespace lotwtool
             mp.undo();
         }
 
-        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        private void importPNGToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
@@ -329,7 +330,7 @@ namespace lotwtool
             }
         }
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportPNGToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
@@ -355,6 +356,71 @@ namespace lotwtool
                 catch (Exception ex)
                 {
                     MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                }
+            }
+        }
+
+        private void importCHRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (highlight < 0 || highlight >= mp.chr_count)
+            {
+                MessageBox.Show("No CHR selected.","CHR Import Error!");
+                return;
+            }
+
+            OpenFileDialog d = new OpenFileDialog();
+            d.Title = "Import CHR Binary";
+            d.DefaultExt = "chr";
+            d.Filter = "CHR Binary (*.chr;*.bin)|*.chr;*.bin|All files (*.*)|*.*";
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + string.Format(".{0:X2}.chr",highlight);
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                byte[] chr;
+                try
+                {
+                    chr = File.ReadAllBytes(d.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to open CHR:\n\n" + ex.ToString(),"CHR Import Error!");
+                    return;
+                }
+
+                mp.rom_modify_start(); // begin a single undo step
+                int co = mp.chr_offset + (highlight * 1024);
+                int len = chr.Length;
+                if (len > 1024) len = 1024;
+                for (int i=0; i<len; ++i)
+                    mp.rom_modify(co+i,chr[i],true);
+                mp.refresh_all();
+            }
+        }
+
+        private void exportCHRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (highlight < 0 || highlight >= mp.chr_count)
+            {
+                MessageBox.Show("No CHR selected.","CHR Export Error!");
+                return;
+            }
+
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Export CHR Binary";
+            d.DefaultExt = "chr";
+            d.Filter = "CHR Binary (*.chr;*.bin)|*.chr;*.bin|All files (*.*)|*.*";
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + string.Format(".{0:X2}.chr",highlight);
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    int co = mp.chr_offset + (1024 * highlight);
+                    byte[] chr = new byte[1024];
+                    Array.Copy(mp.rom,co,chr,0,1024);
+                    File.WriteAllBytes(d.FileName,chr);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save CHR:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
                 }
             }
         }

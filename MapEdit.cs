@@ -313,6 +313,43 @@ namespace lotwtool
             if (s.Length > 0) Console.WriteLine(h+s);
         }
 
+        void set_draw_tile(int tile, int palette, int combo=-1) // -1 not to set one or the other
+        {
+            if (tile >= 0)    draw_tile = (byte)((draw_tile & 0xC0) | (tile & 0x3F));
+            if (palette >= 0) draw_tile = (byte)((draw_tile & 0x3F) | (palette<<6));
+            if (combo >= 0)   draw_tile = (byte)combo;
+            updateStatus();
+            if (tilepal != null)
+            {
+                tilepal.updateTileStatus(draw_tile);
+                tilepal.redraw();
+            }
+        }
+
+        public string get_tile_type(int t)
+        {
+            t = t & 0x3F;
+
+            string s = "open";
+            if (t >= 0x30) s = "solid";
+            switch (t)
+            {
+            case 0:    s = "ladder"; break;
+            case 1:    s = "enter";  break;
+            case 2:    s = "door";   break;
+            case 3:    s = "celina"; break;
+            case 4:    s = "shop";   break;
+            case 5:    s = "inn";    break;
+            case 0x30: s = "spike";  break;
+            case 0x3E: s = "block";  break;
+            }
+
+            int ro = 16 + (1024 * room);
+            if (mp.rom[ro+0x302] == t) s += "*";
+
+            return s;
+        }
+
         public void refresh_all()
         {
             cache();
@@ -468,6 +505,8 @@ namespace lotwtool
         {
             terrainToolStripMenuItem.Checked = mode == 0;
             itemsToolStripMenuItem.Checked   = mode == 1;
+            if (mode == 1 && items == false)
+                showItemsToolStripMenuItem_Click(null, null);
             updateStatus();
         }
 
@@ -479,13 +518,11 @@ namespace lotwtool
         private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mode = 1; updateMode();
-            items = true; // force items display
-            showItemsToolStripMenuItem.Checked = items;
-            redraw();
         }
 
         private void showItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // note: sender/e may be null, see updateMode
             items = !items;
             showItemsToolStripMenuItem.Checked = items;
             redraw();
@@ -513,7 +550,7 @@ namespace lotwtool
                 if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
                 {
                     byte tile = mp.rom[ro+(tx*12)+ty];
-                    tileinfo = string.Format("{0,2:D},{1,2:D} = {2:X2} ({3:X1}:{4:X2})",tx,ty,tile,tile>>6,tile&63);
+                    tileinfo = string.Format("{0,2:D},{1,2:D} = {2:X2} ({3:X1}:{4:X2}) {5}",tx,ty,tile,tile>>6,tile&63,get_tile_type(tile));
                 }
                 modetips = "LMB = Draw, RMB = Pick, Ctrl+RMB = Tiles";
             }
@@ -533,12 +570,16 @@ namespace lotwtool
                 iteminfo = string.Format(" Item {0:D}: ",item) + mp.romhex(ro + 0x320 + (item*16),10);
             }
 
-            if (mode == 1)
+            if (mode == 0 && iteminfo.Length > 0)
+            {
+                iteminfo = " +" + iteminfo;
+            }
+            else if (mode == 1)
             {
                 if (drag_item >= 0)
                     modetips = "Shift = Free Y";
                 else if (item >= 0)
-                    modetips = "MB = Drag, Ctrl+LMB = Create";
+                    modetips = "LMB = Drag, Ctrl+LMB = Create, RMB = Edit";
                 else
                     modetips = "Ctrl+LMB = Create";
             }
@@ -568,6 +609,8 @@ namespace lotwtool
             }
             else if (mode == 1) // item
             {
+                // TODO if right click, edit else... (what is already below)
+
                 if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
                 {
                     for (int i=0; i<12; ++i)
@@ -639,14 +682,7 @@ namespace lotwtool
                         {
                             byte ndt = mp.rom[ti];
                             if (draw_tile != ndt)
-                            {
-                                draw_tile = ndt;
-                                if (tilepal != null)
-                                {
-                                    tilepal.updateTileStatus(draw_tile);
-                                    tilepal.redraw();
-                                }
-                            }
+                                set_draw_tile(-1,-1,ndt);
                         }
                     }
                 }
@@ -714,6 +750,75 @@ namespace lotwtool
         private void rightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mp.add_map_edit(room+1);
+        }
+
+        public void MapEdit_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!e.Modifiers.HasFlag(Keys.Control) && !e.Modifiers.HasFlag(Keys.Shift))
+            {
+                switch (e.KeyCode)
+                {
+                    // set palette
+                    case Keys.D1:
+                    case Keys.D2:
+                    case Keys.D3:
+                    case Keys.D4:
+                        set_draw_tile(-1,e.KeyCode - Keys.D1); break;
+
+                    // select tile
+                    case Keys.OemOpenBrackets:
+                        set_draw_tile((draw_tile-1)&0x3F,-1); break; // decrement tile
+                    case Keys.OemCloseBrackets:
+                        set_draw_tile((draw_tile+1)&0x3F,-1); break; // increment tile
+                    case Keys.Left:
+                        set_draw_tile((draw_tile & 0x38) | ((draw_tile-1) & 0x07), -1); break; // wrapping select
+                    case Keys.Right:
+                        set_draw_tile((draw_tile & 0x38) | ((draw_tile+1) & 0x07), -1); break;
+                    case Keys.Up:
+                        set_draw_tile((draw_tile & 0x07) | ((draw_tile-8) & 0x38), -1); break;
+                    case Keys.Down:
+                        set_draw_tile((draw_tile & 0x07) | ((draw_tile+8) & 0x38), -1); break;
+
+                    // select mode
+                    case Keys.T:
+                        terrainToolStripMenuItem_Click(sender,e); break;
+                    case Keys.I:
+                        itemsToolStripMenuItem_Click(sender,e); break;
+                    case Keys.Space:
+                        mode = mode ^ 1; updateMode(); break;
+
+                    // tile palette
+                    case Keys.P:
+                        tilesToolStripMenuItem_Click(sender,e); break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string HELPTEXT =
+                "T = Terrain mode\n" +
+                "I = Item mode\n" +
+                "P = Open tile palette\n" +
+                "Space = Toggle mode\n" +
+                "\n"+
+                "Terrain mode:\n" +
+                "LMB = Draw tile\n" +
+                "RMB = Pick tile\n" +
+                "Ctrl + RMB = Open tile palette\n" +
+                "1-4 = Palette\n" +
+                "[/] = Cycle tile\n" +
+                "Cursor Keys = Select tile\n" +
+                "\n" +
+                "Item mode:\n" +
+                "LMB = Move item\n" +
+                "Ctrl + LMB = Create item\n" +
+                "Shift + LMB = Move with free Y position\n" +
+                "RMB = Edit item\n";
+            MessageBox.Show(HELPTEXT,"Map Edit Help");
         }
     }
 }

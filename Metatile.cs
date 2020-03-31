@@ -116,7 +116,7 @@ namespace lotwtool
                 {
                     if (cs.highlight >= 0 && cs.highlight < mp.chr_count)
                     {
-                        chr[c] = cs.highlight;
+                        chr[c] = cs.highlight & (~1);
                         cache();
                         redraw();
                     }

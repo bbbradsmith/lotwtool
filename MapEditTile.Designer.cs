@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditTile));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,7 +42,6 @@
             this.zoom4xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.paletteBox = new System.Windows.Forms.PictureBox();
-            this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -65,6 +65,14 @@
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabel.Text = "...";
+            // 
+            // toolStripTipLabel
+            // 
+            this.toolStripTipLabel.Name = "toolStripTipLabel";
+            this.toolStripTipLabel.Size = new System.Drawing.Size(213, 17);
+            this.toolStripTipLabel.Spring = true;
+            this.toolStripTipLabel.Text = "...";
+            this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // menuStrip
             // 
@@ -144,6 +152,7 @@
             this.pictureBox.TabIndex = 2;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
+            this.pictureBox.MouseLeave += new System.EventHandler(this.pictureBox_MouseLeave);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
             // paletteBox
@@ -157,14 +166,6 @@
             this.paletteBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseDown);
             this.paletteBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseMove);
             // 
-            // toolStripTipLabel
-            // 
-            this.toolStripTipLabel.Name = "toolStripTipLabel";
-            this.toolStripTipLabel.Size = new System.Drawing.Size(182, 17);
-            this.toolStripTipLabel.Spring = true;
-            this.toolStripTipLabel.Text = "...";
-            this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // MapEditTile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,10 +176,12 @@
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MapEditTile";
             this.Text = "Tiles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapEditTile_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapEditTile_KeyDown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);

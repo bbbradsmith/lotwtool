@@ -112,7 +112,7 @@ namespace lotwtool
             cache();
             updateZoom();
             //redraw(); // done by updateZoom
-            toolStripTipLabel.Text = "LMB = Pick, RMB = Edit";
+            toolStripTipLabel.Text = "RMB = Edit";
             updateTileStatus(me.draw_tile);
         }
 
@@ -205,6 +205,7 @@ namespace lotwtool
                 int ro = 16 + (1024 * me.room);
                 s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
             }
+            s += " " + me.get_tile_type(t);
             toolStripStatusLabel.Text = s;
         }
 
@@ -262,6 +263,16 @@ namespace lotwtool
             }
 
             updateTileStatus(new_tile,px);
+        }
+
+        private void MapEditTile_KeyDown(object sender, KeyEventArgs e)
+        {
+            me.MapEdit_KeyDown(sender,e);
+        }
+
+        private void pictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            updateTileStatus(me.draw_tile); // revert when mouse leaves
         }
     }
 }

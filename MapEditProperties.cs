@@ -13,7 +13,6 @@ namespace lotwtool
     {
         Main mp;
         MapEdit me;
-        MapProperties map_properties;
 
         public void redraw()
         {
@@ -29,8 +28,7 @@ namespace lotwtool
             int y = me.room / 4;
             Text = string.Format("Map Properties {0},{1} ({2})",x,y,me.room);
             int ro = 16 + (1024 * me.room);
-            map_properties = new MapProperties(mp, me, ro);
-            propertyGrid.SelectedObject = map_properties;
+            propertyGrid.SelectedObject = new MapProperties(mp, me, ro);
         }
 
         private void MapEditProperties_FormClosing(object sender, FormClosingEventArgs e)

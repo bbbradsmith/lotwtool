@@ -240,6 +240,7 @@ namespace lotwtool
                         mp.refresh_map(me.room);
                         me.cache();
                         me.redraw(); // not covered by refresh_map
+                        me.redraw_info();
                         redraw();
                     }
                 }

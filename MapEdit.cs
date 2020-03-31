@@ -25,6 +25,7 @@ namespace lotwtool
         public MapEditHex infohex = null;
         public MapEditTile tilepal = null;
         public MapEditProperties props = null;
+        public MapEditItem itemedit = null;
 
         public byte draw_tile = 0;
         int drag_item = -1;
@@ -32,6 +33,7 @@ namespace lotwtool
         int drag_item_y;
         int last_status_x = 0;
         int last_status_y = 0;
+        public int last_item = 0;
 
         void cache_page(int slot, int page)
         {
@@ -253,6 +255,7 @@ namespace lotwtool
         {
             if (infohex != null) infohex.redraw();
             if (props != null) props.redraw();
+            if (itemedit != null) itemedit.redraw();
         }
 
         public void reload_chr()
@@ -464,6 +467,7 @@ namespace lotwtool
             if (tilepal != null) tilepal.Close();
             if (infohex != null) infohex.Close();
             if (props != null) props.Close();
+            if (itemedit != null) itemedit.Close();
             mp.remove_refresh(this);
             mp.remove_map_edit(this);
         }
@@ -624,9 +628,11 @@ namespace lotwtool
                     {
                         propertiesToolStripMenuItem_Click(sender,e);
                     }
-                    else
+                    else if (item >= 0 && item < 12)
                     {
-                        // TODO
+                        itemEditorToolStripMenuItem_Click(sender,e);
+                        itemedit.set_item(item);
+                        last_item = item;
                     }
                 }
                 else if (e.Button == MouseButtons.Left)
@@ -667,6 +673,7 @@ namespace lotwtool
                         Tuple<int,int> ipos = pos_item(drag_item);
                         drag_y = y;
                         drag_item_y = ipos.Item2;
+                        last_item = drag_item;
                     }
                 }
             }
@@ -765,6 +772,16 @@ namespace lotwtool
             if (Main.raise_child(infohex)) return;
             infohex = new MapEditHex(this, mp);
             infohex.Show();
+        }
+
+        private void itemEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Main.raise_child(itemedit))
+            {
+                itemedit = new MapEditItem(this, mp);
+                itemedit.Show();
+            }
+            itemedit.set_item(last_item);
         }
 
         private void upToolStripMenuItem_Click(object sender, EventArgs e)

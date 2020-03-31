@@ -44,18 +44,21 @@
             this.CHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxFilename = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelGrid = new System.Windows.Forms.TableLayoutPanel();
             this.labelCHRCountValue = new System.Windows.Forms.Label();
             this.labelMapCount = new System.Windows.Forms.Label();
             this.buttonMapEdit = new System.Windows.Forms.Button();
             this.labelCHRCount = new System.Windows.Forms.Label();
             this.buttonCHREdit = new System.Windows.Forms.Button();
             this.labelMapCountValue = new System.Windows.Forms.Label();
+            this.buttonTitleScreen = new System.Windows.Forms.Button();
+            this.buttonCredis = new System.Windows.Forms.Button();
+            this.buttonMisc = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanelTop.SuspendLayout();
+            this.tableLayoutPanelGrid.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -186,22 +189,22 @@
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // tableLayoutPanel1
+            // tableLayoutPanelTop
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.textBoxFilename, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(559, 119);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.tableLayoutPanelTop.AutoSize = true;
+            this.tableLayoutPanelTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanelTop.ColumnCount = 1;
+            this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelTop.Controls.Add(this.textBoxFilename, 0, 0);
+            this.tableLayoutPanelTop.Controls.Add(this.tableLayoutPanelGrid, 0, 1);
+            this.tableLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelTop.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutPanelTop.Name = "tableLayoutPanelTop";
+            this.tableLayoutPanelTop.RowCount = 2;
+            this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelTop.Size = new System.Drawing.Size(559, 194);
+            this.tableLayoutPanelTop.TabIndex = 1;
             // 
             // textBoxFilename
             // 
@@ -213,28 +216,32 @@
             this.textBoxFilename.Size = new System.Drawing.Size(553, 20);
             this.textBoxFilename.TabIndex = 0;
             // 
-            // tableLayoutPanel2
+            // tableLayoutPanelGrid
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.Controls.Add(this.labelCHRCountValue, 2, 1);
-            this.tableLayoutPanel2.Controls.Add(this.labelMapCount, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonMapEdit, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelCHRCount, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.buttonCHREdit, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.labelMapCountValue, 2, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 29);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(553, 87);
-            this.tableLayoutPanel2.TabIndex = 1;
+            this.tableLayoutPanelGrid.AutoSize = true;
+            this.tableLayoutPanelGrid.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanelGrid.ColumnCount = 3;
+            this.tableLayoutPanelGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.Controls.Add(this.labelCHRCountValue, 2, 1);
+            this.tableLayoutPanelGrid.Controls.Add(this.labelMapCount, 1, 0);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonMapEdit, 0, 0);
+            this.tableLayoutPanelGrid.Controls.Add(this.labelCHRCount, 1, 1);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonCHREdit, 0, 1);
+            this.tableLayoutPanelGrid.Controls.Add(this.labelMapCountValue, 2, 0);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonTitleScreen, 0, 2);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonCredis, 1, 2);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonMisc, 2, 2);
+            this.tableLayoutPanelGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelGrid.Location = new System.Drawing.Point(3, 29);
+            this.tableLayoutPanelGrid.Name = "tableLayoutPanelGrid";
+            this.tableLayoutPanelGrid.RowCount = 3;
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelGrid.Size = new System.Drawing.Size(553, 162);
+            this.tableLayoutPanelGrid.TabIndex = 1;
             // 
             // labelCHRCountValue
             // 
@@ -242,9 +249,9 @@
             this.labelCHRCountValue.BackColor = System.Drawing.SystemColors.ControlLight;
             this.labelCHRCountValue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.labelCHRCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCHRCountValue.Location = new System.Drawing.Point(417, 43);
+            this.labelCHRCountValue.Location = new System.Drawing.Point(371, 53);
             this.labelCHRCountValue.Name = "labelCHRCountValue";
-            this.labelCHRCountValue.Size = new System.Drawing.Size(133, 44);
+            this.labelCHRCountValue.Size = new System.Drawing.Size(179, 53);
             this.labelCHRCountValue.TabIndex = 7;
             this.labelCHRCountValue.Text = "0";
             this.labelCHRCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -252,9 +259,9 @@
             // labelMapCount
             // 
             this.labelMapCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMapCount.Location = new System.Drawing.Point(279, 0);
+            this.labelMapCount.Location = new System.Drawing.Point(187, 0);
             this.labelMapCount.Name = "labelMapCount";
-            this.labelMapCount.Size = new System.Drawing.Size(132, 43);
+            this.labelMapCount.Size = new System.Drawing.Size(178, 53);
             this.labelMapCount.TabIndex = 2;
             this.labelMapCount.Text = "Map Count:";
             this.labelMapCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -266,7 +273,7 @@
             this.buttonMapEdit.Enabled = false;
             this.buttonMapEdit.Location = new System.Drawing.Point(3, 3);
             this.buttonMapEdit.Name = "buttonMapEdit";
-            this.buttonMapEdit.Size = new System.Drawing.Size(270, 37);
+            this.buttonMapEdit.Size = new System.Drawing.Size(178, 47);
             this.buttonMapEdit.TabIndex = 4;
             this.buttonMapEdit.Text = "Maps";
             this.buttonMapEdit.UseVisualStyleBackColor = true;
@@ -275,9 +282,9 @@
             // labelCHRCount
             // 
             this.labelCHRCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCHRCount.Location = new System.Drawing.Point(279, 43);
+            this.labelCHRCount.Location = new System.Drawing.Point(187, 53);
             this.labelCHRCount.Name = "labelCHRCount";
-            this.labelCHRCount.Size = new System.Drawing.Size(132, 44);
+            this.labelCHRCount.Size = new System.Drawing.Size(178, 53);
             this.labelCHRCount.TabIndex = 3;
             this.labelCHRCount.Text = "CHR Count:";
             this.labelCHRCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -287,9 +294,9 @@
             this.buttonCHREdit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonCHREdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonCHREdit.Enabled = false;
-            this.buttonCHREdit.Location = new System.Drawing.Point(3, 46);
+            this.buttonCHREdit.Location = new System.Drawing.Point(3, 56);
             this.buttonCHREdit.Name = "buttonCHREdit";
-            this.buttonCHREdit.Size = new System.Drawing.Size(270, 38);
+            this.buttonCHREdit.Size = new System.Drawing.Size(178, 47);
             this.buttonCHREdit.TabIndex = 5;
             this.buttonCHREdit.Text = "CHR";
             this.buttonCHREdit.UseVisualStyleBackColor = true;
@@ -301,20 +308,56 @@
             this.labelMapCountValue.BackColor = System.Drawing.SystemColors.ControlLight;
             this.labelMapCountValue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.labelMapCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMapCountValue.Location = new System.Drawing.Point(417, 0);
+            this.labelMapCountValue.Location = new System.Drawing.Point(371, 0);
             this.labelMapCountValue.Name = "labelMapCountValue";
-            this.labelMapCountValue.Size = new System.Drawing.Size(133, 43);
+            this.labelMapCountValue.Size = new System.Drawing.Size(179, 53);
             this.labelMapCountValue.TabIndex = 6;
             this.labelMapCountValue.Text = "0";
             this.labelMapCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // buttonTitleScreen
+            // 
+            this.buttonTitleScreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonTitleScreen.Enabled = false;
+            this.buttonTitleScreen.Location = new System.Drawing.Point(3, 109);
+            this.buttonTitleScreen.Name = "buttonTitleScreen";
+            this.buttonTitleScreen.Size = new System.Drawing.Size(178, 50);
+            this.buttonTitleScreen.TabIndex = 8;
+            this.buttonTitleScreen.Text = "Title Screen";
+            this.buttonTitleScreen.UseVisualStyleBackColor = true;
+            this.buttonTitleScreen.Click += new System.EventHandler(this.buttonTitleScreen_Click);
+            // 
+            // buttonCredis
+            // 
+            this.buttonCredis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonCredis.Enabled = false;
+            this.buttonCredis.Location = new System.Drawing.Point(187, 109);
+            this.buttonCredis.Name = "buttonCredis";
+            this.buttonCredis.Size = new System.Drawing.Size(178, 50);
+            this.buttonCredis.TabIndex = 9;
+            this.buttonCredis.Text = "Credis";
+            this.buttonCredis.UseVisualStyleBackColor = true;
+            this.buttonCredis.Click += new System.EventHandler(this.buttonCredis_Click);
+            // 
+            // buttonMisc
+            // 
+            this.buttonMisc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonMisc.Enabled = false;
+            this.buttonMisc.Location = new System.Drawing.Point(371, 109);
+            this.buttonMisc.Name = "buttonMisc";
+            this.buttonMisc.Size = new System.Drawing.Size(179, 50);
+            this.buttonMisc.TabIndex = 10;
+            this.buttonMisc.Text = "Miscellaneous";
+            this.buttonMisc.UseVisualStyleBackColor = true;
+            this.buttonMisc.Click += new System.EventHandler(this.buttonMisc_Click);
             // 
             // Main
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 143);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(559, 218);
+            this.Controls.Add(this.tableLayoutPanelTop);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
@@ -325,10 +368,10 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Main_DragEnter);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanelTop.ResumeLayout(false);
+            this.tableLayoutPanelTop.PerformLayout();
+            this.tableLayoutPanelGrid.ResumeLayout(false);
+            this.tableLayoutPanelGrid.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,9 +387,9 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelTop;
         private System.Windows.Forms.TextBox textBoxFilename;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGrid;
         private System.Windows.Forms.Label labelCHRCount;
         private System.Windows.Forms.Label labelMapCount;
         private System.Windows.Forms.Button buttonMapEdit;
@@ -360,6 +403,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mapsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CHRToolStripMenuItem;
+        private System.Windows.Forms.Button buttonTitleScreen;
+        private System.Windows.Forms.Button buttonCredis;
+        private System.Windows.Forms.Button buttonMisc;
     }
 }
 

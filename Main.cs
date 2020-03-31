@@ -619,5 +619,25 @@ namespace lotwtool
         {
             buttonCHREdit_Click(sender, e);
         }
+
+        private void buttonTitleScreen_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // title screen editor
+        }
+
+        private void buttonCredis_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // credits editor
+        }
+
+        private void buttonMisc_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // game properties
+            // family stats?
+            // demo rooms if those are separate from demo playback data
+        }
     }
 }

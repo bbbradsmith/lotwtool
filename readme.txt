@@ -15,7 +15,7 @@ This is a work in progress. Not all features are complete yet.
 
 
 Unstable preview builds:
-https://ci.appveyor.com/project/bbbradsmith/binxelview/branch/master/artifacts
+https://ci.appveyor.com/project/bbbradsmith/lotwview/branch/master/artifacts
 
 
 Requirements

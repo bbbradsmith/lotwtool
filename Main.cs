@@ -155,7 +155,7 @@ namespace lotwtool
             return true;
         }
 
-        bool saveFile(string path)
+        public bool saveFile(string path)
         {
             try
             {
@@ -418,9 +418,9 @@ namespace lotwtool
             rom_modify(0,rom[0],false); // dummy non-change to start an empty step
         }
 
-        public void rom_modify_range(int address, byte[] c) // change a block of ROM in one step
+        public void rom_modify_range(int address, byte[] c, bool append=false) // change a block of ROM in one step
         {
-            rom_modify_start();
+            if (!append) rom_modify_start();
             for (int i=0; i<c.Length; ++i)
                 rom_modify(address+i,c[i],true);
         }

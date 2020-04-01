@@ -196,6 +196,7 @@ namespace lotwtool
         [DisplayName("Position X")]
         [Category("Position")]
         [Description("3 - The horizontal grid position.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int PositionX
         {
             get { return mp.rom[eo+0x2]; }

@@ -34,19 +34,20 @@ namespace lotwtool
             mp = parent;
             InitializeComponent();
             MiscCheatProperties p = new MiscCheatProperties(mp);
+            propertyGrid.SelectedObject = p;
+            collapseCategory("Items Extra"); // nicer if this is collapsed by default
+
+            // errors locating family data
             if (p.errors.Length > 0 && mp.misc_errors_shown == false)
             {
                 MessageBox.Show(p.errors, "Miscellany / Cheat errors!");
                 mp.misc_errors_shown = true;
-                collapseCategory("Stats Xemn");
-                collapseCategory("Stats Meyna");
-                collapseCategory("Stats Roas");
-                collapseCategory("Stats Lyll");
-                collapseCategory("Stats Pochi");
+                collapseCategory("Stats 0 Xemn");
+                collapseCategory("Stats 1 Meyna");
+                collapseCategory("Stats 2 Roas");
+                collapseCategory("Stats 3 Lyll");
+                collapseCategory("Stats 4 Pochi");
             }
-            propertyGrid.SelectedObject = p;
-
-            collapseCategory("Start Items Extra"); // nicer if this is collapsed by default
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -82,13 +83,13 @@ namespace lotwtool
             else if (mp.rom_compare(16+0x1E1F1,new byte[]{0xB9,0xB6,0xFF})) // Dragon Slayer IV
             { family_offset = 16 + 0x1FFB6; }
             else
-            { errors += "Starting family stats location could not be detected.\n"; }
+            { errors += "Starting family stats location could not be detected. Corrupt ROM?\n"; }
         }
 
-        // Start Items
+        // Items
 
         [DisplayName("All Items = 4")]
-        [Category("Start Items")]
+        [Category("Items")]
         [Description("19BFF-19C0F")]
         public bool AllItems
         {
@@ -100,7 +101,7 @@ namespace lotwtool
         }
 
         [DisplayName("Gold")]
-        [Category("Start Items")]
+        [Category("Items")]
         [Description("19BF9")]
         public int Gold
         {
@@ -109,7 +110,7 @@ namespace lotwtool
         }
 
         [DisplayName("Keys")]
-        [Category("Start Items")]
+        [Category("Items")]
         [Description("19BFA")]
         public int Keys
         {
@@ -117,10 +118,10 @@ namespace lotwtool
             set { mp.rom_modify(16+0x19BFA,(byte)value); }
         }
 
-        // Start Items Extra
+        // Items Extra
 
         [DisplayName("Wings")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+0")]
         public int Wings
         {
@@ -129,7 +130,7 @@ namespace lotwtool
         }
 
         [DisplayName("Armor")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+1")]
         public int Armor
         {
@@ -138,7 +139,7 @@ namespace lotwtool
         }
 
         [DisplayName("Mattock")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+2")]
         public int Mattock
         {
@@ -147,7 +148,7 @@ namespace lotwtool
         }
 
         [DisplayName("Glove")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+3")]
         public int Glove
         {
@@ -156,7 +157,7 @@ namespace lotwtool
         }
 
         [DisplayName("Rod")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+4")]
         public int Rod
         {
@@ -165,7 +166,7 @@ namespace lotwtool
         }
 
         [DisplayName("Power Boots")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+5")]
         public int PowerBoots
         {
@@ -174,7 +175,7 @@ namespace lotwtool
         }
 
         [DisplayName("Jump Shoes")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+6")]
         public int JumpShoes
         {
@@ -183,7 +184,7 @@ namespace lotwtool
         }
 
         [DisplayName("Key Stick")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+7")]
         public int KeyStick
         {
@@ -192,7 +193,7 @@ namespace lotwtool
         }
 
         [DisplayName("Power Knuckle")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+8")]
         public int Knuckle
         {
@@ -201,7 +202,7 @@ namespace lotwtool
         }
 
         [DisplayName("Fire Rod")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+9")]
         public int FireRod
         {
@@ -210,7 +211,7 @@ namespace lotwtool
         }
 
         [DisplayName("Shield")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+10")]
         public int Shield
         {
@@ -219,7 +220,7 @@ namespace lotwtool
         }
 
         [DisplayName("Magic Bottle")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+11")]
         public int MagicBottle
         {
@@ -228,7 +229,7 @@ namespace lotwtool
         }
 
         [DisplayName("Elixer")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+12")]
         public int Elixer
         {
@@ -237,7 +238,7 @@ namespace lotwtool
         }
 
         [DisplayName("Crystal")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+13")]
         public int Crystal
         {
@@ -246,7 +247,7 @@ namespace lotwtool
         }
 
         [DisplayName("Crowns")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+14")]
         public int Crowns
         {
@@ -255,7 +256,7 @@ namespace lotwtool
         }
 
         [DisplayName("DragonSlayer")]
-        [Category("Start Items Extra")]
+        [Category("Items Extra")]
         [Description("19BFF+15")]
         public int DragonSlayer
         {
@@ -264,10 +265,10 @@ namespace lotwtool
         }
 
         // Family Stats
-        // Stats Xemn, Stats Meyna, Stats Roas, Stats Lyll, Stats Pochi
+        // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi
 
         [DisplayName("Xemn Jump")]
-        [Category("Stats Xemn")]
+        [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+0")]
         public int XemnJump
         {
@@ -276,7 +277,7 @@ namespace lotwtool
         }
 
         [DisplayName("Xemn Strength")]
-        [Category("Stats Xemn")]
+        [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+1")]
         public int XemnStrength
         {
@@ -285,7 +286,7 @@ namespace lotwtool
         }
 
         [DisplayName("Xemn Shots")]
-        [Category("Stats Xemn")]
+        [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+2")]
         public int XemnShots
         {
@@ -294,7 +295,7 @@ namespace lotwtool
         }
 
         [DisplayName("Xemn Range")]
-        [Category("Stats Xemn")]
+        [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+3")]
         public int XemnRange
         {
@@ -303,7 +304,7 @@ namespace lotwtool
         }
 
         [DisplayName("Meyna Jump")]
-        [Category("Stats Meyna")]
+        [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+4")]
         public int MeynaJump
         {
@@ -312,7 +313,7 @@ namespace lotwtool
         }
 
         [DisplayName("Meyna Strength")]
-        [Category("Stats Meyna")]
+        [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+5")]
         public int MeynaStrength
         {
@@ -321,7 +322,7 @@ namespace lotwtool
         }
 
         [DisplayName("Meyna Shots")]
-        [Category("Stats Meyna")]
+        [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+6")]
         public int MeynaShots
         {
@@ -330,7 +331,7 @@ namespace lotwtool
         }
 
         [DisplayName("Meyna Range")]
-        [Category("Stats Meyna")]
+        [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+7")]
         public int MeynaRange
         {
@@ -339,7 +340,7 @@ namespace lotwtool
         }
 
         [DisplayName("Roas Jump")]
-        [Category("Stats Roas")]
+        [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+8")]
         public int RoasJump
         {
@@ -348,7 +349,7 @@ namespace lotwtool
         }
 
         [DisplayName("Roas Strength")]
-        [Category("Stats Roas")]
+        [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+9")]
         public int RoasStrength
         {
@@ -357,7 +358,7 @@ namespace lotwtool
         }
 
         [DisplayName("Roas Shots")]
-        [Category("Stats Roas")]
+        [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+10")]
         public int RoasShots
         {
@@ -366,7 +367,7 @@ namespace lotwtool
         }
 
         [DisplayName("Roas Range")]
-        [Category("Stats Roas")]
+        [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+11")]
         public int RoasRange
         {
@@ -375,7 +376,7 @@ namespace lotwtool
         }
 
         [DisplayName("Lyll Jump")]
-        [Category("Stats Lyll")]
+        [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+12")]
         public int LyllJump
         {
@@ -384,7 +385,7 @@ namespace lotwtool
         }
 
         [DisplayName("Lyll Strength")]
-        [Category("Stats Lyll")]
+        [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+13")]
         public int LyllStrength
         {
@@ -393,7 +394,7 @@ namespace lotwtool
         }
 
         [DisplayName("Lyll Shots")]
-        [Category("Stats Lyll")]
+        [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+14")]
         public int LyllShots
         {
@@ -402,7 +403,7 @@ namespace lotwtool
         }
 
         [DisplayName("Lyll Range")]
-        [Category("Stats Lyll")]
+        [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+15")]
         public int LyllRange
         {
@@ -411,7 +412,7 @@ namespace lotwtool
         }
 
         [DisplayName("Pochi Jump")]
-        [Category("Stats Pochi")]
+        [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+16")]
 
         public int PochiJump
@@ -421,7 +422,7 @@ namespace lotwtool
         }
 
         [DisplayName("Pochi Strength")]
-        [Category("Stats Pochi")]
+        [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+17")]
         public int PochiStrength
         {
@@ -430,7 +431,7 @@ namespace lotwtool
         }
 
         [DisplayName("Pochi Shots")]
-        [Category("Stats Pochi")]
+        [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+18")]
         public int PochiShots
         {
@@ -439,7 +440,7 @@ namespace lotwtool
         }
 
         [DisplayName("Pochi Range")]
-        [Category("Stats Pochi")]
+        [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+19")]
         public int PochiRange
         {

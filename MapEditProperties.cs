@@ -150,6 +150,7 @@ namespace lotwtool
         [DisplayName("Treasure X")]
         [Category("Treasure")]
         [Description("308 - Horizontal grid location of treasure.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int TreasureX
         {
             get { return mp.rom[ro+0x308]; }
@@ -261,6 +262,7 @@ namespace lotwtool
         [DisplayName("Teleport Player X")]
         [Category("Teleport")]
         [Description("30E - Celina teleport location horizontal grid coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int TeleportPlayerX
         {
             get { return mp.rom[ro+0x30E]; }

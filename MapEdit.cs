@@ -29,6 +29,7 @@ namespace lotwtool
         public MapEditItem itemedit = null;
 
         public byte draw_tile = 0;
+        bool run_held = false;
         int drag_item = -1;
         int drag_y;
         int drag_item_y;
@@ -418,6 +419,55 @@ namespace lotwtool
             return c;
         }
 
+        void run_from_here(int x, int y)
+        {
+            if (x < 0 || x >= 64 || y < 0 || y >= 240) return;
+            y = y & (~0xF); // snap to grid
+
+            // apply patch for starting position
+            mp.rom_modify_start();
+
+            // $1D891 is the end of a routine that sets the start location of the first room,
+            // before calling the routine to load the map.
+            // It ends with this before calling the map load:
+            //   $D891 AD 01 = LDA #$01
+            //   $D893 85 44 = STA $44
+            // Replacing with:
+            //   $D891 20 00 BE = JSR $BE00
+            //   $D894 EA       = NOP
+            byte [] PATCH1 = { 0x20, 0x00, 0xBE, 0xEA };
+            mp.rom_modify_range(16+0x1D891,PATCH1,true);
+
+            // $13E00 is an area at the end of bank $09, which is in memory at $A000 this time.
+            // It appears to be filled with zeroes, so it seemed a safe place to place a patch routine.
+            //   $BE00 A9 xx = LDA #xx
+            //   $BE02 85 yy = STA yy
+            //   ...
+            //   $BE14 50    = RTS
+            int mx = room % 4;
+            int my = room / 4;
+            int xs = x - 8;
+            if (xs < 0) xs = 0;
+            if (xs > 0x30) xs = 0x30;
+            byte [] patch2 = {
+                0xA9, (byte)x,  0x85, 0x44, // x grid location
+                0xA9, (byte)y,  0x85, 0x45, // y pixel location
+                0xA9, (byte)mx, 0x85, 0x47, // x map coordinate
+                0xA9, (byte)my, 0x85, 0x48, // y map coordinate
+                0xA9, (byte)xs, 0x85, 0x7C, // scroll x grid location (player x -8 clamped to 0-48)
+                0x60 };
+            mp.rom_modify_range(16+0x13E00,patch2,true);
+
+            // save and run
+            if (mp.saveFile(mp.filename))
+            {
+                System.Diagnostics.Process.Start(mp.filename); // run the .NES file
+            }
+
+            // undo the patch
+            mp.undo();
+        }
+
         public void refresh_all()
         {
             cache();
@@ -620,7 +670,7 @@ namespace lotwtool
                 if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
                 {
                     byte tile = mp.rom[ro+(tx*12)+ty];
-                    tileinfo = string.Format("{0,2:D},{1,2:D} = {2:X2} ({3:X1}:{4:X2}) {5}",tx,ty,tile,tile>>6,tile&63,get_tile_type(tile));
+                    tileinfo = string.Format("{0:X2},{1:X2} = {2:X2} ({3:X1}:{4:X2}) {5}",tx,ty,tile,tile>>6,tile&63,get_tile_type(tile));
                 }
                 modetips = "LMB = Draw, RMB = Pick, Ctrl+RMB = Tiles";
             }
@@ -667,6 +717,15 @@ namespace lotwtool
             int ro = 16 + (1024 * room);
 
             drag_item = -1;
+
+            if (e.Button == MouseButtons.Left &&
+                ModifierKeys.HasFlag(Keys.Control) &&
+                ModifierKeys.HasFlag(Keys.Alt))
+            {
+                run_from_here(x/16,y);
+                run_held = true;
+                return;
+            }
 
             if (mode == 0) // terrain
             {
@@ -748,7 +807,7 @@ namespace lotwtool
             int ty = y / 16;
             int ro = 16 + (1024 * room);
 
-            if (e.Button != MouseButtons.None)
+            if (e.Button != MouseButtons.None && run_held == false)
             {
                 int ti = ro+(tx*12)+ty;
                 if (mode == 0)
@@ -806,6 +865,7 @@ namespace lotwtool
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             drag_item = -1;
+            run_held = false;
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -916,6 +976,7 @@ namespace lotwtool
                 "I = Item mode\n" +
                 "P = Open tile palette\n" +
                 "Space = Toggle mode\n" +
+                "Ctrl + Shift + LMB = Save and run from here\n" +
                 "\n"+
                 "Terrain mode:\n" +
                 "LMB = Draw tile\n" +

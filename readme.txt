@@ -54,16 +54,13 @@ YY - DS4v
 https://www.romhacking.net/utilities/170/
 An old Legacy of the Wizard editor for Windows 95.
 
-
 NetBrian - Leghack
 https://www.romhacking.net/documents/86/
 A few helpful notes about the map format that made reverse engineering quicker.
 
-
 Binta - Item and Stats Hacking Guide
 https://gamefaqs.gamespot.com/nes/587404-legacy-of-the-wizard/faqs/26604
 Some notes about the game's memory usage that helped me figure out cheats.
-
 
 
 Changes

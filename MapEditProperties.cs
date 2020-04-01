@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -60,6 +61,7 @@ namespace lotwtool
         [DisplayName("Metatile Page")]
         [Category("Tileset")]
         [Description("300 - Selects the page of metatile definitions to use.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int MetatileSet
         {
             get { return mp.rom[ro+0x300]; }
@@ -73,6 +75,7 @@ namespace lotwtool
         [DisplayName("Terrain CHR 0")]
         [Category("Tileset")]
         [Description("305 - Selects the first 2K page of CHR to use for the background.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int CHR0
         {
             get { return mp.rom[ro+0x305]; }
@@ -87,6 +90,7 @@ namespace lotwtool
         [DisplayName("Terrain CHR 1")]
         [Category("Tileset")]
         [Description("306 - Selects the second 2K page of CHR to use for the background.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int CHR1
         {
             get { return mp.rom[ro+0x306]; }
@@ -101,6 +105,7 @@ namespace lotwtool
         [DisplayName("Enemy CHR")]
         [Category("Tileset")]
         [Description("301 - Selects the 1K page of CHR to use for enemies.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int CHREnemy
         {
             get { return mp.rom[ro+0x301]; }
@@ -130,6 +135,7 @@ namespace lotwtool
         [DisplayName("Treasure Contents")]
         [Category("Treasure")]
         [Description("30A - Contents of the treasure chest.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int TreasureContents
         {
             get { return mp.rom[ro+0x30A]; }
@@ -160,6 +166,7 @@ namespace lotwtool
         [DisplayName("Treasure Y")]
         [Category("Treasure")]
         [Description("309 - Vertical pixel location of treasure.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int TreasureY
         {
             get { return mp.rom[ro+0x309]; }
@@ -175,6 +182,7 @@ namespace lotwtool
         [DisplayName("Shop Item 0")]
         [Category("Shop")]
         [Description("310 - First shop item.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int ShopItem0
         {
             get { return mp.rom[ro+0x310]; }
@@ -201,6 +209,7 @@ namespace lotwtool
         [DisplayName("Shop Item 1")]
         [Category("Shop")]
         [Description("312 - Second shop item.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int ShopItem1
         {
             get { return mp.rom[ro+0x312]; }
@@ -266,6 +275,7 @@ namespace lotwtool
         [DisplayName("Teleport Player Y")]
         [Category("Teleport")]
         [Description("30F - Celina teleport location vertical pixel coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int TeleportPlayerY
         {
             get { return mp.rom[ro+0x30F]; }
@@ -279,6 +289,7 @@ namespace lotwtool
         [DisplayName("Secret Wall Tile")]
         [Category("Secret Wall")]
         [Description("302 - The tile which will secretly be replaced when touched.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int SecretWallTile
         {
             get { return mp.rom[ro+0x302]; }
@@ -294,6 +305,7 @@ namespace lotwtool
         [DisplayName("Secret Wall Replace")]
         [Category("Secret Wall")]
         [Description("303 - The tile which will replace the secret wall when touched.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int SecretWallReplace
         {
             get { return mp.rom[ro+0x303]; }
@@ -309,6 +321,7 @@ namespace lotwtool
         [DisplayName("Block Replace")]
         [Category("Secret Wall")]
         [Description("304 - The tile which will replace a block when moved or destroyed.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int BlockReplace
         {
             get { return mp.rom[ro+0x304]; }
@@ -335,6 +348,7 @@ namespace lotwtool
         [DisplayName("Music Control")]
         [Category("Music")]
         [Description("315 - Music behaviour for this map.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int MusicControl
         {
             get { return mp.rom[ro+0x315]; }
@@ -348,6 +362,7 @@ namespace lotwtool
         [DisplayName("Unknown 314")]
         [Category("Unknown")]
         [Description("314 - ?")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int Unknown314
         {
             get { return mp.rom[ro+0x314]; }
@@ -361,6 +376,7 @@ namespace lotwtool
         [DisplayName("Unknown 316")]
         [Category("Unknown")]
         [Description("316 - Rarely not 0?")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int Unknown316
         {
             get { return mp.rom[ro+0x316]; }

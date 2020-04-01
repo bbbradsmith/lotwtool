@@ -11,15 +11,6 @@ using System.Windows.Forms;
 
 namespace lotwtool
 {
-    public interface RomRefresh
-    {
-        void refresh_all();
-        void refresh_chr(int tile);
-        void refresh_metatile(int page);
-        void refresh_map(int map);
-        void refresh_close();
-    }
-
     public partial class Main : Form, RomRefresh
     {
         const string VERSION = "0"; // TODO set this
@@ -639,5 +630,65 @@ namespace lotwtool
             // family stats?
             // demo rooms if those are separate from demo playback data
         }
+    }
+
+    public interface RomRefresh // for forms that need to redraw after ROM changes
+    {
+        void refresh_all();
+        void refresh_chr(int tile);
+        void refresh_metatile(int page);
+        void refresh_map(int map);
+        void refresh_close();
+    }
+
+    public class HexByteConverter : TypeConverter // for hex bytes in property grid
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(string)) return true;
+            return base.CanConvertFrom(context, sourceType);
+        }
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            if (destinationType == typeof(string)) return true;
+            return base.CanConvertTo(context, destinationType);
+        }
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value.GetType() != typeof(string))
+                return base.ConvertFrom(context, culture, value);
+
+            int v = 0;
+            int b = 10;
+            string s = (string)value;
+            s.Trim();
+            if      (s.StartsWith("$" )) { b = 16; s = s.Substring(1); }
+            else if (s.StartsWith("0x")) { b = 16; s = s.Substring(2); }
+            try
+            {
+                v = Convert.ToInt32(s,b);
+            }
+            catch (Exception)
+            {
+                //v = 0; // this might be nicer for debugging, custom exceptions raise the debugger
+                throw new CustomIgnorableException(s + " is not a valid value for a hexadecimal byte.");
+            }
+
+            if (v < 0) v = 0;
+            if (v > 255) v = 255;
+            return v;
+        }
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string))
+                return string.Format("${0:X2}", value);
+            else
+                return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class CustomIgnorableException : Exception // just something that makes it easy to ignore in the debugger
+    {
+        public CustomIgnorableException(string s) : base(s) {}
     }
 }

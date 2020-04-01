@@ -141,6 +141,7 @@ namespace lotwtool
         [DisplayName("Sprite Main")]
         [Category("Appearance")]
         [Description("0 - Selects the first sprite in the item's animation set.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int SpriteMain
         {
             get { return mp.rom[eo+0x0]; }
@@ -155,6 +156,7 @@ namespace lotwtool
         [DisplayName("Sprite Dead")]
         [Category("Appearance")]
         [Description("6 - Selects the dead sprite.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int SpriteDead
         {
             get { return mp.rom[eo+0x6]; }
@@ -166,6 +168,7 @@ namespace lotwtool
 
         [DisplayName("Sprite Other")]
         [Category("Appearance")]
+        [TypeConverter(typeof(HexByteConverter))]
         [Description("7 - Selects the other sprite?")]
         public int SpriteOther
         {
@@ -207,6 +210,7 @@ namespace lotwtool
         [DisplayName("Position Y")]
         [Category("Position")]
         [Description("3 - The vertical pixel position.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int PositionY
         {
             get { return mp.rom[eo+0x3]; }
@@ -245,6 +249,7 @@ namespace lotwtool
         [DisplayName("Behaviour")]
         [Category("Attributes")]
         [Description("8 - Behaviour type.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int Behave
         {
             get { return mp.rom[eo+0x8]; }

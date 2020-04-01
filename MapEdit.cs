@@ -138,7 +138,6 @@ namespace lotwtool
                 {
                     uint c = get_collision_color(mp.rom[ro+(x*12)+y]);
                     Main.draw_box(d, (x*16*zoom), (y*16*zoom), 16*zoom, 16*zoom, c);
-                    // TODO
                 }
             }
         }

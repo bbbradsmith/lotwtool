@@ -121,6 +121,12 @@
     <Compile Include="Metatile.Designer.cs">
       <DependentUpon>Metatile.cs</DependentUpon>
     </Compile>
+    <Compile Include="MiscCheat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MiscCheat.Designer.cs">
+      <DependentUpon>MiscCheat.cs</DependentUpon>
+    </Compile>
     <Compile Include="PalettePick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Metatile.resx">
       <DependentUpon>Metatile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MiscCheat.resx">
+      <DependentUpon>MiscCheat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PalettePick.resx">
       <DependentUpon>PalettePick.cs</DependentUpon>

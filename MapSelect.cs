@@ -248,5 +248,10 @@ namespace lotwtool
             showCollisionToolStripMenuItem.Enabled = collision;
             redraw();
         }
+
+        private void saveAndRunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mp.saveAndTestToolStripMenuItem_Click(sender,e);
+        }
     }
 }

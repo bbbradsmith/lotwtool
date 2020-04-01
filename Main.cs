@@ -18,7 +18,8 @@ namespace lotwtool
         // ROM state
 
         public byte[] rom = { };
-        byte[] rom_unchanged = null;
+        byte[] rom_unchanged = null; // last saved file
+        byte[] rom_original = null; // as first opened
         public string filename = "";
         public int chr_offset = 0;
         public int chr_count = 0;
@@ -27,7 +28,9 @@ namespace lotwtool
         List<RomRefresh> refreshers = new List<RomRefresh>();
         List<MapEdit> mapedits = new List<MapEdit>();
         public MapSelect map_select = null;
+        public MiscCheat misc_cheat = null;
         Stack<List<int>> undo_stack = new Stack<List<int>>();
+        public bool misc_errors_shown = false;
 
         public static readonly uint[] NES_PALETTE =
         {
@@ -93,6 +96,7 @@ namespace lotwtool
             if (changePrevent("Open...")) return false;
 
             close_children();
+            misc_errors_shown = false;
 
             byte[] read_rom;
             try
@@ -109,6 +113,7 @@ namespace lotwtool
             rom = read_rom;
             filename = path; textBoxFilename.Text = filename;
             rom_unchanged = (byte[])rom.Clone();
+            rom_original = (byte[])rom.Clone();
             undo_stack.Clear();
 
             // set file boundaries
@@ -137,9 +142,15 @@ namespace lotwtool
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
+            buttonTitleScreen.Enabled = false; // TODO (romsize check)
+            buttonCredits.Enabled = false; // TODO (romsize check)
+            buttonMisc.Enabled = rom.Length >= 0x20010;
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
             CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;
+            titleScreenToolStripMenuItem.Enabled = buttonTitleScreen.Enabled;
+            creditsToolStripMenuItem.Enabled = buttonCredits.Enabled;
+            miscToolStripMenuItem.Enabled = buttonMisc.Enabled;
 
             return true;
         }
@@ -407,11 +418,27 @@ namespace lotwtool
             rom_modify(0,rom[0],false); // dummy non-change to start an empty step
         }
 
+        public void rom_modify_range(int address, byte[] c) // change a block of ROM in one step
+        {
+            rom_modify_start();
+            for (int i=0; i<c.Length; ++i)
+                rom_modify(address+i,c[i],true);
+        }
+
+        public bool rom_compare(int address, byte[] c) // check ROM for a specific string
+        {
+            if ((address + c.Length) > rom.Length) return false;
+            for (int i=0; i<c.Length; ++i)
+                if (rom[address+i] != c[i]) return false;
+            return true;
+        }
+
         // Children management
 
         public void refresh_all()
         {
             foreach (RomRefresh r in refreshers) r.refresh_all();
+            if (misc_cheat != null) misc_cheat.redraw();
         }
 
         public void refresh_chr(int tile)
@@ -446,6 +473,11 @@ namespace lotwtool
             {
                 removed = refreshers.Remove(r);
             } while (removed);
+        }
+
+        public void refresh_misc()
+        {
+            if (misc_cheat != null) misc_cheat.redraw();
         }
 
         public void add_map_edit(int room)
@@ -484,6 +516,8 @@ namespace lotwtool
         {
             while (refreshers.Count > 0)
                 refreshers[0].refresh_close();
+            if (map_select != null) map_select.Close();
+            if (misc_cheat != null) misc_cheat.Close();
         }
 
         public static bool raise_child(Form c) // convenient way to wake a child
@@ -575,6 +609,25 @@ namespace lotwtool
             add_refresh(chr_select);
         }
 
+        private void buttonTitleScreen_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // title screen editor
+        }
+
+        private void buttonCredits_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // credits editor
+        }
+
+        private void buttonMisc_Click(object sender, EventArgs e)
+        {
+            if (raise_child(misc_cheat)) return;
+            misc_cheat = new MiscCheat(this);
+            misc_cheat.Show();
+        }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ABOUT_TEXT =
@@ -593,7 +646,7 @@ namespace lotwtool
             undo();
         }
 
-        private void saveAndTestToolStripMenuItem_Click(object sender, EventArgs e)
+        public void saveAndTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (saveFile(filename))
             {
@@ -611,24 +664,34 @@ namespace lotwtool
             buttonCHREdit_Click(sender, e);
         }
 
-        private void buttonTitleScreen_Click(object sender, EventArgs e)
+        private void miscToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
-            // title screen editor
+            buttonMisc_Click(sender,e);
         }
 
-        private void buttonCredis_Click(object sender, EventArgs e)
+        private void revertAllWorkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
-            // credits editor
+            if (rom.SequenceEqual(rom_original))
+            {
+                MessageBox.Show("No changes since opening.", "Revert to Opened", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (DialogResult.OK == MessageBox.Show(
+                "Undo all changes since opening the file?",
+                "Revert to Opened",
+                MessageBoxButtons.OKCancel))
+            {
+                rom = (byte[])rom_original.Clone();
+                rom_unchanged = (byte[])rom.Clone();
+                undo_stack.Clear();
+                refresh_all();
+            }
         }
 
-        private void buttonMisc_Click(object sender, EventArgs e)
+        private void closeAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
-            // game properties
-            // family stats?
-            // demo rooms if those are separate from demo playback data
+            close_children();
         }
     }
 

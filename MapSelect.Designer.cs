@@ -38,6 +38,7 @@
             this.showSecretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.halfSecretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.zoomr16xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomr8xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,7 @@
             this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.showCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -77,7 +78,8 @@
             this.actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
             this.undoToolStripMenuItem,
-            this.saveImageToolStripMenuItem});
+            this.saveImageToolStripMenuItem,
+            this.saveAndRunToolStripMenuItem});
             this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
             this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.actionToolStripMenuItem.Text = "&Action";
@@ -86,22 +88,22 @@
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.refreshToolStripMenuItem.Text = "Re&fresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
-            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveImageToolStripMenuItem.Text = "Save &Image...";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
             // 
@@ -149,6 +151,14 @@
             this.showItemsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.showItemsToolStripMenuItem.Text = "Show &Items";
             this.showItemsToolStripMenuItem.Click += new System.EventHandler(this.showItemsToolStripMenuItem_Click);
+            // 
+            // showCollisionToolStripMenuItem
+            // 
+            this.showCollisionToolStripMenuItem.Name = "showCollisionToolStripMenuItem";
+            this.showCollisionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.showCollisionToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.showCollisionToolStripMenuItem.Text = "Show &Collision";
+            this.showCollisionToolStripMenuItem.Click += new System.EventHandler(this.showCollisionToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -283,13 +293,13 @@
             this.pictureBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDoubleClick);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
-            // showCollisionToolStripMenuItem
+            // saveAndRunToolStripMenuItem
             // 
-            this.showCollisionToolStripMenuItem.Name = "showCollisionToolStripMenuItem";
-            this.showCollisionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.showCollisionToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.showCollisionToolStripMenuItem.Text = "Show &Collision";
-            this.showCollisionToolStripMenuItem.Click += new System.EventHandler(this.showCollisionToolStripMenuItem_Click);
+            this.saveAndRunToolStripMenuItem.Name = "saveAndRunToolStripMenuItem";
+            this.saveAndRunToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.saveAndRunToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.saveAndRunToolStripMenuItem.Text = "Save and &Run";
+            this.saveAndRunToolStripMenuItem.Click += new System.EventHandler(this.saveAndRunToolStripMenuItem_Click);
             // 
             // MapSelect
             // 
@@ -344,5 +354,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripTipLabel;
         private System.Windows.Forms.ToolStripMenuItem showCollisionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAndRunToolStripMenuItem;
     }
 }

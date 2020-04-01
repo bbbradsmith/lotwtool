@@ -644,7 +644,7 @@ namespace lotwtool
         private void showCollisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             collision = !collision;
-            showCollisionToolStripMenuItem.Enabled = collision;
+            showCollisionToolStripMenuItem.Checked = collision;
             redraw();
         }
 

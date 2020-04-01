@@ -18,6 +18,22 @@ Unstable preview builds:
 https://ci.appveyor.com/project/bbbradsmith/lotwview/branch/master/artifacts
 
 
+Tips
+----
+
+You can Ctrl + Alt + Left Click to quickly test the room you're editing.
+The tile you clicked on will become the entry point of the dungeon,
+instead of map 0,0. I recommend using the Miscellaneous / Cheat menu to
+give yourself all items, and a supply of keys as well, and editing the
+home map 3,16 to put a ladder next to the door of the Drasle residence to
+enter more quickly.
+
+The Inn in map 1,16 will look strange in the editor. To make changes to it,
+use the Map Properties tool to temporarily set its Metatile Page to $1F,
+instead of $0D, and its correct tiles will appear. (The game has a special
+override that does this just for the inn.)
+
+
 Requirements
 ------------
 
@@ -29,6 +45,25 @@ https://www.microsoft.com/en-ca/download/details.aspx?id=17718
 
 This project is open source, and might be compatible with other .NET frameworks,
 which could potentially enable use on other platforms.
+
+
+Acknowledgements
+----------------
+
+YY - DS4v
+https://www.romhacking.net/utilities/170/
+An old Legacy of the Wizard editor for Windows 95.
+
+
+NetBrian - Leghack
+https://www.romhacking.net/documents/86/
+A few helpful notes about the map format that made reverse engineering quicker.
+
+
+Binta - Item and Stats Hacking Guide
+https://gamefaqs.gamespot.com/nes/587404-legacy-of-the-wizard/faqs/26604
+Some notes about the game's memory usage that helped me figure out cheats.
+
 
 
 Changes

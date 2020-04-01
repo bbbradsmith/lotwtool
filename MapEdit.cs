@@ -17,6 +17,7 @@ namespace lotwtool
         int mode = 0; // 0 terrain edit, 1 item edit
         int secret = 2; // 0 none, 1 replace, 2 blend
         bool items = true;
+        bool collision = false;
         public int room = 0;
         Main mp;
         Bitmap bmp = null;
@@ -50,8 +51,8 @@ namespace lotwtool
         {
             int ro = 16 + (1024 * room);
             int[] chri = new int[8];
-            chri[0] = mp.rom[ro + 0x305];
-            chri[2] = mp.rom[ro + 0x306];
+            chri[0] = mp.rom[ro + 0x305] & (~1);
+            chri[2] = mp.rom[ro + 0x306] & (~1);
             chri[5] = mp.rom[ro + 0x301];
             chri[1] = chri[0] + 1;
             chri[3] = chri[2] + 1;
@@ -120,14 +121,23 @@ namespace lotwtool
             for (int i=0; i<4; ++i)
             {
                 int mt = mp.rom[mto+(metatile*4)+i] + (attribute * 512);
-                if (secret != 2 || !replace)
+                if (!collision)
                 {
-                    Main.chr_blit(d, chr_cache, mt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    if (secret != 2 || !replace)
+                    {
+                        Main.chr_blit(d, chr_cache, mt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    }
+                    else // blend original and secret replacement
+                    {
+                        int smt = mp.rom[mto+((str&63)*4)+i] + ((str>>6) * 512);
+                        Main.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    }
                 }
-                else // blend original and secret replacement
+                else
                 {
-                    int smt = mp.rom[mto+((str&63)*4)+i] + ((str>>6) * 512);
-                    Main.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                    uint c = get_collision_color(mp.rom[ro+(x*12)+y]);
+                    Main.draw_box(d, (x*16*zoom), (y*16*zoom), 16*zoom, 16*zoom, c);
+                    // TODO
                 }
             }
         }
@@ -270,12 +280,13 @@ namespace lotwtool
             mp.refresh_map(room);
         }
 
-        public void render_select(BitmapData d, int room_, int zoom_, int secret_, bool items_)
+        public void render_select(BitmapData d, int room_, int zoom_, int secret_, bool items_, bool collision_)
         {
             room = room_;
             zoom = zoom_;
             secret = secret_;
             items = items_;
+            collision = collision_;
             cache();
             draw_bg(d);
             draw_items(d);
@@ -368,6 +379,43 @@ namespace lotwtool
             if (mp.rom[ro+0x302] == t) s += "*";
 
             return s;
+        }
+
+        public uint get_collision_color(int t, bool special = true)
+        {
+            t = t & 0x3F;
+
+            uint           c = 0xFF000000; // open (black)
+            if (t >= 0x30) c = 0xFFFFFFFF; // solid (white)
+            switch (t)
+            {
+            case 0:    c = 0xFF008800; break; // ladder (dark green)
+            case 1:    c = 0xFF00FF00; break; // enter (green)
+            case 2:    c = 0xFF8800FF; break; // door (purple)
+            case 3:    c = 0xFF00FFFF; break; // celina (cyan)
+            case 4:    c = 0xFFCCFF00; break; // shop (green-yellow)
+            case 5:    c = 0xFF00FFCC; break; // inn (green-blue)
+            case 0x30: c = 0xFFFF0000; break; // spike (red)
+            case 0x3E: c = 0xFFFFDD00; break; // block (yellow-orange)
+            }
+            if (!special) return c;
+
+            int ro = 16 + (1024 * room);
+            int st = mp.rom[ro+0x302]; // special tile
+            int rt = mp.rom[ro+0x303] & 0x3F; // special replacement
+            if (t == st) // special
+            {
+                if (st < 6 || st == 0x3E || rt < 6 || rt == 0x3E)
+                    return 0xFFFF00FF; // weird conversion (magenta)
+
+                // 25%/75% blend to replaced colour
+                uint rc = get_collision_color(rt,false);
+                c = (c>>2) & 0x3F3F3F;
+                rc = ((rc>>2) & 0x3F3F3F) + ((rc>>1) & 0x7F7F7F);
+                c = (c + rc) | 0xFF000000;
+            }
+
+            return c;
         }
 
         public void refresh_all()
@@ -540,6 +588,13 @@ namespace lotwtool
             // note: sender/e may be null, see updateMode
             items = !items;
             showItemsToolStripMenuItem.Checked = items;
+            redraw();
+        }
+
+        private void showCollisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            collision = !collision;
+            showCollisionToolStripMenuItem.Enabled = collision;
             redraw();
         }
 

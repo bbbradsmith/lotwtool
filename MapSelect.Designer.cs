@@ -54,6 +54,7 @@
             this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.showCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -110,6 +111,7 @@
             this.showSecretToolStripMenuItem,
             this.halfSecretToolStripMenuItem,
             this.showItemsToolStripMenuItem,
+            this.showCollisionToolStripMenuItem,
             this.toolStripMenuItem1,
             this.zoomr16xToolStripMenuItem,
             this.zoomr8xToolStripMenuItem,
@@ -281,6 +283,14 @@
             this.pictureBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDoubleClick);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
+            // showCollisionToolStripMenuItem
+            // 
+            this.showCollisionToolStripMenuItem.Name = "showCollisionToolStripMenuItem";
+            this.showCollisionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.showCollisionToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.showCollisionToolStripMenuItem.Text = "Show &Collision";
+            this.showCollisionToolStripMenuItem.Click += new System.EventHandler(this.showCollisionToolStripMenuItem_Click);
+            // 
             // MapSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -333,5 +343,6 @@
         private System.Windows.Forms.ToolStripMenuItem autoRefreshToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripTipLabel;
+        private System.Windows.Forms.ToolStripMenuItem showCollisionToolStripMenuItem;
     }
 }

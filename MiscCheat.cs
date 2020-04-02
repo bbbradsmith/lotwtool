@@ -309,6 +309,58 @@ namespace lotwtool
             set { mp.rom_modify(16+0x19BFF+15,(byte)value); mp.refresh_misc(); }
         }
 
+        // Dungeon Exit
+
+        [DisplayName("Dungeon Exit Map X")]
+        [Category("Dungeon Exit")]
+        [Description("1D86B - Dungeon exit teleport map horizontal coordinate.")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int DungeonExitMapX
+        {
+            get { return mp.rom[16+0x1D86B]; }
+            set { mp.rom_modify(16+0x1D86B,(byte)value); }
+        }
+
+        [DisplayName("Dungeon Exit Map Y")]
+        [Category("Dungeon Exit")]
+        [Description("1D867 - Dungeon exit teleport map vertical coordinate.")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int DungeonExitMapY
+        {
+            get { return mp.rom[16+0x1D867]; }
+            set { mp.rom_modify(16+0x1D867,(byte)value); }
+        }
+
+        [DisplayName("Dungeon Exit Player X")]
+        [Category("Dungeon Exit")]
+        [Description("1D877 - Dungeon exit teleport location horizontal grid coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int DungeonExitPlayerX
+        {
+            get { return mp.rom[16+0x1D877]; }
+            set { mp.rom_modify(16+0x1D877,(byte)value); }
+        }
+
+        [DisplayName("Dungeon Exit Scroll X")]
+        [Category("Dungeon Exit")]
+        [Description("1D86F - Dungeon exit scroll grid position. Min $00, Max $30, should be 0-15 less than player X.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int DungeonExitScrollX
+        {
+            get { return mp.rom[16+0x1D86F]; }
+            set { mp.rom_modify(16+0x1D86F,(byte)value); }
+        }
+
+        [DisplayName("Dungeon Exit Player Y")]
+        [Category("Dungeon Exit")]
+        [Description("1D873 - Dungeon exit teleport location vertical pixel coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int DungeonExitPlayerY
+        {
+            get { return mp.rom[16+0x1D873]; }
+            set { mp.rom_modify(16+0x1D873,(byte)value); }
+        }
+
         // Family Stats
         // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi
 

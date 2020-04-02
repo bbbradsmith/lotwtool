@@ -461,7 +461,7 @@ namespace lotwtool
             //   $BE14 60    = RTS
             int mx = room % 4;
             int my = room / 4;
-            int xs = x - 8;
+            int xs = x - 8; // princess celina portrait teleports set scroll as x-8 clamped to 0-48
             if (xs < 0) xs = 0;
             if (xs > 0x30) xs = 0x30;
             byte [] patch2 = {
@@ -469,7 +469,7 @@ namespace lotwtool
                 0xA9, (byte)y,  0x85, 0x45, // y pixel location
                 0xA9, (byte)mx, 0x85, 0x47, // x map coordinate
                 0xA9, (byte)my, 0x85, 0x48, // y map coordinate
-                0xA9, (byte)xs, 0x85, 0x7C, // scroll x grid location (player x -8 clamped to 0-48)
+                0xA9, (byte)xs, 0x85, 0x7C, // scroll x grid location
                 0x60 };
             mp.rom_modify_range(RUN_FROM_HERE_PATCH2_ADDR,patch2,true);
 
@@ -704,7 +704,7 @@ namespace lotwtool
                 if (tx >= 0 && tx < 64 && ty >= 0 && ty < 16)
                 {
                     byte tile = mp.rom[ro+(tx*12)+ty];
-                    tileinfo = string.Format("{0:X2},{1:X2} = {2:X2} ({3:X1}:{4:X2}) {5}",tx,ty,tile,tile>>6,tile&63,get_tile_type(tile));
+                    tileinfo = string.Format("{0:X2},{1:X1} = {2:X2} ({3:X1}:{4:X2}) {5}",tx,ty,tile,tile>>6,tile&63,get_tile_type(tile));
                 }
                 modetips = "LMB = Draw, RMB = Pick, Ctrl+RMB = Tiles";
             }

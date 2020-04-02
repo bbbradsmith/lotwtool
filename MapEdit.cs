@@ -418,6 +418,11 @@ namespace lotwtool
             return c;
         }
 
+        static readonly int RUN_FROM_HERE_PATCH1_ADDR = 16 + 0x1D891;
+        static readonly byte[] RUN_FROM_HERE_PATCH1   = { 0x20, 0x00, 0xBE, 0xEA };
+        static readonly byte[] RUN_FROM_HERE_UNPATCH1 = { 0xA9, 0x01, 0x85, 0x44 };
+        static readonly int RUN_FROM_HERE_PATCH2_ADDR = 16 + 0x13E00;
+        static readonly byte[] RUN_FROM_HERE_UNPATCH2 = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         void run_from_here(int x, int y)
         {
             if (x < 0 || x >= 64 || y < 0 || y >= 240) return;
@@ -429,13 +434,12 @@ namespace lotwtool
             // $1D891 is the end of a routine that sets the start location of the first room,
             // before calling the routine to load the map.
             // It ends with this before calling the map load:
-            //   $D891 AD 01 = LDA #$01
+            //   $D891 A9 01 = LDA #$01
             //   $D893 85 44 = STA $44
             // Replacing with:
             //   $D891 20 00 BE = JSR $BE00
             //   $D894 EA       = NOP
-            byte [] PATCH1 = { 0x20, 0x00, 0xBE, 0xEA };
-            mp.rom_modify_range(16+0x1D891,PATCH1,true);
+            mp.rom_modify_range(RUN_FROM_HERE_PATCH1_ADDR,RUN_FROM_HERE_PATCH1,true);
 
             // $13E00 is an area at the end of bank $09, which is in memory at $A000 this time.
             // It appears to be filled with zeroes, so it seemed a safe place to place a patch routine.
@@ -455,7 +459,12 @@ namespace lotwtool
                 0xA9, (byte)my, 0x85, 0x48, // y map coordinate
                 0xA9, (byte)xs, 0x85, 0x7C, // scroll x grid location (player x -8 clamped to 0-48)
                 0x60 };
-            mp.rom_modify_range(16+0x13E00,patch2,true);
+            mp.rom_modify_range(RUN_FROM_HERE_PATCH2_ADDR,patch2,true);
+
+            if ((RUN_FROM_HERE_PATCH1.Length != RUN_FROM_HERE_UNPATCH1.Length) ||
+                (patch2.Length != RUN_FROM_HERE_UNPATCH2.Length))
+                throw new Exception("Fatal error! Run from here patch length mismatch?");
+
 
             // save and run
             if (mp.saveFile(mp.filename))
@@ -465,6 +474,19 @@ namespace lotwtool
 
             // undo the patch
             mp.undo();
+        }
+        static public void remove_run_from_here(Main mp)
+        {
+            if (!detect_run_from_here(mp)) return; // no patch to remove
+            mp.rom_modify_start();
+            mp.rom_modify_range(RUN_FROM_HERE_PATCH1_ADDR,RUN_FROM_HERE_UNPATCH1,true);
+            mp.rom_modify_range(RUN_FROM_HERE_PATCH2_ADDR,RUN_FROM_HERE_UNPATCH2,true);
+        }
+        static public bool detect_run_from_here(Main mp) // true if the patch has been applied
+        {
+            return !(
+                mp.rom_compare(RUN_FROM_HERE_PATCH1_ADDR,RUN_FROM_HERE_UNPATCH1) &&
+                mp.rom_compare(RUN_FROM_HERE_PATCH2_ADDR,RUN_FROM_HERE_UNPATCH2));
         }
 
         public void refresh_all()

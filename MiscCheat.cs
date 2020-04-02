@@ -70,6 +70,7 @@ namespace lotwtool
     {
         Main mp;
         int family_offset;
+        string rom_type = "Unknown. Corrupt?";
         public string errors = "";
 
         public MiscCheatProperties(Main parent)
@@ -77,13 +78,39 @@ namespace lotwtool
             mp = parent;
 
             // find starting item table
-            family_offset   = 16 + 0x1FFA7;
-            if      (mp.rom_compare(16+0x1E1E7,new byte[]{0xB9,0xA7,0xFF})) // Legacy of the Wizard
-            { } // already default
-            else if (mp.rom_compare(16+0x1E1F1,new byte[]{0xB9,0xB6,0xFF})) // Dragon Slayer IV
-            { family_offset = 16 + 0x1FFB6; }
+            family_offset   = 16 + 0x1FFA7; // default = Legacy of the Wizard
+            if      (mp.rom_compare(16+0x1E1E7,new byte[]{0xB9,0xA7,0xFF}))
+            {
+                rom_type = "Legacy of the Wizard (NES)";
+            }
+            else if (mp.rom_compare(16+0x1E1F1,new byte[]{0xB9,0xB6,0xFF}))
+            {
+                rom_type = "Dragon Slayer IV (Famicom)";
+                family_offset = 16 + 0x1FFB6;
+            }
             else
-            { errors += "Starting family stats location could not be detected. Corrupt ROM?\n"; }
+            {
+                errors += "Starting family stats location could not be detected. Corrupt ROM?\n";
+            }
+        }
+
+        // (ROM)
+
+        [DisplayName("Region Type")]
+        [Category("(ROM)")]
+        [Description("Detected base ROM version.")]
+        public string ROMType
+        {
+            get { return rom_type; }
+        }
+
+        [DisplayName("Start location patch removed?")]
+        [Category("(ROM)")]
+        [Description("Set true to remove the \"run from here\" patch if accidentally present.")]
+        public bool ROMRFHPatch
+        {
+            get { return !MapEdit.detect_run_from_here(mp); }
+            set { if (value) MapEdit.remove_run_from_here(mp); }
         }
 
         // Items

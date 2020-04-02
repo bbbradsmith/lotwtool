@@ -23,10 +23,18 @@ Tips
 
 You can Ctrl + Alt + Left Click to quickly test the room you're editing.
 The tile you clicked on will become the entry point of the dungeon,
-instead of map 0,0. I recommend using the Miscellaneous / Cheat menu to
+instead of map 0,0. This will save the ROM with a starting location patch
+and open it in your program associated with .NES files.
+
+The editor will automatically undo the patch in memory, but if the file
+is accidentally left unsaved after a test, the patch may persist.
+This can be removed in the Miscellaneous / Cheat menu.
+
+I recommend also using the Miscellaneous / Cheat menu to
 give yourself all items, and a supply of keys as well, and editing the
 home map 3,16 to put a ladder next to the door of the Drasle residence to
 enter more quickly.
+
 
 The Inn in map 1,16 will look strange in the editor. To make changes to it,
 use the Map Properties tool to temporarily set its Metatile Page to $1F,

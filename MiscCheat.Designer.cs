@@ -43,7 +43,7 @@
             this.actionToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(310, 24);
+            this.menuStrip.Size = new System.Drawing.Size(364, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -78,14 +78,14 @@
             this.propertyGrid.Location = new System.Drawing.Point(0, 24);
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.propertyGrid.Size = new System.Drawing.Size(310, 638);
+            this.propertyGrid.Size = new System.Drawing.Size(364, 638);
             this.propertyGrid.TabIndex = 1;
             // 
             // MiscCheat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(310, 662);
+            this.ClientSize = new System.Drawing.Size(364, 662);
             this.Controls.Add(this.propertyGrid);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

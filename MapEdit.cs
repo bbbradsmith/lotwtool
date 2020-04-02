@@ -446,7 +446,7 @@ namespace lotwtool
             //   $BE00 A9 xx = LDA #xx
             //   $BE02 85 yy = STA yy
             //   ...
-            //   $BE14 50    = RTS
+            //   $BE14 60    = RTS
             int mx = room % 4;
             int my = room / 4;
             int xs = x - 8;

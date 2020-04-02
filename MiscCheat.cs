@@ -130,6 +130,7 @@ namespace lotwtool
         [DisplayName("Gold")]
         [Category("Items")]
         [Description("19BF9")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Gold
         {
             get { return mp.rom[16+0x19BF9]; }
@@ -139,6 +140,7 @@ namespace lotwtool
         [DisplayName("Keys")]
         [Category("Items")]
         [Description("19BFA")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Keys
         {
             get { return mp.rom[16+0x19BFA]; }
@@ -150,6 +152,7 @@ namespace lotwtool
         [DisplayName("Wings")]
         [Category("Items Extra")]
         [Description("19BFF+0")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Wings
         {
             get { return mp.rom[16+0x19BFF+0]; }
@@ -159,6 +162,7 @@ namespace lotwtool
         [DisplayName("Armor")]
         [Category("Items Extra")]
         [Description("19BFF+1")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Armor
         {
             get { return mp.rom[16+0x19BFF+1]; }
@@ -168,6 +172,7 @@ namespace lotwtool
         [DisplayName("Mattock")]
         [Category("Items Extra")]
         [Description("19BFF+2")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Mattock
         {
             get { return mp.rom[16+0x19BFF+2]; }
@@ -177,6 +182,7 @@ namespace lotwtool
         [DisplayName("Glove")]
         [Category("Items Extra")]
         [Description("19BFF+3")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Glove
         {
             get { return mp.rom[16+0x19BFF+3]; }
@@ -186,6 +192,7 @@ namespace lotwtool
         [DisplayName("Rod")]
         [Category("Items Extra")]
         [Description("19BFF+4")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Rod
         {
             get { return mp.rom[16+0x19BFF+4]; }
@@ -195,6 +202,7 @@ namespace lotwtool
         [DisplayName("Power Boots")]
         [Category("Items Extra")]
         [Description("19BFF+5")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int PowerBoots
         {
             get { return mp.rom[16+0x19BFF+5]; }
@@ -204,6 +212,7 @@ namespace lotwtool
         [DisplayName("Jump Shoes")]
         [Category("Items Extra")]
         [Description("19BFF+6")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int JumpShoes
         {
             get { return mp.rom[16+0x19BFF+6]; }
@@ -213,6 +222,7 @@ namespace lotwtool
         [DisplayName("Key Stick")]
         [Category("Items Extra")]
         [Description("19BFF+7")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int KeyStick
         {
             get { return mp.rom[16+0x19BFF+7]; }
@@ -222,6 +232,7 @@ namespace lotwtool
         [DisplayName("Power Knuckle")]
         [Category("Items Extra")]
         [Description("19BFF+8")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Knuckle
         {
             get { return mp.rom[16+0x19BFF+8]; }
@@ -231,6 +242,7 @@ namespace lotwtool
         [DisplayName("Fire Rod")]
         [Category("Items Extra")]
         [Description("19BFF+9")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int FireRod
         {
             get { return mp.rom[16+0x19BFF+9]; }
@@ -240,6 +252,7 @@ namespace lotwtool
         [DisplayName("Shield")]
         [Category("Items Extra")]
         [Description("19BFF+10")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Shield
         {
             get { return mp.rom[16+0x19BFF+10]; }
@@ -249,6 +262,7 @@ namespace lotwtool
         [DisplayName("Magic Bottle")]
         [Category("Items Extra")]
         [Description("19BFF+11")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MagicBottle
         {
             get { return mp.rom[16+0x19BFF+11]; }
@@ -258,6 +272,7 @@ namespace lotwtool
         [DisplayName("Elixer")]
         [Category("Items Extra")]
         [Description("19BFF+12")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Elixer
         {
             get { return mp.rom[16+0x19BFF+12]; }
@@ -267,6 +282,7 @@ namespace lotwtool
         [DisplayName("Crystal")]
         [Category("Items Extra")]
         [Description("19BFF+13")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Crystal
         {
             get { return mp.rom[16+0x19BFF+13]; }
@@ -276,6 +292,7 @@ namespace lotwtool
         [DisplayName("Crowns")]
         [Category("Items Extra")]
         [Description("19BFF+14")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Crowns
         {
             get { return mp.rom[16+0x19BFF+14]; }
@@ -285,6 +302,7 @@ namespace lotwtool
         [DisplayName("DragonSlayer")]
         [Category("Items Extra")]
         [Description("19BFF+15")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int DragonSlayer
         {
             get { return mp.rom[16+0x19BFF+15]; }
@@ -294,9 +312,12 @@ namespace lotwtool
         // Family Stats
         // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi
 
+        // TODO 1FFC5 = 4 byte palette of Xemn, etc... (directly follows equip)
+
         [DisplayName("Xemn Jump")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+0")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int XemnJump
         {
             get { return mp.rom[family_offset+0]; }
@@ -306,6 +327,7 @@ namespace lotwtool
         [DisplayName("Xemn Strength")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+1")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int XemnStrength
         {
             get { return mp.rom[family_offset+1]; }
@@ -315,6 +337,7 @@ namespace lotwtool
         [DisplayName("Xemn Shots")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+2")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int XemnShots
         {
             get { return mp.rom[family_offset+2]; }
@@ -324,15 +347,37 @@ namespace lotwtool
         [DisplayName("Xemn Range")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+3")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int XemnRange
         {
             get { return mp.rom[family_offset+3]; }
             set { mp.rom_modify(family_offset+3,(byte)value); }
         }
 
+        [DisplayName("Xemn Equip 0")]
+        [Category("Stats 0 Xemn")]
+        [Description("1FFA7/1FFB6+20")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int XemnEquip0
+        {
+            get { return mp.rom[family_offset+20]; }
+            set { mp.rom_modify(family_offset+20,(byte)value); }
+        }
+
+        [DisplayName("Xemn Equip 1")]
+        [Category("Stats 0 Xemn")]
+        [Description("1FFA7/1FFB6+21")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int XemnEquip1
+        {
+            get { return mp.rom[family_offset+21]; }
+            set { mp.rom_modify(family_offset+21,(byte)value); }
+        }
+
         [DisplayName("Meyna Jump")]
         [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+4")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MeynaJump
         {
             get { return mp.rom[family_offset+4]; }
@@ -342,6 +387,7 @@ namespace lotwtool
         [DisplayName("Meyna Strength")]
         [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+5")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MeynaStrength
         {
             get { return mp.rom[family_offset+5]; }
@@ -351,6 +397,7 @@ namespace lotwtool
         [DisplayName("Meyna Shots")]
         [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+6")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MeynaShots
         {
             get { return mp.rom[family_offset+6]; }
@@ -360,15 +407,37 @@ namespace lotwtool
         [DisplayName("Meyna Range")]
         [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+7")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MeynaRange
         {
             get { return mp.rom[family_offset+7]; }
             set { mp.rom_modify(family_offset+7,(byte)value); }
         }
 
+        [DisplayName("Meyna Equip 0")]
+        [Category("Stats 1 Meyna")]
+        [Description("1FFA7/1FFB6+22")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int MeynaEquip0
+        {
+            get { return mp.rom[family_offset+22]; }
+            set { mp.rom_modify(family_offset+22,(byte)value); }
+        }
+
+        [DisplayName("Meyna Equip 1")]
+        [Category("Stats 1 Meyna")]
+        [Description("1FFA7/1FFB6+23")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int MeynaEquip1
+        {
+            get { return mp.rom[family_offset+23]; }
+            set { mp.rom_modify(family_offset+23,(byte)value); }
+        }
+
         [DisplayName("Roas Jump")]
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+8")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int RoasJump
         {
             get { return mp.rom[family_offset+8]; }
@@ -378,6 +447,7 @@ namespace lotwtool
         [DisplayName("Roas Strength")]
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+9")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int RoasStrength
         {
             get { return mp.rom[family_offset+9]; }
@@ -387,6 +457,7 @@ namespace lotwtool
         [DisplayName("Roas Shots")]
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+10")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int RoasShots
         {
             get { return mp.rom[family_offset+10]; }
@@ -396,15 +467,37 @@ namespace lotwtool
         [DisplayName("Roas Range")]
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+11")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int RoasRange
         {
             get { return mp.rom[family_offset+11]; }
             set { mp.rom_modify(family_offset+11,(byte)value); }
         }
 
+        [DisplayName("Roas Equip 0")]
+        [Category("Stats 2 Roas")]
+        [Description("1FFA7/1FFB6+24")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int RoasEquip0
+        {
+            get { return mp.rom[family_offset+24]; }
+            set { mp.rom_modify(family_offset+24,(byte)value); }
+        }
+
+        [DisplayName("Roas Equip 1")]
+        [Category("Stats 2 Roas")]
+        [Description("1FFA7/1FFB6+25")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int RoasEquip1
+        {
+            get { return mp.rom[family_offset+25]; }
+            set { mp.rom_modify(family_offset+25,(byte)value); }
+        }
+
         [DisplayName("Lyll Jump")]
         [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+12")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int LyllJump
         {
             get { return mp.rom[family_offset+12]; }
@@ -414,6 +507,7 @@ namespace lotwtool
         [DisplayName("Lyll Strength")]
         [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+13")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int LyllStrength
         {
             get { return mp.rom[family_offset+13]; }
@@ -423,6 +517,7 @@ namespace lotwtool
         [DisplayName("Lyll Shots")]
         [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+14")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int LyllShots
         {
             get { return mp.rom[family_offset+14]; }
@@ -432,16 +527,38 @@ namespace lotwtool
         [DisplayName("Lyll Range")]
         [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+15")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int LyllRange
         {
             get { return mp.rom[family_offset+15]; }
             set { mp.rom_modify(family_offset+15,(byte)value); }
         }
 
+        [DisplayName("Lyll Equip 0")]
+        [Category("Stats 3 Lyll")]
+        [Description("1FFA7/1FFB6+26")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int LyllEquip0
+        {
+            get { return mp.rom[family_offset+26]; }
+            set { mp.rom_modify(family_offset+26,(byte)value); }
+        }
+
+        [DisplayName("Lyll Equip 1")]
+        [Category("Stats 3 Lyll")]
+        [Description("1FFA7/1FFB6+27")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int LyllEquip1
+        {
+            get { return mp.rom[family_offset+27]; }
+            set { mp.rom_modify(family_offset+27,(byte)value); }
+        }
+
         [DisplayName("Pochi Jump")]
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+16")]
 
+        [TypeConverter(typeof(IntByteConverter))]
         public int PochiJump
         {
             get { return mp.rom[family_offset+16]; }
@@ -451,6 +568,7 @@ namespace lotwtool
         [DisplayName("Pochi Strength")]
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+17")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int PochiStrength
         {
             get { return mp.rom[family_offset+17]; }
@@ -460,6 +578,7 @@ namespace lotwtool
         [DisplayName("Pochi Shots")]
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+18")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int PochiShots
         {
             get { return mp.rom[family_offset+18]; }
@@ -469,10 +588,31 @@ namespace lotwtool
         [DisplayName("Pochi Range")]
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+19")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int PochiRange
         {
             get { return mp.rom[family_offset+19]; }
             set { mp.rom_modify(family_offset+19,(byte)value); }
+        }
+
+        [DisplayName("Pochi Equip 0")]
+        [Category("Stats 4 Pochi")]
+        [Description("1FFA7/1FFB6+28")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int PochiEquip0
+        {
+            get { return mp.rom[family_offset+28]; }
+            set { mp.rom_modify(family_offset+28,(byte)value); }
+        }
+
+        [DisplayName("Pochi Equip 1")]
+        [Category("Stats 4 Pochi")]
+        [Description("1FFA7/1FFB6+29")]
+        [TypeConverter(typeof(BinaryByteConverter))]
+        public int PochiEquip1
+        {
+            get { return mp.rom[family_offset+29]; }
+            set { mp.rom_modify(family_offset+29,(byte)value); }
         }
     }
 }

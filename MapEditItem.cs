@@ -168,8 +168,8 @@ namespace lotwtool
 
         [DisplayName("Sprite Other")]
         [Category("Appearance")]
-        [TypeConverter(typeof(HexByteConverter))]
         [Description("7 - Selects the other sprite?")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int SpriteOther
         {
             get { return mp.rom[eo+0x7]; }
@@ -182,6 +182,7 @@ namespace lotwtool
         [DisplayName("Palette")]
         [Category("Appearance")]
         [Description("1 - Selects the colour palette to use.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Palette
         {
             get { return mp.rom[eo+0x1]; }
@@ -226,6 +227,7 @@ namespace lotwtool
         [DisplayName("Hit points")]
         [Category("Attributes")]
         [Description("4 - Damge received before death. (Death takes one extra point.)")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int HitPoints
         {
             get { return mp.rom[eo+0x4]; }
@@ -238,6 +240,7 @@ namespace lotwtool
         [DisplayName("Damage")]
         [Category("Attributes")]
         [Description("5 - Damage to player on contact.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Damage
         {
             get { return mp.rom[eo+0x5]; }
@@ -263,6 +266,7 @@ namespace lotwtool
         [DisplayName("Speed")]
         [Category("Attributes")]
         [Description("9 - Movement speed.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int Speed
         {
             get { return mp.rom[eo+0x9]; }

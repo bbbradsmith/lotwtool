@@ -727,6 +727,7 @@ namespace lotwtool
             s.Trim();
             if      (s.StartsWith("$" )) { b = 16; s = s.Substring(1); }
             else if (s.StartsWith("0x")) { b = 16; s = s.Substring(2); }
+            else if (s.StartsWith("%" )) { b = 2;  s = s.Substring(1); }
             try
             {
                 v = Convert.ToInt32(s,b);
@@ -734,7 +735,7 @@ namespace lotwtool
             catch (Exception)
             {
                 //v = 0; // this might be nicer for debugging, custom exceptions raise the debugger
-                throw new CustomIgnorableException(s + " is not a valid value for a hexadecimal byte.");
+                throw new CustomIgnorableException(s + " is not a valid number.");
             }
 
             if (v < 0) v = 0;
@@ -745,6 +746,36 @@ namespace lotwtool
         {
             if (destinationType == typeof(string))
                 return string.Format("${0:X2}", value);
+            else
+                return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class BinaryByteConverter : HexByteConverter
+    {
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string))
+                return string.Format("%{0}{1}{2}{3}{4}{5}{6}{7}",
+                    (((int)value)>>7)&1,
+                    (((int)value)>>6)&1,
+                    (((int)value)>>5)&1,
+                    (((int)value)>>4)&1,
+                    (((int)value)>>3)&1,
+                    (((int)value)>>2)&1,
+                    (((int)value)>>1)&1,
+                    (((int)value)>>0)&1);
+            else
+                return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class IntByteConverter : HexByteConverter
+    {
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string))
+                return string.Format("{0}", value);
             else
                 return base.ConvertTo(context, culture, value, destinationType);
         }

@@ -196,6 +196,7 @@ namespace lotwtool
         [DisplayName("Shop Price 0")]
         [Category("Shop")]
         [Description("311 - First shop price.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int ShopPrice0
         {
             get { return mp.rom[ro+0x311]; }
@@ -223,6 +224,7 @@ namespace lotwtool
         [DisplayName("Shop Price 1")]
         [Category("Shop")]
         [Description("313 - Second shop price.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int ShopPrice1
         {
             get { return mp.rom[ro+0x313]; }
@@ -236,6 +238,7 @@ namespace lotwtool
         [DisplayName("Teleport Map X")]
         [Category("Teleport")]
         [Description("30C - Celina teleport map horizontal coordinate.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int TeleportMapX
         {
             get { return mp.rom[ro+0x30C]; }
@@ -249,6 +252,7 @@ namespace lotwtool
         [DisplayName("Teleport Map Y")]
         [Category("Teleport")]
         [Description("30D - Celina teleport map vertical coordinate.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int TeleportMapY
         {
             get { return mp.rom[ro+0x30D]; }
@@ -336,6 +340,7 @@ namespace lotwtool
         [DisplayName("Music Track")]
         [Category("Music")]
         [Description("30B - Music to play on this map.")]
+        [TypeConverter(typeof(IntByteConverter))]
         public int MusicTrack
         {
             get { return mp.rom[ro+0x30B]; }

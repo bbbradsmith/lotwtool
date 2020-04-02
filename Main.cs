@@ -425,6 +425,27 @@ namespace lotwtool
                 rom_modify(address+i,c[i],true);
         }
 
+        public void rom_modify_hex32(int address, uint v, bool append=false) // writes big endian 32 bit
+        {
+            rom_modify_range(address, new byte[] {
+                    (byte)((v>>24)&0xFF),
+                    (byte)((v>>16)&0xFF),
+                    (byte)((v>> 8)&0xFF),
+                    (byte)((v>> 0)&0xFF)}, append);
+        }
+        
+        public uint rom_hex32(int address) // reads big endian 32 bit
+        {
+            uint v = 0;
+            for (int i=0; i<4; ++i)
+            {
+                v <<= 8;
+                if ((address+i) < rom.Length)
+                    v |= rom[address+i];
+            }
+            return v;
+        }
+
         public bool rom_compare(int address, byte[] c) // check ROM for a specific string
         {
             if ((address + c.Length) > rom.Length) return false;
@@ -706,6 +727,7 @@ namespace lotwtool
 
     public class HexByteConverter : TypeConverter // for hex bytes in property grid
     {
+        protected virtual bool byterange() { return true; }
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string)) return true;
@@ -738,8 +760,11 @@ namespace lotwtool
                 throw new CustomIgnorableException(s + " is not a valid number.");
             }
 
-            if (v < 0) v = 0;
-            if (v > 255) v = 255;
+            if (byterange())
+            {
+                if (v < 0) v = 0;
+                if (v > 255) v = 255;
+            }
             return v;
         }
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
@@ -776,6 +801,18 @@ namespace lotwtool
         {
             if (destinationType == typeof(string))
                 return string.Format("{0}", value);
+            else
+                return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class Hex32ByteConverter : HexByteConverter
+    {
+        protected override bool byterange() { return false; } // no clamping
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string))
+                return string.Format("${0:X8}", value);
             else
                 return base.ConvertTo(context, culture, value, destinationType);
         }

@@ -312,8 +312,6 @@ namespace lotwtool
         // Family Stats
         // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi
 
-        // TODO 1FFC5 = 4 byte palette of Xemn, etc... (directly follows equip)
-
         [DisplayName("Xemn Jump")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+0")]
@@ -372,6 +370,17 @@ namespace lotwtool
         {
             get { return mp.rom[family_offset+21]; }
             set { mp.rom_modify(family_offset+21,(byte)value); }
+        }
+
+        // TODO these palette entries should use a custom palette picker/editor control
+        [DisplayName("Xemn Palette")]
+        [Category("Stats 0 Xemn")]
+        [Description("1FFA7/1FFB6+30")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint XemnPalette
+        {
+            get { return mp.rom_hex32(family_offset+30); }
+            set { mp.rom_modify_hex32(family_offset+30,value); }
         }
 
         [DisplayName("Meyna Jump")]
@@ -434,6 +443,16 @@ namespace lotwtool
             set { mp.rom_modify(family_offset+23,(byte)value); }
         }
 
+        [DisplayName("Meyna Palette")]
+        [Category("Stats 1 Meyna")]
+        [Description("1FFA7/1FFB6+34")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint MeynaPalette
+        {
+            get { return mp.rom_hex32(family_offset+34); }
+            set { mp.rom_modify_hex32(family_offset+34,value); }
+        }
+
         [DisplayName("Roas Jump")]
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+8")]
@@ -492,6 +511,16 @@ namespace lotwtool
         {
             get { return mp.rom[family_offset+25]; }
             set { mp.rom_modify(family_offset+25,(byte)value); }
+        }
+
+        [DisplayName("Roas Palette")]
+        [Category("Stats 2 Roas")]
+        [Description("1FFA7/1FFB6+38")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint RoasPalette
+        {
+            get { return mp.rom_hex32(family_offset+38); }
+            set { mp.rom_modify_hex32(family_offset+38,value); }
         }
 
         [DisplayName("Lyll Jump")]
@@ -554,6 +583,16 @@ namespace lotwtool
             set { mp.rom_modify(family_offset+27,(byte)value); }
         }
 
+        [DisplayName("Lyll Palette")]
+        [Category("Stats 3 Lyll")]
+        [Description("1FFA7/1FFB6+42")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint LyllPalette
+        {
+            get { return mp.rom_hex32(family_offset+42); }
+            set { mp.rom_modify_hex32(family_offset+42,value); }
+        }
+
         [DisplayName("Pochi Jump")]
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+16")]
@@ -614,5 +653,16 @@ namespace lotwtool
             get { return mp.rom[family_offset+29]; }
             set { mp.rom_modify(family_offset+29,(byte)value); }
         }
+
+        [DisplayName("Pochi Palette")]
+        [Category("Stats 4 Pochi")]
+        [Description("1FFA7/1FFB6+46")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint PochiPalette
+        {
+            get { return mp.rom_hex32(family_offset+46); }
+            set { mp.rom_modify_hex32(family_offset+46,value); }
+        }
+
     }
 }

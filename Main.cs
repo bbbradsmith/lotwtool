@@ -76,6 +76,8 @@ namespace lotwtool
             0xFFDDFFCC,
         };
 
+        public const uint GRID = 0xFFFFFF00; // yellow
+
         // Common code
 
         bool changed()

@@ -19,11 +19,12 @@ namespace lotwtool
         Bitmap bmp = null;
         Bitmap bpal = null;
         int color_select = 0;
-        const uint GRID = 0xFF664400;
         const uint SELECT = 0xFFFF0000;
         bool drawing = false;
-        int zoom = 8;
-        static int default_zoom = 8;
+        int zoom = 12;
+        static int default_zoom = 12;
+        bool grid = false;
+        static bool default_grid = false;
 
         void find_tiles(int tile)
         {
@@ -62,10 +63,17 @@ namespace lotwtool
                 Main.chr_blit(d, chr_cache, i, XO[i], YO[i], zoom);
 
             // grid
-            for (int i=0; i<9; ++i)
+            if (grid)
             {
-                Main.draw_hline(d,span,span+(i*zoom),span+1,GRID);
-                Main.draw_vline(d,span+(i*zoom),span,span+1,GRID);
+                for (int i=0; i<9; ++i)
+                {
+                    Main.draw_hline(d,span,span+(i*zoom),span+1,Main.GRID);
+                    Main.draw_vline(d,span+(i*zoom),span,span+1,Main.GRID);
+                }
+            }
+            else
+            {
+                Main.draw_outbox(d,span-1,span-1,span+2,span+2,Main.GRID);
             }
 
             bmp.UnlockBits(d);
@@ -116,6 +124,7 @@ namespace lotwtool
             find_tiles(tile);
             chr_cache = new uint[9 * 64];
             zoom = default_zoom;
+            grid = default_grid;
             updateZoom();
             //redraw(); // handled by updateZoom
         }
@@ -300,6 +309,14 @@ namespace lotwtool
         private void zoom16xToolStripMenuItem_Click(object sender, EventArgs e)
         {
             zoom = 16; updateZoom();
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            grid = !grid;
+            default_grid = grid;
+            gridToolStripMenuItem.Checked = grid;
+            redraw();
         }
     }
 }

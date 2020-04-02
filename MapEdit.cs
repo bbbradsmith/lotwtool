@@ -18,6 +18,9 @@ namespace lotwtool
         int secret = 2; // 0 none, 1 replace, 2 blend
         bool items = true;
         bool collision = false;
+        bool grid = false;
+        static bool default_grid = false;
+
         public int room = 0;
         Main mp;
         Bitmap bmp = null;
@@ -153,6 +156,14 @@ namespace lotwtool
             }
         }
 
+        void draw_grid(BitmapData d)
+        {
+            for (int y=0; y<12; ++y)
+                Main.draw_hline(d,0,y*16*zoom,64*16*zoom,Main.GRID);
+            for (int x=0; x<64; ++x)
+                Main.draw_vline(d,x*16*zoom,0,12*16*zoom,Main.GRID);
+        }
+
         void draw_sprite(BitmapData d, int s, int a, int x, int y)
         {
             if (s>=256) return;
@@ -257,6 +268,7 @@ namespace lotwtool
             }
             BitmapData d = draw_lock();
             draw_bg(d);
+            if (grid) draw_grid(d);
             draw_items(d);
             draw_unlock(d);
         }
@@ -530,6 +542,7 @@ namespace lotwtool
             mp = parent;
             room = room_;
             zoom = default_zoom;
+            grid = default_grid;
             InitializeComponent();
 
             int x = room % 4;
@@ -1013,6 +1026,14 @@ namespace lotwtool
                 "Shift + LMB = Move with free Y position\n" +
                 "RMB = Edit item\n";
             MessageBox.Show(HELPTEXT,"Map Edit Help");
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            grid = !grid;
+            default_grid = grid;
+            gridToolStripMenuItem.Checked = grid;
+            redraw();
         }
     }
 }

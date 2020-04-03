@@ -70,6 +70,9 @@ Binta - Item and Stats Hacking Guide
 https://gamefaqs.gamespot.com/nes/587404-legacy-of-the-wizard/faqs/26604
 Some notes about the game's memory usage that helped me figure out cheats.
 
+LSD4 - Unofficial archive of Legacy of the Wizard / Dragon Slayer 4
+http://lsd4.starfree.jp/
+
 
 Changes
 -------

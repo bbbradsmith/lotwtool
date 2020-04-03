@@ -544,6 +544,7 @@ namespace lotwtool
             zoom = default_zoom;
             grid = default_grid;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
 
             int x = room % 4;
             int y = room / 4;

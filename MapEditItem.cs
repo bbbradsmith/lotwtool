@@ -51,6 +51,7 @@ namespace lotwtool
             mp = mp_;
             ro = 16 + (1024 * me.room);
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             int x = me.room % 4;
             int y = me.room / 4;
             Text = string.Format("Map Items {0},{1} ({2})",x,y,me.room);

@@ -20,6 +20,7 @@ namespace lotwtool
         public PalettePick(int select)
         {
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
 
             Bitmap bmp = new Bitmap(16*zoom, 4*zoom, PixelFormat.Format32bppArgb);
             BitmapData d = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);

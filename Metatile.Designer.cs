@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Metatile));
             this.tileBox = new System.Windows.Forms.PictureBox();
             this.metatileBox = new System.Windows.Forms.PictureBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tileBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.metatileBox)).BeginInit();
             this.statusStrip.SuspendLayout();
@@ -73,6 +72,21 @@
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(28, 17);
+            this.toolStripStatusLabel.Text = "...";
+            // 
+            // toolStripTipLabel
+            // 
+            this.toolStripTipLabel.Name = "toolStripTipLabel";
+            this.toolStripTipLabel.Size = new System.Drawing.Size(213, 17);
+            this.toolStripTipLabel.Spring = true;
+            this.toolStripTipLabel.Text = "...";
+            this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // buttonOK
             // 
             this.buttonOK.Location = new System.Drawing.Point(3, 357);
@@ -93,21 +107,6 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // toolStripStatusLabel
-            // 
-            this.toolStripStatusLabel.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(28, 17);
-            this.toolStripStatusLabel.Text = "...";
-            // 
-            // toolStripTipLabel
-            // 
-            this.toolStripTipLabel.Name = "toolStripTipLabel";
-            this.toolStripTipLabel.Size = new System.Drawing.Size(213, 17);
-            this.toolStripTipLabel.Spring = true;
-            this.toolStripTipLabel.Text = "...";
-            this.toolStripTipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // Metatile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -119,7 +118,6 @@
             this.Controls.Add(this.metatileBox);
             this.Controls.Add(this.tileBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

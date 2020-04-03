@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CHRSelect));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,10 +48,10 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.importPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelDummy = new System.Windows.Forms.Label();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.importCHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelDummy = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -216,21 +215,40 @@
             this.importCHRToolStripMenuItem,
             this.exportCHRToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 120);
+            this.contextMenuStrip.Size = new System.Drawing.Size(147, 98);
             // 
             // importPNGToolStripMenuItem
             // 
             this.importPNGToolStripMenuItem.Name = "importPNGToolStripMenuItem";
-            this.importPNGToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importPNGToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.importPNGToolStripMenuItem.Text = "&Import PNG...";
             this.importPNGToolStripMenuItem.Click += new System.EventHandler(this.importPNGToolStripMenuItem_Click);
             // 
             // exportPNGToolStripMenuItem
             // 
             this.exportPNGToolStripMenuItem.Name = "exportPNGToolStripMenuItem";
-            this.exportPNGToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportPNGToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportPNGToolStripMenuItem.Text = "&Export PNG...";
             this.exportPNGToolStripMenuItem.Click += new System.EventHandler(this.exportPNGToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(143, 6);
+            // 
+            // importCHRToolStripMenuItem
+            // 
+            this.importCHRToolStripMenuItem.Name = "importCHRToolStripMenuItem";
+            this.importCHRToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.importCHRToolStripMenuItem.Text = "I&mport CHR...";
+            this.importCHRToolStripMenuItem.Click += new System.EventHandler(this.importCHRToolStripMenuItem_Click);
+            // 
+            // exportCHRToolStripMenuItem
+            // 
+            this.exportCHRToolStripMenuItem.Name = "exportCHRToolStripMenuItem";
+            this.exportCHRToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exportCHRToolStripMenuItem.Text = "E&xport CHR...";
+            this.exportCHRToolStripMenuItem.Click += new System.EventHandler(this.exportCHRToolStripMenuItem_Click);
             // 
             // labelDummy
             // 
@@ -240,25 +258,6 @@
             this.labelDummy.Size = new System.Drawing.Size(0, 13);
             this.labelDummy.TabIndex = 1;
             // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // importCHRToolStripMenuItem
-            // 
-            this.importCHRToolStripMenuItem.Name = "importCHRToolStripMenuItem";
-            this.importCHRToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.importCHRToolStripMenuItem.Text = "I&mport CHR...";
-            this.importCHRToolStripMenuItem.Click += new System.EventHandler(this.importCHRToolStripMenuItem_Click);
-            // 
-            // exportCHRToolStripMenuItem
-            // 
-            this.exportCHRToolStripMenuItem.Name = "exportCHRToolStripMenuItem";
-            this.exportCHRToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportCHRToolStripMenuItem.Text = "E&xport CHR...";
-            this.exportCHRToolStripMenuItem.Click += new System.EventHandler(this.exportCHRToolStripMenuItem_Click);
-            // 
             // CHRSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,7 +266,6 @@
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "CHRSelect";

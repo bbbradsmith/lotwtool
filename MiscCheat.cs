@@ -33,6 +33,7 @@ namespace lotwtool
         {
             mp = parent;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             MiscCheatProperties p = new MiscCheatProperties(mp);
             propertyGrid.SelectedObject = p;
             collapseCategory("Items Extra"); // nicer if this is collapsed by default

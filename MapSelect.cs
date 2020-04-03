@@ -63,6 +63,7 @@ namespace lotwtool
             mp = parent;
             zoom = default_zoom;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             toolStripTipLabel.Text = "Double Click = Open Map";
             updateZoom();
             //redraw(); // drawn by updateZoom

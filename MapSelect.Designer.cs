@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapSelect));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSecretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.halfSecretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +55,6 @@
             this.toolStripTipLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.saveAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
@@ -106,6 +105,14 @@
             this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveImageToolStripMenuItem.Text = "Save &Image...";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
+            // 
+            // saveAndRunToolStripMenuItem
+            // 
+            this.saveAndRunToolStripMenuItem.Name = "saveAndRunToolStripMenuItem";
+            this.saveAndRunToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.saveAndRunToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.saveAndRunToolStripMenuItem.Text = "Save and &Run";
+            this.saveAndRunToolStripMenuItem.Click += new System.EventHandler(this.saveAndRunToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -293,14 +300,6 @@
             this.pictureBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDoubleClick);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             // 
-            // saveAndRunToolStripMenuItem
-            // 
-            this.saveAndRunToolStripMenuItem.Name = "saveAndRunToolStripMenuItem";
-            this.saveAndRunToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.saveAndRunToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-            this.saveAndRunToolStripMenuItem.Text = "Save and &Run";
-            this.saveAndRunToolStripMenuItem.Click += new System.EventHandler(this.saveAndRunToolStripMenuItem_Click);
-            // 
             // MapSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -309,7 +308,6 @@
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MapSelect";
             this.Text = "Map Select";

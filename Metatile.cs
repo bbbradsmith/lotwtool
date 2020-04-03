@@ -87,6 +87,7 @@ namespace lotwtool
             chr = new int[2];
             mt = new int[4];
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
 
             chr[0] = chr0;
             chr[1] = chr1;

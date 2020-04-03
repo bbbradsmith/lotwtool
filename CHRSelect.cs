@@ -132,6 +132,7 @@ namespace lotwtool
             mp = parent;
             modal = modal_;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             if (modal)
             {
                 actionToolStripMenuItem.Enabled = false;

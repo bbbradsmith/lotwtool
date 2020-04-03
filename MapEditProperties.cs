@@ -24,6 +24,7 @@ namespace lotwtool
             me = parent;
             mp = mp_;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             int x = me.room % 4;
             int y = me.room / 4;
             Text = string.Format("Map Properties {0},{1} ({2})",x,y,me.room);

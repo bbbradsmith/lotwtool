@@ -121,6 +121,7 @@ namespace lotwtool
             mp = parent;
             sprite = sprite_;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             find_tiles(tile);
             chr_cache = new uint[9 * 64];
             zoom = default_zoom;

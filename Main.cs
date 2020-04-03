@@ -560,6 +560,7 @@ namespace lotwtool
         public Main()
         {
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
 
             // open file from the command line
             string[] args = Environment.GetCommandLineArgs();

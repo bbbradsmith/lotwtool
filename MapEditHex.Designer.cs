@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditHex));
             this.textBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -51,7 +50,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 269);
             this.Controls.Add(this.textBox);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MapEditHex";
             this.Text = "Map Info Hex";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MapEditHex_FormClosing);

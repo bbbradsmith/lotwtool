@@ -105,6 +105,7 @@ namespace lotwtool
             mp = parent;
             me = me_;
             InitializeComponent();
+            this.Icon = lotwtool.Properties.Resources.Icon;
             int x = me.room % 4;
             int y = me.room / 4;
             Text = string.Format("Tiles {0},{1} ({2})",x,y,(y*4)+x);

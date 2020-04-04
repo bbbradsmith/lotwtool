@@ -41,7 +41,7 @@ namespace lotwtool
             // errors locating family data
             if (p.errors.Length > 0 && mp.misc_errors_shown == false)
             {
-                MessageBox.Show(p.errors, "Miscellany / Cheat errors!");
+                MessageBox.Show(p.errors, "Global  errors!");
                 mp.misc_errors_shown = true;
                 collapseCategory("Stats 0 Xemn");
                 collapseCategory("Stats 1 Meyna");
@@ -312,6 +312,12 @@ namespace lotwtool
 
         // Dungeon Exit
 
+        // Disabled:
+        // This works for returning normally or with the crystal,
+        // but the end of game cutscene requires a specific ladder location.
+        // Maybe we can move the house exit instead?
+        // TODO
+        /*
         [DisplayName("Dungeon Exit Map X")]
         [Category("Dungeon Exit")]
         [Description("1D86B - Dungeon exit teleport map horizontal coordinate.")]
@@ -361,6 +367,7 @@ namespace lotwtool
             get { return mp.rom[16+0x1D873]; }
             set { mp.rom_modify(16+0x1D873,(byte)value); }
         }
+        */
 
         // Family Stats
         // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi

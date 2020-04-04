@@ -89,7 +89,7 @@
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MiscCheat";
-            this.Text = "Miscellaneous / Cheat";
+            this.Text = "Global";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MiscCheat_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

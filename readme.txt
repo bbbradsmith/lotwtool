@@ -28,12 +28,11 @@ and open it in your program associated with .NES files.
 
 The editor will automatically undo the patch in memory, but if the file
 is accidentally left unsaved after a test, the patch may persist.
-This can be removed in the Miscellaneous / Cheat menu.
+This can be removed in the Global menu.
 
-I recommend also using the Miscellaneous / Cheat menu to
-give yourself all items, and a supply of keys as well, and editing the
-home map 3,16 to put a ladder next to the door of the Drasle residence to
-enter more quickly.
+I recommend also using the Global menu to give yourself all items,
+and a supply of keys as well, and editing the home map 3,16 to put an
+extra ladder next to the door of the Drasle residence to enter more quickly.
 
 
 The Inn in map 1,16 will look strange in the editor. To make changes to it,

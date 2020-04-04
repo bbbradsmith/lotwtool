@@ -391,7 +391,7 @@
             this.buttonCredits.Name = "buttonCredits";
             this.buttonCredits.Size = new System.Drawing.Size(178, 48);
             this.buttonCredits.TabIndex = 9;
-            this.buttonCredits.Text = "Credis";
+            this.buttonCredits.Text = "Credits";
             this.buttonCredits.UseVisualStyleBackColor = true;
             this.buttonCredits.Click += new System.EventHandler(this.buttonCredits_Click);
             // 
@@ -402,7 +402,7 @@
             this.buttonMisc.Name = "buttonMisc";
             this.buttonMisc.Size = new System.Drawing.Size(179, 48);
             this.buttonMisc.TabIndex = 10;
-            this.buttonMisc.Text = "Miscellaneous / Cheat";
+            this.buttonMisc.Text = "Global";
             this.buttonMisc.UseVisualStyleBackColor = true;
             this.buttonMisc.Click += new System.EventHandler(this.buttonMisc_Click);
             // 

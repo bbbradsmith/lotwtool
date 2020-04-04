@@ -71,6 +71,7 @@ namespace lotwtool
     {
         Main mp;
         int family_offset;
+        int poison_offset;
         string rom_type = "Unknown. Corrupt?";
         public string errors = "";
 
@@ -78,8 +79,9 @@ namespace lotwtool
         {
             mp = parent;
 
-            // find starting item table
-            family_offset   = 16 + 0x1FFA7; // default = Legacy of the Wizard
+            // detect ROM by looking for the pointer to the family stats
+            family_offset = 16 + 0x1FFA7; // default = Legacy of the Wizard
+            poison_offset = 16 + 0x1E7E1;
             if      (mp.rom_compare(16+0x1E1E7,new byte[]{0xB9,0xA7,0xFF}))
             {
                 rom_type = "Legacy of the Wizard (NES)";
@@ -88,10 +90,14 @@ namespace lotwtool
             {
                 rom_type = "Dragon Slayer IV (Famicom)";
                 family_offset = 16 + 0x1FFB6;
+                poison_offset = 16 + 0x1E7F0;
             }
             else
             {
-                errors += "Starting family stats location could not be detected. Corrupt ROM?\n";
+                errors += "ROM type could not be detected. Corrupt ROM?\n" +
+                          "The following properties may be invalid:\n" +
+                          "- Family Stats\n" +
+                          "- Poison Strength";
             }
         }
 
@@ -368,6 +374,68 @@ namespace lotwtool
             set { mp.rom_modify(16+0x1D873,(byte)value); }
         }
         */
+
+        // Drops
+
+        [DisplayName("Bread Life")]
+        [Category("Drops")]
+        [Description("1DB2C")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int BreadHP
+        {
+            get { return mp.rom[16+0x1DB2C]; }
+            set { mp.rom_modify(16+0x1DB2C,(byte)value); }
+        }
+
+        [DisplayName("Potion Magic")]
+        [Category("Drops")]
+        [Description("1DB37")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int MagicMP
+        {
+            get { return mp.rom[16+0x1DB37]; }
+            set { mp.rom_modify(16+0x1DB37,(byte)value); }
+        }
+
+        [DisplayName("Gold Bag")]
+        [Category("Drops")]
+        [Description("1DB42")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int GoldBag
+        {
+            get { return mp.rom[16+0x1DB42]; }
+            set { mp.rom_modify(16+0x1DB42,(byte)value); }
+        }
+
+        [DisplayName("Gold Chest")]
+        [Category("Drops")]
+        [Description("1DB4D")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int GoldChest
+        {
+            get { return mp.rom[16+0x1DB4D]; }
+            set { mp.rom_modify(16+0x1DB4D,(byte)value); }
+        }
+
+        [DisplayName("Key Chest")]
+        [Category("Drops")]
+        [Description("1DB6C")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int KeyChest
+        {
+            get { return mp.rom[16+0x1DB6C]; }
+            set { mp.rom_modify(16+0x1DB6C,(byte)value); }
+        }
+
+        [DisplayName("Poison Strength")]
+        [Category("Drops")]
+        [Description("1E7E1/1E7F0")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int Poison
+        {
+            get { return mp.rom[poison_offset]; }
+            set { mp.rom_modify(poison_offset,(byte)value); }
+        }
 
         // Family Stats
         // Stats 0 Xemn, Stats 1 Meyna, Stats 2 Roas, Stats 3 Lyll, Stats 4 Pochi

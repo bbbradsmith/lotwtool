@@ -25,13 +25,14 @@ namespace lotwtool
                 Main.NES_PALETTE[0x0F],
                 Main.NES_PALETTE[0x0C],
                 Main.NES_PALETTE[0x10],
-                Main.NES_PALETTE[0x3F],
+                Main.NES_PALETTE[0x30],
             };
 
             chr_cache = new uint[256*64];
             for (int i=0; i<256; ++i)
             {
-                mp.chr_cache((CHR0*64)+i,i,chr_cache,palette);
+                //mp.chr_cache((CHR0*64)+i,i,chr_cache,palette);
+                mp.chr_cache((CHR0*64)+i,i,chr_cache,Main.GREY);
             }
         }
 

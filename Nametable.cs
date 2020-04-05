@@ -192,6 +192,7 @@ namespace lotwtool
             chr_cache = new uint[256*6*64];
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
+            this.Text = string.Format("Nametable {0:X}",no-16);
             cache();
             redraw();
         }

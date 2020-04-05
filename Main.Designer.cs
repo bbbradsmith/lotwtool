@@ -60,7 +60,11 @@
             this.labelMapCountValue = new System.Windows.Forms.Label();
             this.buttonTitleScreen = new System.Windows.Forms.Button();
             this.buttonCredits = new System.Windows.Forms.Button();
+            this.buttonDragon = new System.Windows.Forms.Button();
+            this.buttonUnusedScreen = new System.Windows.Forms.Button();
             this.buttonMisc = new System.Windows.Forms.Button();
+            this.unusedScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dragonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tableLayoutPanelTop.SuspendLayout();
             this.tableLayoutPanelGrid.SuspendLayout();
@@ -168,12 +172,14 @@
             this.mapsToolStripMenuItem,
             this.CHRToolStripMenuItem,
             this.titleScreenToolStripMenuItem,
+            this.unusedScreenToolStripMenuItem,
             this.creditsToolStripMenuItem,
+            this.dragonToolStripMenuItem,
             this.miscToolStripMenuItem,
             this.toolStripMenuItem3,
             this.closeAllToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // mapsToolStripMenuItem
@@ -181,7 +187,7 @@
             this.mapsToolStripMenuItem.Enabled = false;
             this.mapsToolStripMenuItem.Name = "mapsToolStripMenuItem";
             this.mapsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.mapsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.mapsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mapsToolStripMenuItem.Text = "&Maps";
             this.mapsToolStripMenuItem.Click += new System.EventHandler(this.mapsToolStripMenuItem_Click);
             // 
@@ -190,7 +196,7 @@
             this.CHRToolStripMenuItem.Enabled = false;
             this.CHRToolStripMenuItem.Name = "CHRToolStripMenuItem";
             this.CHRToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.CHRToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.CHRToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.CHRToolStripMenuItem.Text = "&CHR";
             this.CHRToolStripMenuItem.Click += new System.EventHandler(this.CHRToolStripMenuItem_Click);
             // 
@@ -198,14 +204,14 @@
             // 
             this.titleScreenToolStripMenuItem.Enabled = false;
             this.titleScreenToolStripMenuItem.Name = "titleScreenToolStripMenuItem";
-            this.titleScreenToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.titleScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.titleScreenToolStripMenuItem.Text = "&Title Screen";
             // 
             // creditsToolStripMenuItem
             // 
             this.creditsToolStripMenuItem.Enabled = false;
             this.creditsToolStripMenuItem.Name = "creditsToolStripMenuItem";
-            this.creditsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.creditsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.creditsToolStripMenuItem.Text = "Credits";
             // 
             // miscToolStripMenuItem
@@ -213,20 +219,20 @@
             this.miscToolStripMenuItem.Enabled = false;
             this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
             this.miscToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.miscToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.miscToolStripMenuItem.Text = "Miscellaneous / &Cheat";
+            this.miscToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.miscToolStripMenuItem.Text = "&Global";
             this.miscToolStripMenuItem.Click += new System.EventHandler(this.miscToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(230, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(177, 6);
             // 
             // closeAllToolStripMenuItem
             // 
             this.closeAllToolStripMenuItem.Name = "closeAllToolStripMenuItem";
             this.closeAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeAllToolStripMenuItem.Text = "Close &All";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.closeAllToolStripMenuItem_Click);
             // 
@@ -259,7 +265,7 @@
             this.tableLayoutPanelTop.RowCount = 2;
             this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.tableLayoutPanelTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelTop.Size = new System.Drawing.Size(559, 194);
+            this.tableLayoutPanelTop.Size = new System.Drawing.Size(559, 204);
             this.tableLayoutPanelTop.TabIndex = 1;
             // 
             // textBoxFilename
@@ -288,15 +294,18 @@
             this.tableLayoutPanelGrid.Controls.Add(this.labelMapCountValue, 2, 0);
             this.tableLayoutPanelGrid.Controls.Add(this.buttonTitleScreen, 0, 2);
             this.tableLayoutPanelGrid.Controls.Add(this.buttonCredits, 1, 2);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonDragon, 1, 3);
+            this.tableLayoutPanelGrid.Controls.Add(this.buttonUnusedScreen, 0, 3);
             this.tableLayoutPanelGrid.Controls.Add(this.buttonMisc, 2, 2);
             this.tableLayoutPanelGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelGrid.Location = new System.Drawing.Point(3, 29);
             this.tableLayoutPanelGrid.Name = "tableLayoutPanelGrid";
-            this.tableLayoutPanelGrid.RowCount = 3;
-            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanelGrid.Size = new System.Drawing.Size(553, 162);
+            this.tableLayoutPanelGrid.RowCount = 4;
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelGrid.Size = new System.Drawing.Size(553, 172);
             this.tableLayoutPanelGrid.TabIndex = 1;
             // 
             // labelCHRCountValue
@@ -305,9 +314,9 @@
             this.labelCHRCountValue.BackColor = System.Drawing.SystemColors.ControlLight;
             this.labelCHRCountValue.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.labelCHRCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCHRCountValue.Location = new System.Drawing.Point(371, 54);
+            this.labelCHRCountValue.Location = new System.Drawing.Point(371, 43);
             this.labelCHRCountValue.Name = "labelCHRCountValue";
-            this.labelCHRCountValue.Size = new System.Drawing.Size(179, 54);
+            this.labelCHRCountValue.Size = new System.Drawing.Size(179, 43);
             this.labelCHRCountValue.TabIndex = 7;
             this.labelCHRCountValue.Text = "0";
             this.labelCHRCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -317,7 +326,7 @@
             this.labelMapCount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelMapCount.Location = new System.Drawing.Point(187, 0);
             this.labelMapCount.Name = "labelMapCount";
-            this.labelMapCount.Size = new System.Drawing.Size(178, 54);
+            this.labelMapCount.Size = new System.Drawing.Size(178, 43);
             this.labelMapCount.TabIndex = 2;
             this.labelMapCount.Text = "Map Count:";
             this.labelMapCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -329,7 +338,7 @@
             this.buttonMapEdit.Enabled = false;
             this.buttonMapEdit.Location = new System.Drawing.Point(3, 3);
             this.buttonMapEdit.Name = "buttonMapEdit";
-            this.buttonMapEdit.Size = new System.Drawing.Size(178, 48);
+            this.buttonMapEdit.Size = new System.Drawing.Size(178, 37);
             this.buttonMapEdit.TabIndex = 4;
             this.buttonMapEdit.Text = "Maps";
             this.buttonMapEdit.UseVisualStyleBackColor = true;
@@ -338,9 +347,9 @@
             // labelCHRCount
             // 
             this.labelCHRCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCHRCount.Location = new System.Drawing.Point(187, 54);
+            this.labelCHRCount.Location = new System.Drawing.Point(187, 43);
             this.labelCHRCount.Name = "labelCHRCount";
-            this.labelCHRCount.Size = new System.Drawing.Size(178, 54);
+            this.labelCHRCount.Size = new System.Drawing.Size(178, 43);
             this.labelCHRCount.TabIndex = 3;
             this.labelCHRCount.Text = "CHR Count:";
             this.labelCHRCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -350,9 +359,9 @@
             this.buttonCHREdit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonCHREdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonCHREdit.Enabled = false;
-            this.buttonCHREdit.Location = new System.Drawing.Point(3, 57);
+            this.buttonCHREdit.Location = new System.Drawing.Point(3, 46);
             this.buttonCHREdit.Name = "buttonCHREdit";
-            this.buttonCHREdit.Size = new System.Drawing.Size(178, 48);
+            this.buttonCHREdit.Size = new System.Drawing.Size(178, 37);
             this.buttonCHREdit.TabIndex = 5;
             this.buttonCHREdit.Text = "CHR";
             this.buttonCHREdit.UseVisualStyleBackColor = true;
@@ -366,7 +375,7 @@
             this.labelMapCountValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelMapCountValue.Location = new System.Drawing.Point(371, 0);
             this.labelMapCountValue.Name = "labelMapCountValue";
-            this.labelMapCountValue.Size = new System.Drawing.Size(179, 54);
+            this.labelMapCountValue.Size = new System.Drawing.Size(179, 43);
             this.labelMapCountValue.TabIndex = 6;
             this.labelMapCountValue.Text = "0";
             this.labelMapCountValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -375,9 +384,9 @@
             // 
             this.buttonTitleScreen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonTitleScreen.Enabled = false;
-            this.buttonTitleScreen.Location = new System.Drawing.Point(3, 111);
+            this.buttonTitleScreen.Location = new System.Drawing.Point(3, 89);
             this.buttonTitleScreen.Name = "buttonTitleScreen";
-            this.buttonTitleScreen.Size = new System.Drawing.Size(178, 48);
+            this.buttonTitleScreen.Size = new System.Drawing.Size(178, 37);
             this.buttonTitleScreen.TabIndex = 8;
             this.buttonTitleScreen.Text = "Title Screen";
             this.buttonTitleScreen.UseVisualStyleBackColor = true;
@@ -387,31 +396,68 @@
             // 
             this.buttonCredits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonCredits.Enabled = false;
-            this.buttonCredits.Location = new System.Drawing.Point(187, 111);
+            this.buttonCredits.Location = new System.Drawing.Point(187, 89);
             this.buttonCredits.Name = "buttonCredits";
-            this.buttonCredits.Size = new System.Drawing.Size(178, 48);
+            this.buttonCredits.Size = new System.Drawing.Size(178, 37);
             this.buttonCredits.TabIndex = 9;
             this.buttonCredits.Text = "Credits";
             this.buttonCredits.UseVisualStyleBackColor = true;
             this.buttonCredits.Click += new System.EventHandler(this.buttonCredits_Click);
             // 
+            // buttonDragon
+            // 
+            this.buttonDragon.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDragon.Location = new System.Drawing.Point(187, 132);
+            this.buttonDragon.Name = "buttonDragon";
+            this.buttonDragon.Size = new System.Drawing.Size(178, 37);
+            this.buttonDragon.TabIndex = 11;
+            this.buttonDragon.Text = "Dragon";
+            this.buttonDragon.UseVisualStyleBackColor = true;
+            this.buttonDragon.Click += new System.EventHandler(this.buttonDragon_Click);
+            // 
+            // buttonUnusedScreen
+            // 
+            this.buttonUnusedScreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonUnusedScreen.Location = new System.Drawing.Point(3, 132);
+            this.buttonUnusedScreen.Name = "buttonUnusedScreen";
+            this.buttonUnusedScreen.Size = new System.Drawing.Size(178, 37);
+            this.buttonUnusedScreen.TabIndex = 12;
+            this.buttonUnusedScreen.Text = "Unused Screen";
+            this.buttonUnusedScreen.UseVisualStyleBackColor = true;
+            this.buttonUnusedScreen.Click += new System.EventHandler(this.buttonUnusedScreen_Click);
+            // 
             // buttonMisc
             // 
             this.buttonMisc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonMisc.Location = new System.Drawing.Point(371, 111);
+            this.buttonMisc.Location = new System.Drawing.Point(371, 89);
             this.buttonMisc.Name = "buttonMisc";
-            this.buttonMisc.Size = new System.Drawing.Size(179, 48);
+            this.tableLayoutPanelGrid.SetRowSpan(this.buttonMisc, 2);
+            this.buttonMisc.Size = new System.Drawing.Size(179, 80);
             this.buttonMisc.TabIndex = 10;
             this.buttonMisc.Text = "Global";
             this.buttonMisc.UseVisualStyleBackColor = true;
             this.buttonMisc.Click += new System.EventHandler(this.buttonMisc_Click);
+            // 
+            // unusedScreenToolStripMenuItem
+            // 
+            this.unusedScreenToolStripMenuItem.Enabled = false;
+            this.unusedScreenToolStripMenuItem.Name = "unusedScreenToolStripMenuItem";
+            this.unusedScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.unusedScreenToolStripMenuItem.Text = "&Unused Screen";
+            // 
+            // dragonToolStripMenuItem
+            // 
+            this.dragonToolStripMenuItem.Enabled = false;
+            this.dragonToolStripMenuItem.Name = "dragonToolStripMenuItem";
+            this.dragonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dragonToolStripMenuItem.Text = "&Dragon";
             // 
             // Main
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 218);
+            this.ClientSize = new System.Drawing.Size(559, 228);
             this.Controls.Add(this.tableLayoutPanelTop);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
@@ -466,6 +512,10 @@
         private System.Windows.Forms.ToolStripMenuItem revertAllWorkToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem closeAllToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDragon;
+        private System.Windows.Forms.Button buttonUnusedScreen;
+        private System.Windows.Forms.ToolStripMenuItem dragonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unusedScreenToolStripMenuItem;
     }
 }
 

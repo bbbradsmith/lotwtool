@@ -107,8 +107,8 @@
             // tableLayoutPanelButtons
             // 
             this.tableLayoutPanelButtons.ColumnCount = 2;
-            this.tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelButtons.Controls.Add(this.buttonOK, 0, 0);
             this.tableLayoutPanelButtons.Controls.Add(this.buttonCancel, 1, 0);
             this.tableLayoutPanelButtons.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -124,7 +124,7 @@
             this.buttonOK.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonOK.Location = new System.Drawing.Point(3, 3);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(302, 38);
+            this.buttonOK.Size = new System.Drawing.Size(303, 38);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -133,9 +133,9 @@
             // buttonCancel
             // 
             this.buttonCancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonCancel.Location = new System.Drawing.Point(311, 3);
+            this.buttonCancel.Location = new System.Drawing.Point(312, 3);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(304, 38);
+            this.buttonCancel.Size = new System.Drawing.Size(303, 38);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;

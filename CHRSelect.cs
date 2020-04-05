@@ -264,7 +264,7 @@ namespace lotwtool
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
-                MessageBox.Show("No CHR selected.","CHR Import Error!");
+                MessageBox.Show("No CHR selected.","CHR import error!");
                 return;
             }
 
@@ -286,13 +286,13 @@ namespace lotwtool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to open image:\n\n" + ex.ToString(),"CHR Import Error!");
+                    MessageBox.Show("Unable to open image:\n\n" + ex.ToString(),"CHR import error!");
                     return;
                 }
 
                 if (b.Width != 128 || b.Height != 32)
                 {
-                    MessageBox.Show("Image must be 128 x 32 pixels.", "CHR Import Error!");
+                    MessageBox.Show("Image must be 128 x 32 pixels.", "CHR import error!");
                     return;
                 }
 
@@ -335,7 +335,7 @@ namespace lotwtool
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
-                MessageBox.Show("No CHR selected.","CHR Export Error!");
+                MessageBox.Show("No CHR selected.","CHR export error!");
                 return;
             }
 
@@ -365,7 +365,7 @@ namespace lotwtool
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
-                MessageBox.Show("No CHR selected.","CHR Import Error!");
+                MessageBox.Show("No CHR selected.","CHR import error!");
                 return;
             }
 
@@ -383,7 +383,7 @@ namespace lotwtool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to open CHR:\n\n" + ex.ToString(),"CHR Import Error!");
+                    MessageBox.Show("Unable to open CHR:\n\n" + ex.ToString(),"CHR import error!");
                     return;
                 }
 
@@ -401,7 +401,7 @@ namespace lotwtool
         {
             if (highlight < 0 || highlight >= mp.chr_count)
             {
-                MessageBox.Show("No CHR selected.","CHR Export Error!");
+                MessageBox.Show("No CHR selected.","CHR export error!");
                 return;
             }
 
@@ -421,7 +421,7 @@ namespace lotwtool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to save CHR:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                    MessageBox.Show("Unable to save CHR:\n" + d.FileName + "\n\n" + ex.ToString(), "CHR save error!");
                 }
             }
         }

@@ -29,6 +29,7 @@ namespace lotwtool
         List<MapEdit> mapedits = new List<MapEdit>();
         public MapSelect map_select = null;
         public MiscCheat misc_cheat = null;
+        public Nametable title_screen = null;
         Stack<List<int>> undo_stack = new Stack<List<int>>();
         public bool misc_errors_shown = false;
 
@@ -77,6 +78,10 @@ namespace lotwtool
         };
 
         public const uint GRID = 0xFFFFFF00; // yellow
+        public const uint GRID2 = 0xFFAAAA00; // dimmer yellow
+        public const uint PAL_INNER = 0xFF000000;
+        public const uint PAL_OUTER = 0xFFFFFFFF;
+
 
         // Common code
 
@@ -144,14 +149,18 @@ namespace lotwtool
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
-            buttonTitleScreen.Enabled = false; // TODO (romsize check)
+            buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000;
+            buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000;
             buttonCredits.Enabled = rom.Length >= 16+0x1C000;
+            buttonDragon.Enabled = false; // TODO ROM size check
             buttonMisc.Enabled = rom.Length >= 16+0x20000;
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
             CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;
             titleScreenToolStripMenuItem.Enabled = buttonTitleScreen.Enabled;
+            unusedScreenToolStripMenuItem.Enabled = buttonUnusedScreen.Enabled;
             creditsToolStripMenuItem.Enabled = buttonCredits.Enabled;
+            dragonToolStripMenuItem.Enabled = buttonDragon.Enabled;
             miscToolStripMenuItem.Enabled = buttonMisc.Enabled;
 
             return true;
@@ -541,6 +550,7 @@ namespace lotwtool
                 refreshers[0].refresh_close();
             if (map_select != null) map_select.Close();
             if (misc_cheat != null) misc_cheat.Close();
+            if (title_screen != null) title_screen.Close();
         }
 
         public static bool raise_child(Form c) // convenient way to wake a child
@@ -635,8 +645,22 @@ namespace lotwtool
 
         private void buttonTitleScreen_Click(object sender, EventArgs e)
         {
-            // TODO
-            // title screen editor
+            int ADDRESS = 16+0x19EC9;
+            if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
+            if (raise_child(title_screen)) return;
+            title_screen = new Nametable(this, ADDRESS);
+            title_screen.Show();
+            add_refresh(title_screen);
+        }
+
+        private void buttonUnusedScreen_Click(object sender, EventArgs e)
+        {
+            int ADDRESS = 16+0x17BCA;
+            if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
+            if (raise_child(title_screen)) return;
+            title_screen = new Nametable(this, ADDRESS);
+            title_screen.Show();
+            add_refresh(title_screen);
         }
 
         private void buttonCredits_Click(object sender, EventArgs e)
@@ -709,6 +733,11 @@ namespace lotwtool
                     break;
                 }
             }
+        }
+
+        private void buttonDragon_Click(object sender, EventArgs e)
+        {
+            // TODO
         }
 
         private void buttonMisc_Click(object sender, EventArgs e)

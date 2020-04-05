@@ -14,8 +14,6 @@ namespace lotwtool
     {
         int zoom = 16;
         public int picked = -1;
-        const uint BLACK = 0xFF000000;
-        const uint SELECT = 0xFFFFFFFF;
 
         public PalettePick(int select)
         {
@@ -33,8 +31,8 @@ namespace lotwtool
                     Main.draw_box(d,x*zoom,y*zoom,zoom,zoom,c);
                     if (p == select)
                     {
-                        Main.draw_outbox(d,x*zoom,y*zoom,zoom,zoom,SELECT);
-                        Main.draw_outbox(d,x*zoom+1,y*zoom+1,zoom-2,zoom-2,BLACK);
+                        Main.draw_outbox(d,x*zoom,y*zoom,zoom,zoom,Main.PAL_OUTER);
+                        Main.draw_outbox(d,x*zoom+1,y*zoom+1,zoom-2,zoom-2,Main.PAL_INNER);
                     }
                 }
             }

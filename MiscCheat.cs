@@ -124,196 +124,216 @@ namespace lotwtool
 
         [DisplayName("All Items = 4")]
         [Category("Items")]
-        [Description("19BFF-19C0F")]
+        [Description("19BFF-19C0F, 19D3E+16")]
         public bool AllItems
         {
             get { return mp.rom_compare(16+0x19BFF, new byte[]{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4}); }
-            set { mp.rom_modify_range(  16+0x19BFF, value ?
-                  (new byte[]{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4}):
-                  (new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}));
+            set { byte[] v = value ?
+                    (new byte[]{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4}):
+                    (new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+                  mp.rom_modify_range(  16+0x19BFF, v); // starting set
+                  mp.rom_modify_range(  16+0x19D3E+16, v, true); // starting save
                   mp.refresh_misc(); }
         }
 
         [DisplayName("Gold")]
         [Category("Items")]
-        [Description("19BF9")]
+        [Description("19BF9, 19D5F")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Gold
         {
             get { return mp.rom[16+0x19BF9]; }
-            set { mp.rom_modify(16+0x19BF9,(byte)value); }
+            set { mp.rom_modify(16+0x19BF9,(byte)value);
+                  mp.rom_modify(16+0x19D5F,(byte)value,true); }
         }
 
         [DisplayName("Keys")]
         [Category("Items")]
-        [Description("19BFA")]
+        [Description("19BFA, 19D5E")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Keys
         {
             get { return mp.rom[16+0x19BFA]; }
-            set { mp.rom_modify(16+0x19BFA,(byte)value); }
+            set { mp.rom_modify(16+0x19BFA,(byte)value);
+                  mp.rom_modify(16+0x19D5E,(byte)value,true); }
         }
 
         // Items Extra
 
         [DisplayName("Wings")]
         [Category("Items Extra")]
-        [Description("19BFF+0")]
+        [Description("19BFF+0, 19D4E+0")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Wings
         {
             get { return mp.rom[16+0x19BFF+0]; }
-            set { mp.rom_modify(16+0x19BFF+0,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+0,(byte)value);
+                  mp.rom_modify(16+0x19D4E+0,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Armor")]
         [Category("Items Extra")]
-        [Description("19BFF+1")]
+        [Description("19BFF+1, 19D4E+1")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Armor
         {
             get { return mp.rom[16+0x19BFF+1]; }
-            set { mp.rom_modify(16+0x19BFF+1,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+1,(byte)value);
+                  mp.rom_modify(16+0x19D4E+1,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Mattock")]
         [Category("Items Extra")]
-        [Description("19BFF+2")]
+        [Description("19BFF+2, 19D4E+2")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Mattock
         {
             get { return mp.rom[16+0x19BFF+2]; }
-            set { mp.rom_modify(16+0x19BFF+2,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+2,(byte)value);
+                  mp.rom_modify(16+0x19D4E+2,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Glove")]
         [Category("Items Extra")]
-        [Description("19BFF+3")]
+        [Description("19BFF+3, 19D4E+3")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Glove
         {
             get { return mp.rom[16+0x19BFF+3]; }
-            set { mp.rom_modify(16+0x19BFF+3,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+3,(byte)value);
+                  mp.rom_modify(16+0x19D4E+3,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Rod")]
         [Category("Items Extra")]
-        [Description("19BFF+4")]
+        [Description("19BFF+4, 19D4E+4")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Rod
         {
             get { return mp.rom[16+0x19BFF+4]; }
-            set { mp.rom_modify(16+0x19BFF+4,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+4,(byte)value);
+                  mp.rom_modify(16+0x19D4E+4,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Power Boots")]
         [Category("Items Extra")]
-        [Description("19BFF+5")]
+        [Description("19BFF+5, 19D4E+5")]
         [TypeConverter(typeof(IntByteConverter))]
         public int PowerBoots
         {
             get { return mp.rom[16+0x19BFF+5]; }
-            set { mp.rom_modify(16+0x19BFF+5,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+5,(byte)value);
+                  mp.rom_modify(16+0x19D4E+5,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Jump Shoes")]
         [Category("Items Extra")]
-        [Description("19BFF+6")]
+        [Description("19BFF+6, 19D4E+6")]
         [TypeConverter(typeof(IntByteConverter))]
         public int JumpShoes
         {
             get { return mp.rom[16+0x19BFF+6]; }
-            set { mp.rom_modify(16+0x19BFF+6,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+6,(byte)value);
+                  mp.rom_modify(16+0x19D4E+6,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Key Stick")]
         [Category("Items Extra")]
-        [Description("19BFF+7")]
+        [Description("19BFF+7, 19D4E+7")]
         [TypeConverter(typeof(IntByteConverter))]
         public int KeyStick
         {
             get { return mp.rom[16+0x19BFF+7]; }
-            set { mp.rom_modify(16+0x19BFF+7,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+7,(byte)value);
+                  mp.rom_modify(16+0x19D4E+7,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Power Knuckle")]
         [Category("Items Extra")]
-        [Description("19BFF+8")]
+        [Description("19BFF+8, 19D4E+8")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Knuckle
         {
             get { return mp.rom[16+0x19BFF+8]; }
-            set { mp.rom_modify(16+0x19BFF+8,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+8,(byte)value);
+                  mp.rom_modify(16+0x19D4E+8,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Fire Rod")]
         [Category("Items Extra")]
-        [Description("19BFF+9")]
+        [Description("19BFF+9, 19D4E+9")]
         [TypeConverter(typeof(IntByteConverter))]
         public int FireRod
         {
             get { return mp.rom[16+0x19BFF+9]; }
-            set { mp.rom_modify(16+0x19BFF+9,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+9,(byte)value);
+                  mp.rom_modify(16+0x19D4E+9,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Shield")]
         [Category("Items Extra")]
-        [Description("19BFF+10")]
+        [Description("19BFF+10, 19D4E+10")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Shield
         {
             get { return mp.rom[16+0x19BFF+10]; }
-            set { mp.rom_modify(16+0x19BFF+10,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+10,(byte)value);
+                  mp.rom_modify(16+0x19D4E+10,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Magic Bottle")]
         [Category("Items Extra")]
-        [Description("19BFF+11")]
+        [Description("19BFF+11, 19D4E+11")]
         [TypeConverter(typeof(IntByteConverter))]
         public int MagicBottle
         {
             get { return mp.rom[16+0x19BFF+11]; }
-            set { mp.rom_modify(16+0x19BFF+11,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+11,(byte)value);
+                  mp.rom_modify(16+0x19D4E+11,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Elixer")]
         [Category("Items Extra")]
-        [Description("19BFF+12")]
+        [Description("19BFF+12, 19D4E+12")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Elixer
         {
             get { return mp.rom[16+0x19BFF+12]; }
-            set { mp.rom_modify(16+0x19BFF+12,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+12,(byte)value);
+                  mp.rom_modify(16+0x19D4E+12,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Crystal")]
         [Category("Items Extra")]
-        [Description("19BFF+13")]
+        [Description("19BFF+13, 19D4E+13")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Crystal
         {
             get { return mp.rom[16+0x19BFF+13]; }
-            set { mp.rom_modify(16+0x19BFF+13,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+13,(byte)value);
+                  mp.rom_modify(16+0x19D4E+13,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("Crowns")]
         [Category("Items Extra")]
-        [Description("19BFF+14")]
+        [Description("19BFF+14, 19D4E+14")]
         [TypeConverter(typeof(IntByteConverter))]
         public int Crowns
         {
             get { return mp.rom[16+0x19BFF+14]; }
-            set { mp.rom_modify(16+0x19BFF+14,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+14,(byte)value);
+                  mp.rom_modify(16+0x19D4E+14,(byte)value, true); mp.refresh_misc(); }
         }
 
         [DisplayName("DragonSlayer")]
         [Category("Items Extra")]
-        [Description("19BFF+15")]
+        [Description("19BFF+15, 19D4E+15")]
         [TypeConverter(typeof(IntByteConverter))]
         public int DragonSlayer
         {
             get { return mp.rom[16+0x19BFF+15]; }
-            set { mp.rom_modify(16+0x19BFF+15,(byte)value); mp.refresh_misc(); }
+            set { mp.rom_modify(16+0x19BFF+15,(byte)value);
+                  mp.rom_modify(16+0x19D4E+15,(byte)value, true); mp.refresh_misc(); }
         }
 
         // Dungeon Exit

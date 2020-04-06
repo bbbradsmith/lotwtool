@@ -180,10 +180,11 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Palette")]
+        [DisplayName("Draw Attribute")]
         [Category("Appearance")]
-        [Description("1 - Selects the colour palette to use.")]
-        [TypeConverter(typeof(IntByteConverter))]
+        [Description("1 - Low 2 bits select the colour palette to use." +
+                     " Bit 5 ($20) makes the enemy 'hide' behind the background until touched.")]
+        [TypeConverter(typeof(HexByteConverter))]
         public int Palette
         {
             get { return mp.rom[eo+0x1]; }

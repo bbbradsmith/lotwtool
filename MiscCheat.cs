@@ -339,13 +339,49 @@ namespace lotwtool
                   mp.rom_modify(16+0x19D4E+15,(byte)value, true); mp.refresh_misc(); }
         }
 
-        // Dungeon Exit
+        // Home Exit
 
+        // Disabled:
+        // This doesn't work. Somehow the coordinates for the home exit is also needed
+        // for the family select screen to work properly?
+
+        /*
+        [DisplayName("Home Exit Player X")]
+        [Category("Home Exit")]
+        [Description("1C05C - Home exit teleport location horizontal grid coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int HomeExitPlayerX
+        {
+            get { return mp.rom[16+0x1C05C]; }
+            set { mp.rom_modify(16+0x1C05C,(byte)value); }
+        }
+
+        [DisplayName("Home Exit Scroll X")]
+        [Category("Home Exit")]
+        [Description("1C058 - Home exit scroll grid position. Min $00, Max $30, should be 0-15 less than player X.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int HomeExitScrollX
+        {
+            get { return mp.rom[16+0x1C058]; }
+            set { mp.rom_modify(16+0x1C058,(byte)value); }
+        }
+
+        [DisplayName("Home Exit Player Y")]
+        [Category("Home Exit")]
+        [Description("1C060 - Home exit teleport location vertical pixel coordinate.")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int HomeExitPlayerY
+        {
+            get { return mp.rom[16+0x1C060]; }
+            set { mp.rom_modify(16+0x1C060,(byte)value); }
+        }
+        */
+
+        // Dungeon Exit
         // Disabled:
         // This works for returning normally or with the crystal,
         // but the end of game cutscene requires a specific ladder location.
-        // Maybe we can move the house exit instead?
-        // TODO
+
         /*
         [DisplayName("Dungeon Exit Map X")]
         [Category("Dungeon Exit")]

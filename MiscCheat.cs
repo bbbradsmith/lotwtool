@@ -72,6 +72,7 @@ namespace lotwtool
         Main mp;
         int family_offset;
         int poison_offset;
+        int credit_offset;
         string rom_type = "Unknown. Corrupt?";
         public string errors = "";
 
@@ -82,6 +83,7 @@ namespace lotwtool
             // detect ROM by looking for the pointer to the family stats
             family_offset = 16 + 0x1FFA7; // default = Legacy of the Wizard
             poison_offset = 16 + 0x1E7E1;
+            credit_offset = 16 + 0x1B2CD;
             if      (mp.rom_compare(16+0x1E1E7,new byte[]{0xB9,0xA7,0xFF}))
             {
                 rom_type = "Legacy of the Wizard (NES)";
@@ -91,6 +93,7 @@ namespace lotwtool
                 rom_type = "Dragon Slayer IV (Famicom)";
                 family_offset = 16 + 0x1FFB6;
                 poison_offset = 16 + 0x1E7F0;
+                credit_offset = 16 + 0x1B2DB;
             }
             else
             {
@@ -810,6 +813,22 @@ namespace lotwtool
         {
             get { return mp.rom_hex32(family_offset+46); }
             set { mp.rom_modify_hex32(family_offset+46,value); }
+        }
+
+        [DisplayName("Credits Palette")]
+        [Category("Misc")]
+        [Description("1B2CD/1B2DB at 5 byte interval.")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        public uint CreditsPalette
+        {
+            get { return ((uint)mp.rom[credit_offset+ 0] << 24) |
+                         ((uint)mp.rom[credit_offset+ 5] << 16) |
+                         ((uint)mp.rom[credit_offset+10] <<  8) |
+                         ((uint)mp.rom[credit_offset+15] <<  0); }
+            set { mp.rom_modify(       credit_offset+ 0,(byte)((value>>24)&0xFF));
+                  mp.rom_modify(       credit_offset+ 5,(byte)((value>>16)&0xFF),true);
+                  mp.rom_modify(       credit_offset+10,(byte)((value>> 8)&0xFF),true);
+                  mp.rom_modify(       credit_offset+15,(byte)((value>> 0)&0xFF),true); }
         }
 
     }

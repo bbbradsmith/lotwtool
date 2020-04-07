@@ -671,15 +671,26 @@ namespace lotwtool
             //   A9 .. = LDA #..
             //   85 0D = STA $0D
             int credits_loc = 16 + 0x1B79C;
+            int credits_pal = 16 + 0x1B2CD;
             if      (rom_compare(16 + 0x1B183, new byte[] { 0xA9,0x9C,0x85,0x0C,0xA9,0xB7,0x85,0x0D }))
-            {                             } // Legacy of the Wizard (default)
+            { } // Legacy of the Wizard (default)
             else if (rom_compare(16 + 0x1B191, new byte[] { 0xA9,0xAA,0x85,0x0C,0xA9,0xB7,0x85,0x0D }))
-            { credits_loc = 16 + 0x1B7AA; } // Dragon Slayer 4
+            {   // Dragon Slayer 4
+                credits_loc = 16 + 0x1B7AA;
+                credits_pal = 16 + 0x1B2DB;
+            }
             else
             {
                 MessageBox.Show("Could not identify credits location. Corrupt ROM?", "Credits error!");
                 return;
             }
+
+            byte[] cpal = {
+                rom[credits_pal+ 0],
+                rom[credits_pal+ 5],
+                rom[credits_pal+10],
+                rom[credits_pal+15]
+            };
 
             // credits are an ASCII string
             string credits_text = "";
@@ -706,7 +717,7 @@ namespace lotwtool
             }
             int pos_max = pos;
 
-            Credits c = new Credits(this,credits_text);
+            Credits c = new Credits(this,credits_text,cpal);
             while (c.ShowDialog() == DialogResult.OK)
             {
                 int count = 1; // +1 for terminal 0
@@ -825,7 +836,6 @@ namespace lotwtool
 
     public class HexByteConverter : TypeConverter // for hex bytes in property grid
     {
-        protected virtual bool byterange() { return true; }
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string)) return true;
@@ -858,11 +868,8 @@ namespace lotwtool
                 throw new CustomIgnorableException(s + " is not a valid number.");
             }
 
-            if (byterange())
-            {
-                if (v < 0) v = 0;
-                if (v > 255) v = 255;
-            }
+            if (v < 0) v = 0;
+            if (v > 255) v = 255;
             return v;
         }
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
@@ -906,7 +913,29 @@ namespace lotwtool
 
     public class Hex32ByteConverter : HexByteConverter
     {
-        protected override bool byterange() { return false; } // no clamping
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value.GetType() != typeof(string))
+                return base.ConvertFrom(context, culture, value);
+
+            uint v = 0;
+            int b = 10;
+            string s = (string)value;
+            s.Trim();
+            if      (s.StartsWith("$" )) { b = 16; s = s.Substring(1); }
+            else if (s.StartsWith("0x")) { b = 16; s = s.Substring(2); }
+            else if (s.StartsWith("%" )) { b = 2;  s = s.Substring(1); }
+            try
+            {
+                v = Convert.ToUInt32(s,b);
+            }
+            catch (Exception)
+            {
+                //v = 0; // this might be nicer for debugging, custom exceptions raise the debugger
+                throw new CustomIgnorableException(s + " is not a valid number.");
+            }
+            return v;
+        }
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
             if (destinationType == typeof(string))

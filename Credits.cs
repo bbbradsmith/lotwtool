@@ -15,6 +15,7 @@ namespace lotwtool
         Main mp;
         Bitmap bmp;
         uint[] chr_cache = null;
+        byte[] nes_pal = null;
         const int CHR0 = 0x20;
         public string result;
 
@@ -22,17 +23,16 @@ namespace lotwtool
         {
             uint[] palette =
             {
-                Main.NES_PALETTE[0x0F],
-                Main.NES_PALETTE[0x0C],
-                Main.NES_PALETTE[0x10],
-                Main.NES_PALETTE[0x30],
+                Main.NES_PALETTE[nes_pal[0]],
+                Main.NES_PALETTE[nes_pal[1]],
+                Main.NES_PALETTE[nes_pal[2]],
+                Main.NES_PALETTE[nes_pal[3]],
             };
 
             chr_cache = new uint[256*64];
             for (int i=0; i<256; ++i)
             {
-                //mp.chr_cache((CHR0*64)+i,i,chr_cache,palette);
-                mp.chr_cache((CHR0*64)+i,i,chr_cache,Main.GREY);
+                mp.chr_cache((CHR0*64)+i,i,chr_cache,palette);
             }
         }
 
@@ -79,11 +79,12 @@ namespace lotwtool
             pictureBox.Image = bmp;
         }
 
-        public Credits(Main parent, string start_text)
+        public Credits(Main parent, string start_text, byte[] nes_pal_)
         {
             mp = parent;
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
+            nes_pal = nes_pal_;
             cache();
             textBox.Text = start_text;
             //redraw(); // already done by assigning textBot.Text

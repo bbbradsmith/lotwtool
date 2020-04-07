@@ -328,6 +328,19 @@ namespace lotwtool
             // Is 307 treasure chest active = 1, inactive = 0?
             /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("\nTreasure 307: {0:X2}",mp.rom[ro+0x307]);*/
 
+            // 30B,315 music
+            //s += string.Format("= {0:X2} {1:X2}",mp.rom[ro+0x30B],mp.rom[ro+0x315]);
+
+            // querying item fields
+            /*for (int i=0; i<12; ++i)
+            {
+                int eo = ro + 0x320 + (i*16);
+                if (!mp.rom_compare(eo, new byte[] { 0,0,0,0,0,0,0,0,0,0 }))
+                {
+                    s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+8]); // behaviour
+                }
+            }*/
+
             // querying unused item data fields
             /*
             for (int i=0; i<12; ++i)

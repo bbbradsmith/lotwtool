@@ -352,9 +352,54 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Music Control")]
-        [Category("Music")]
-        [Description("315 - Music behaviour for this map.")]
+        [DisplayName("Demo Xemn")]
+        [Category("Title Demo")]
+        [Description("314:0 - Xemn may appear in demonstrations of this room.")]
+        public bool DemoXemn
+        {
+            get { return mp.rom_bit(ro+0x314,0); }
+            set { mp.rom_modify_bit(ro+0x314,0,value); me.redraw_info(); }
+        }
+
+        [DisplayName("Demo Meyna")]
+        [Category("Title Demo")]
+        [Description("314:1 - Meyna may appear in demonstrations of this room.")]
+        public bool DemoMeyna
+        {
+            get { return mp.rom_bit(ro+0x314,1); }
+            set { mp.rom_modify_bit(ro+0x314,1,value); me.redraw_info(); }
+        }
+
+        [DisplayName("Demo Roas")]
+        [Category("Title Demo")]
+        [Description("314:2 - Roas may appear in demonstrations of this room.")]
+        public bool DemoRoas
+        {
+            get { return mp.rom_bit(ro+0x314,2); }
+            set { mp.rom_modify_bit(ro+0x314,2,value); me.redraw_info(); }
+        }
+
+        [DisplayName("Demo Lyll")]
+        [Category("Title Demo")]
+        [Description("314:3 - Lyll may appear in demonstrations of this room.")]
+        public bool DemoLyll
+        {
+            get { return mp.rom_bit(ro+0x314,3); }
+            set { mp.rom_modify_bit(ro+0x314,3,value); me.redraw_info(); }
+        }
+
+        [DisplayName("Demo Pochi")]
+        [Category("Title Demo")]
+        [Description("314:4 - Pochi may appear in demonstrations of this room.")]
+        public bool DemoPochi
+        {
+            get { return mp.rom_bit(ro+0x314,4); }
+            set { mp.rom_modify_bit(ro+0x314,4,value); me.redraw_info(); }
+        }
+
+        [DisplayName("Music Control 315?")]
+        [Category("Uknown")]
+        [Description("315 - Music behaviour for this map?")]
         [TypeConverter(typeof(HexByteConverter))]
         public int MusicControl
         {
@@ -362,20 +407,6 @@ namespace lotwtool
             set
             {
                 mp.rom_modify(ro+0x315,(byte)value);
-                me.redraw_info();
-            }
-        }
-
-        [DisplayName("Unknown 314")]
-        [Category("Unknown")]
-        [Description("314 - ?")]
-        [TypeConverter(typeof(HexByteConverter))]
-        public int Unknown314
-        {
-            get { return mp.rom[ro+0x314]; }
-            set
-            {
-                mp.rom_modify(ro+0x314,(byte)value);
                 me.redraw_info();
             }
         }

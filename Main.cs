@@ -429,16 +429,32 @@ namespace lotwtool
             rom_modify(0,rom[0],false); // dummy non-change to start an empty step
         }
 
-        public void rom_modify_range(int address, byte[] c, bool append=false) // change a block of ROM in one step
+        public bool rom_modify_range(int address, byte[] c, bool append=false) // change a block of ROM in one step
         {
+            bool modified = false;
             if (!append) rom_modify_start();
             for (int i=0; i<c.Length; ++i)
-                rom_modify(address+i,c[i],true);
+                modified |= rom_modify(address+i,c[i],true);
+            return modified;
         }
 
-        public void rom_modify_hex32(int address, uint v, bool append=false) // writes big endian 32 bit
+        public bool rom_modify_bit(int address, int bit, bool v, bool append=false) // write a single bit (LSB=0, MSB=7)
         {
-            rom_modify_range(address, new byte[] {
+            byte m = (byte)(1 << bit);
+            byte b = (byte)(rom[address] & (~m));
+            if (v) b |= m;
+            return rom_modify(address, b, append);
+        }
+
+        public bool rom_bit(int address, int bit) // read a single bit (LSB=0, MSB=7)
+        {
+            byte m = (byte)(1 << bit);
+            return (rom[address] & m) != 0;
+        }
+
+        public bool rom_modify_hex32(int address, uint v, bool append=false) // writes big endian 32 bit
+        {
+            return rom_modify_range(address, new byte[] {
                     (byte)((v>>24)&0xFF),
                     (byte)((v>>16)&0xFF),
                     (byte)((v>> 8)&0xFF),

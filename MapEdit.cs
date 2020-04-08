@@ -323,7 +323,9 @@ namespace lotwtool
             /*s += string.Format("secret tile {0:X2} -> {1:X2}",mp.rom[ro+0x302],mp.rom[ro+0x303]);*/
 
             // 314,316 what are these?
-            //s += string.Format("= {0:X2} {1:X2}",mp.rom[ro+0x314],mp.rom[ro+0x316]);
+            // 314 is a bitfield for which family members can demo a room
+            // 316 is still a mystery
+            /*s += string.Format("= {0:X2} {1:X2}",mp.rom[ro+0x314],mp.rom[ro+0x316]);*/
 
             // Is 307 treasure chest active = 1, inactive = 0?
             /*if (mp.rom[ro+0x307] != 0x01) s += string.Format("\nTreasure 307: {0:X2}",mp.rom[ro+0x307]);*/

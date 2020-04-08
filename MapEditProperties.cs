@@ -348,6 +348,22 @@ namespace lotwtool
             set
             {
                 mp.rom_modify(ro+0x30B,(byte)value);
+                mp.rom_modify(ro+0x315,(byte)(1<<value));
+                me.redraw_info();
+            }
+        }
+
+        [DisplayName("Music Control")]
+        [Category("Music")]
+        [Description("315 - Bitfield to prevent switching music. If (1 << current track) is set, will keep current music instead of switching. 0 to always switch." +
+            " Also used in strange way by shop map (vestigial tile lookup, similar to 'Unknown 316').")]
+        [TypeConverter(typeof(HexByteConverter))]
+        public int MusicControl
+        {
+            get { return mp.rom[ro+0x315]; }
+            set
+            {
+                mp.rom_modify(ro+0x315,(byte)value);
                 me.redraw_info();
             }
         }
@@ -397,23 +413,10 @@ namespace lotwtool
             set { mp.rom_modify_bit(ro+0x314,4,value); me.redraw_info(); }
         }
 
-        [DisplayName("Music Control 315?")]
-        [Category("Uknown")]
-        [Description("315 - Music behaviour for this map?")]
-        [TypeConverter(typeof(HexByteConverter))]
-        public int MusicControl
-        {
-            get { return mp.rom[ro+0x315]; }
-            set
-            {
-                mp.rom_modify(ro+0x315,(byte)value);
-                me.redraw_info();
-            }
-        }
-
         [DisplayName("Unknown 316")]
         [Category("Unknown")]
-        [Description("316 - Rarely not 0?")]
+        [Description("316 - Rarely not 0? Seems unused by dungeon maps," +
+            " but on the shop map used as a tile lookup when loading which renders uselessly offscreen? Possibly vestigial.")]
         [TypeConverter(typeof(HexByteConverter))]
         public int Unknown316
         {

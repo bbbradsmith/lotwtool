@@ -152,7 +152,7 @@ namespace lotwtool
             buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000;
             buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000;
             buttonCredits.Enabled = rom.Length >= 16+0x1C000;
-            buttonDragon.Enabled = false; // TODO ROM size check
+            buttonDragon.Enabled = rom.Length >= 16+0x1C000;
             buttonMisc.Enabled = rom.Length >= 16+0x20000;
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
@@ -530,7 +530,7 @@ namespace lotwtool
 
         public void add_map_edit(int room)
         {
-            if (room >= map_count) return;
+            if (room >= map_count && room != 0x4E) return;
             foreach (MapEdit m in mapedits)
             {
                 if (m.room == room)
@@ -764,7 +764,7 @@ namespace lotwtool
 
         private void buttonDragon_Click(object sender, EventArgs e)
         {
-            // TODO
+            add_map_edit(0x4E); // seems to just be a special map at 13800
         }
 
         private void buttonMisc_Click(object sender, EventArgs e)

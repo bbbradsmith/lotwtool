@@ -21,7 +21,14 @@ namespace lotwtool
         bool grid = false;
         static bool default_grid = false;
 
-        public int room = 0;
+        int ro;
+        int room_internal;
+        public int room
+        {
+            get { return room_internal; }
+            set { room_internal = value;
+                  ro = 16 + (1024 * room_internal); }
+        }
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache;
@@ -53,7 +60,6 @@ namespace lotwtool
 
         public int[] chr_set()
         {
-            int ro = 16 + (1024 * room);
             int[] chri = new int[8];
             chri[0] = mp.rom[ro + 0x305] & (~1);
             chri[2] = mp.rom[ro + 0x306] & (~1);
@@ -68,8 +74,6 @@ namespace lotwtool
 
         public void cache()
         {
-            int ro = 16 + (1024 * room);
-
             palette = new uint[8][];
             for (int i = 0; i < 8; ++i)
             {
@@ -103,8 +107,6 @@ namespace lotwtool
 
         void draw_bg_tile(BitmapData d, int x, int y)
         {
-            int ro = 16 + (1024 * room);
-
             int st = mp.rom[ro+0x302]; // secret tile (no palette)
             int str = mp.rom[ro+0x303]; // secret tile replacement (with palette)
             int t = mp.rom[ro+(x*12)+y];
@@ -182,8 +184,6 @@ namespace lotwtool
         void draw_items(BitmapData d)
         {
             if (!items) return;
-            int ro = 16 + (1024 * room);
-
             for (int i=11; i>=0; --i)
             {
                 int eo = ro + 0x320 + (i*16);
@@ -212,8 +212,6 @@ namespace lotwtool
 
         int pick_item(int x, int y) // pick item under pixel
         {
-            int ro = 16 + (1024 * room);
-
             // treasure
             if (mp.rom[ro+0x307] != 0)
             {
@@ -237,7 +235,6 @@ namespace lotwtool
 
         Tuple<int,int> pos_item(int item)
         {
-            int ro = 16 + (1024 * room);
             int tx,ty;
             if (item < 0 || item > 12)
             {
@@ -309,7 +306,6 @@ namespace lotwtool
         {
             // for investigating a few questions about the format
 
-            int ro = 16 + (1024 * room);
             int rx = room % 4;
             int ry = room / 4;
             string h = string.Format("debug_room {0:D2},{1:D2} {2:D2} ",rx,ry,room);
@@ -402,7 +398,6 @@ namespace lotwtool
             case 0x3E: s = "block";  break;
             }
 
-            int ro = 16 + (1024 * room);
             if (mp.rom[ro+0x302] == t) s += "*";
 
             return s;
@@ -427,7 +422,6 @@ namespace lotwtool
             }
             if (!special) return c;
 
-            int ro = 16 + (1024 * room);
             int st = mp.rom[ro+0x302]; // special tile
             int rt = mp.rom[ro+0x303] & 0x3F; // special replacement
             if (t == st) // special
@@ -540,7 +534,6 @@ namespace lotwtool
 
         public void refresh_metatile(int page)
         {
-            int ro = 16 + (1024 * room);
             if (page == mp.rom[ro+0x300])
             {
                 redraw();
@@ -705,7 +698,6 @@ namespace lotwtool
             last_status_x = x;
             last_status_y = y;
 
-            int ro = 16 + (1024 * room);
             int tx = x / 16;
             int ty = y / 16;
 
@@ -764,7 +756,6 @@ namespace lotwtool
         {
             int x = e.X / zoom;
             int y = e.Y / zoom;
-            int ro = 16 + (1024 * room);
 
             drag_item = -1;
 
@@ -855,7 +846,6 @@ namespace lotwtool
             int y = e.Y / zoom;
             int tx = x / 16;
             int ty = y / 16;
-            int ro = 16 + (1024 * room);
 
             if (e.Button != MouseButtons.None && run_held == false)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -559,11 +560,11 @@ namespace lotwtool
             set { mp.rom_modify(family_offset+21,(byte)value); }
         }
 
-        // TODO these palette entries should use a custom palette picker/editor control
         [DisplayName("Xemn Palette")]
         [Category("Stats 0 Xemn")]
         [Description("1FFA7/1FFB6+30")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint XemnPalette
         {
             get { return mp.rom_hex32(family_offset+30); }
@@ -634,6 +635,7 @@ namespace lotwtool
         [Category("Stats 1 Meyna")]
         [Description("1FFA7/1FFB6+34")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint MeynaPalette
         {
             get { return mp.rom_hex32(family_offset+34); }
@@ -704,6 +706,7 @@ namespace lotwtool
         [Category("Stats 2 Roas")]
         [Description("1FFA7/1FFB6+38")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint RoasPalette
         {
             get { return mp.rom_hex32(family_offset+38); }
@@ -774,6 +777,7 @@ namespace lotwtool
         [Category("Stats 3 Lyll")]
         [Description("1FFA7/1FFB6+42")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint LyllPalette
         {
             get { return mp.rom_hex32(family_offset+42); }
@@ -845,6 +849,7 @@ namespace lotwtool
         [Category("Stats 4 Pochi")]
         [Description("1FFA7/1FFB6+46")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint PochiPalette
         {
             get { return mp.rom_hex32(family_offset+46); }
@@ -855,6 +860,7 @@ namespace lotwtool
         [Category("Misc")]
         [Description("1B2CD/1B2DB at 5 byte interval.")]
         [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
         public uint CreditsPalette
         {
             get { return ((uint)mp.rom[credit_offset+ 0] << 24) |

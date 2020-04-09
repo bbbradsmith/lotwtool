@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace lotwtool
 {
@@ -1018,6 +1020,79 @@ namespace lotwtool
             if (value is string && destinationType == typeof(string))
                 return GetEnumDescription(enum_type, (string)value);
             return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class TypePaletteEditor : UITypeEditor
+    {
+        TypePaletteEditor() { }
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.DropDown; }
+        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
+        public override void PaintValue(PaintValueEventArgs e)
+        {
+            int hw = e.Bounds.Width / 2;
+            int hh = e.Bounds.Height / 2;
+            for (int i=0; i<4; ++i)
+            {
+                uint p = (((uint)e.Value) >> (8*(3-i))) & 0xFF;
+                int x = e.Bounds.X;
+                int y = e.Bounds.Y;
+                int w = hw;
+                int h = hh;
+                if ((i&1)!=0) { x += hw; w = e.Bounds.Width - hw; }
+                if ((i&2)!=0) { y += hh; h = e.Bounds.Height - hh; }
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p])), new Rectangle(x,y,w,h));
+            }
+        }
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            if (value.GetType() != typeof(uint)) return value;
+            IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            if( edSvc != null )
+            {
+                PropertyPaletteControl prop = new PropertyPaletteControl((uint)value);
+                edSvc.DropDownControl(prop);
+                return prop.result;
+            }
+            return value;
+        }
+    }
+
+    public class PropertyPaletteControl : UserControl
+    {
+        const int zoom = 32;
+        public uint result;
+        protected uint original;
+        public PropertyPaletteControl(uint value)
+        {
+            result = value;
+            original = value;
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            Width = zoom * 4;
+            Height = zoom;
+        }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            for (int i=0; i<4; ++i)
+            {
+                uint p = (result >> (8*(3-i))) & 0xFF;
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p])), new Rectangle(i*zoom,0,zoom,zoom));
+            }
+        }
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            int i = e.X / zoom;
+            if (i < 0 || i >= 4) return;
+            int s = (8*(3-i));
+            uint old = (result >> s) & 0xFF;
+            PalettePick p = new PalettePick((int)(old & 63));
+            p.StartPosition = FormStartPosition.CenterParent;
+            if (p.ShowDialog() == DialogResult.OK)
+            {
+                result &= ~(uint)(0x000000FF << s);
+                result |= (uint)p.picked << s;
+                Refresh();
+            }
         }
     }
 

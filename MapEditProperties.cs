@@ -446,6 +446,6 @@ namespace lotwtool
         [Description("$0C home")]      VC = 0x0C,
         [Description("$0D inventory")] VD = 0x0D,
         [Description("$0E pickup")]    VE = 0x0E,
-        [Description("$0F unused")]    VF = 0x0F
+        [Description("$0F unused")]    VF = 0x0F,
     }
 }

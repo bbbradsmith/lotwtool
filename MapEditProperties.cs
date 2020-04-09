@@ -341,14 +341,14 @@ namespace lotwtool
         [DisplayName("Music Track")]
         [Category("Music")]
         [Description("30B - Music to play on this map.")]
-        [TypeConverter(typeof(IntByteConverter))]
-        public int MusicTrack
+        [TypeConverter(typeof(EnumDescriptionConverter))]
+        public MusicEnum MusicTrack
         {
-            get { return mp.rom[ro+0x30B]; }
+            get { return (MusicEnum)mp.rom[ro+0x30B]; }
             set
             {
                 mp.rom_modify(ro+0x30B,(byte)value);
-                mp.rom_modify(ro+0x315,(byte)(1<<value));
+                mp.rom_modify(ro+0x315,(byte)(1<<(int)value));
                 me.redraw_info();
             }
         }
@@ -427,5 +427,25 @@ namespace lotwtool
                 me.redraw_info();
             }
         }
+    }
+
+    public enum MusicEnum
+    {
+        [Description("$00 dungeon")]   V0 = 0x00,
+        [Description("$01 xemn")]      V1 = 0x01,
+        [Description("$02 meyna")]     V2 = 0x02,
+        [Description("$03 lyll")]      V3 = 0x03,
+        [Description("$04 pochi")]     V4 = 0x04,
+        [Description("$05 dragon")]    V5 = 0x05,
+        [Description("$06 inn")]       V6 = 0x06,
+        [Description("$07 shop")]      V7 = 0x07,
+        [Description("$08 death")]     V8 = 0x08,
+        [Description("$09 title")]     V9 = 0x09,
+        [Description("$0A credits")]   VA = 0x0A,
+        [Description("$0B boss")]      VB = 0x0B,
+        [Description("$0C home")]      VC = 0x0C,
+        [Description("$0D inventory")] VD = 0x0D,
+        [Description("$0E pickup")]    VE = 0x0E,
+        [Description("$0F unused")]    VF = 0x0F
     }
 }

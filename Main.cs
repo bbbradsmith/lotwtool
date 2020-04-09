@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -958,6 +959,65 @@ namespace lotwtool
                 return string.Format("${0:X8}", value);
             else
                 return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
+    public class EnumDescriptionConverter : EnumConverter // allows Description property on enums
+    {
+        protected Type enum_type;
+        public static string GetEnumDescription(System.Type value, string name)
+        {
+            FieldInfo fi = value.GetField(name);
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute),false);
+            return (attributes.Length>0) ? attributes[0].Description : name;
+        }
+        public static string GetEnumDescription(Enum value)
+        {
+            return GetEnumDescription(value.GetType(), value.ToString());
+        }
+        public static object GetEnumValue(System.Type value, string description)
+        {
+            FieldInfo[] fis = value.GetFields();
+            foreach (FieldInfo fi in fis)
+            {
+                DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute),false);
+                if (attributes.Length>0 && attributes[0].Description == description)
+                    return fi.GetValue(fi.Name);
+                if (fi.Name == description)
+                    return fi.GetValue(fi.Name);
+            }
+            return description;
+        }
+        public EnumDescriptionConverter(Type t) : base(t.GetType())
+        {
+            enum_type = t;
+        }
+        public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+        {
+            List<object> values = new List<object>();
+            foreach (FieldInfo fi in enum_type.GetFields())
+            {
+                if (fi.IsLiteral)
+                    values.Add(fi.GetValue(null));
+            }
+            values.Sort();
+            return new StandardValuesCollection(values);
+        }
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value is string)
+                return GetEnumValue(enum_type, (string)value);
+            if (value is Enum)
+                return GetEnumDescription((Enum)value);
+            return base.ConvertFrom(context, culture, value);
+        }
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (value is Enum && destinationType == typeof(string))
+                return GetEnumDescription((Enum)value);
+            if (value is string && destinationType == typeof(string))
+                return GetEnumDescription(enum_type, (string)value);
+            return base.ConvertTo(context, culture, value, destinationType);
         }
     }
 

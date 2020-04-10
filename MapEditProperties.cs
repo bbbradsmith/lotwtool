@@ -487,32 +487,13 @@ namespace lotwtool
     public class TypeCHR2kEditor : TypeCHREditor { public TypeCHR2kEditor() : base(true ) { } }
     public class TypeCHR1kEditor : TypeCHREditor { public TypeCHR1kEditor() : base(false) { } }
 
-    public class CollectibleItemEditor : UITypeEditor
+    public class CollectibleItemEditor : BoxlessSquareIconEditor
     {
         protected bool shop;
         public CollectibleItemEditor(bool shop_) { shop = shop_; }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.DropDown; }
-        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
-        public override void PaintValue(PaintValueEventArgs e)
+        public override void PaintIcon(PaintValueEventArgs e, Rectangle r)
         {
-            // remove black border (more legible without it)
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
-            // create square image rectangle (unfortunately will be squished, can't make it taller)
-            Rectangle r = new Rectangle(e.Bounds.X+1, e.Bounds.Y+1, e.Bounds.Width-2, e.Bounds.Height-2);
-            if (r.Width > r.Height)
-            {
-                r.X = r.X + ((r.Width - r.Height) / 2);
-                r.Width = r.Height;
-            }
-            if (r.Height > r.Width)
-            {
-                r.Y = r.Y + ((r.Height - r.Width) / 2);
-                r.Height = r.Width;
-            }
-            // draw icon
             MapProperties mep = (MapProperties)e.Context.Instance;
             byte sprite = (byte)(0x81 + ((int)e.Value*4));
             if (shop) sprite += (8*4);
@@ -615,32 +596,13 @@ namespace lotwtool
         }
     }
 
-    public class PropertyTileEditor : UITypeEditor
+    public class PropertyTileEditor : BoxlessSquareIconEditor
     {
         protected bool grey = false;
         public PropertyTileEditor() { }
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.Modal; }
-        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
-        public override void PaintValue(PaintValueEventArgs e)
+        public override void PaintIcon(PaintValueEventArgs e, Rectangle r)
         {
-            // remove black border (more legible without it)
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
-            // create square image rectangle (unfortunately will be squished, can't make it taller)
-            Rectangle r = new Rectangle(e.Bounds.X+1, e.Bounds.Y+1, e.Bounds.Width-2, e.Bounds.Height-2);
-            if (r.Width > r.Height)
-            {
-                r.X = r.X + ((r.Width - r.Height) / 2);
-                r.Width = r.Height;
-            }
-            if (r.Height > r.Width)
-            {
-                r.Y = r.Y + ((r.Height - r.Width) / 2);
-                r.Height = r.Width;
-            }
-            // draw icon
             MapProperties mep = (MapProperties)e.Context.Instance;
             byte tile = (byte)(int)e.Value;
             Bitmap b = mep.me.make_icon(tile,grey?4:(tile>>6),false,1);

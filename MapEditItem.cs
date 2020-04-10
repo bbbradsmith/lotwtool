@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace lotwtool
 {
@@ -126,9 +128,11 @@ namespace lotwtool
 
     public class MapItemProperties
     {
-        Main mp;
-        MapEdit me;
-        int eo;
+        public Main mp;
+        public MapEdit me;
+
+        [Browsable(false)]
+        public int eo;
 
         public MapItemProperties(Main mp_, MapEdit me_, int eo_)
         {
@@ -137,12 +141,11 @@ namespace lotwtool
             eo = eo_;
         }
 
-        // TODO ranges, validations, dropdown lists, visual representations, pickers, etc...
-
         [DisplayName("Sprite Main")]
         [Category("Appearance")]
         [Description("0 - Selects the first sprite in the item's animation set.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(PropertySpriteEditor),typeof(UITypeEditor))]
         public int SpriteMain
         {
             get { return mp.rom[eo+0x0]; }
@@ -158,6 +161,7 @@ namespace lotwtool
         [Category("Appearance")]
         [Description("6 - Selects the dead sprite.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(PropertySpriteEditor),typeof(UITypeEditor))]
         public int SpriteDead
         {
             get { return mp.rom[eo+0x6]; }
@@ -167,9 +171,10 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Sprite Other")]
-        [Category("Appearance")]
-        [Description("7 - Selects the other sprite?")]
+        // TODO find out what this does
+        [DisplayName("Unknown 7")]
+        [Category("Unknown")]
+        [Description("7 - Affects selected sprite appearance?")]
         [TypeConverter(typeof(HexByteConverter))]
         public int SpriteOther
         {
@@ -180,6 +185,7 @@ namespace lotwtool
             }
         }
 
+        // TODO click a palette?
         [DisplayName("Draw Attribute")]
         [Category("Appearance")]
         [Description("1 - Low 2 bits select the colour palette to use." +
@@ -252,6 +258,7 @@ namespace lotwtool
             }
         }
 
+        // TODO dropdown list
         [DisplayName("Behaviour")]
         [Category("Attributes")]
         [Description("8 - Behaviour type.")]
@@ -275,6 +282,118 @@ namespace lotwtool
             set {
                 mp.rom_modify(eo+0x9,(byte)value);
                 me.redraw_info();
+            }
+        }
+    }
+
+    public class PropertySpriteEditor : BoxlessSquareIconEditor
+    {
+        public PropertySpriteEditor() { }
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.DropDown; }
+        public override void PaintIcon(PaintValueEventArgs e, Rectangle r)
+        {
+            MapItemProperties mip = (MapItemProperties)e.Context.Instance;
+            byte sprite = (byte)(int)e.Value;
+            int palette = mip.mp.rom[mip.eo+0x1] & 3;
+            Bitmap b = mip.me.make_icon(sprite,palette,true,1);
+            e.Graphics.DrawImage(b,r);
+        }
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            if (value.GetType() != typeof(int)) return value;
+            IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            if( edSvc != null )
+            {
+                int iv = (int)value;
+                int i = (((iv & 1) ^ 1) << 6) | (iv >> 2);
+                MapItemProperties mip = (MapItemProperties)context.Instance;
+                SpriteControl prop = new SpriteControl(mip.me, i);
+                edSvc.DropDownControl(prop);
+                iv = prop.result;
+                if (prop.valid)
+                {
+                    return ((iv>>6)^1) | ((iv & 63) << 2);
+                }
+            }
+            return value;
+        }
+    }
+
+    public class SpriteControl : UserControl
+    {
+        const int zoom = 2;
+        public int result;
+        public int hover = -1;
+        public bool valid = false;
+        MapEdit me;
+        Bitmap b = null;
+        public SpriteControl(MapEdit me_, int value)
+        {
+            me = me_;
+            result = value;
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            Width = zoom * 16 * 8;
+            Height = zoom * 16 * 8;
+        }
+        BitmapData draw_lock()
+        {
+            return b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
+        }
+        void draw_unlock(BitmapData d)
+        {
+            b.UnlockBits(d);
+        }
+        void draw_tile(BitmapData d, int i)
+        { 
+            if (i<0 || i>=64) return;
+            int x = i % 8;
+            int y = i / 8;
+            int palette = 4;
+            if (i == result) palette = 6;
+            if (i == hover) palette = 5;
+            int s = ((i>>6)^1) | ((i & 63) << 2);
+            me.draw_icon(d,(byte)s,palette,x*16,y*16,true,zoom);
+        }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (b == null)
+            {
+                b = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+                BitmapData d = draw_lock();
+                for (int i=0; i<64;++i)
+                    draw_tile(d,i);
+                draw_unlock(d);
+            }
+            e.Graphics.DrawImage(b,0,0);
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            int y = e.Y / (16 * zoom);
+            int x = e.X / (16 * zoom);
+            if (x>=0 && x<8 && y>=0 && y < 16)
+            {
+                int new_hover = (y*8)+x;
+                if (new_hover != hover)
+                {
+                    BitmapData d = draw_lock();
+                    int old_hover = hover;
+                    hover = new_hover;
+                    draw_tile(d,old_hover);
+                    draw_tile(d,hover);
+                    draw_unlock(d);
+                    Refresh();
+                }
+            }
+        }
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            int y = e.Y / (16 * zoom);
+            int x = e.X / (16 * zoom);
+            if (x>=0 && x<8 && y>=0 && y <16)
+            {
+                result = (y*8)+x;
+                valid = true;
+                ParentForm.Close();
             }
         }
     }

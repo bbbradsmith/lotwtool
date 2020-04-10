@@ -1094,6 +1094,36 @@ namespace lotwtool
         }
     }
 
+    public class BoxlessSquareIconEditor : UITypeEditor
+    {
+        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
+        public virtual void PaintIcon(PaintValueEventArgs e, Rectangle r) { } // override this and draw image to rectangle
+        public override void PaintValue(PaintValueEventArgs e)
+        {
+            // remove black border (more legible without it)
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
+            
+            // create square image rectangle (unfortunately will be squished, can't make it taller)
+            Rectangle r = new Rectangle(e.Bounds.X+1, e.Bounds.Y+1, e.Bounds.Width-2, e.Bounds.Height-2);
+            if (r.Width > r.Height)
+            {
+                r.X = r.X + ((r.Width - r.Height) / 2);
+                r.Width = r.Height;
+            }
+            if (r.Height > r.Width)
+            {
+                r.Y = r.Y + ((r.Height - r.Width) / 2);
+                r.Height = r.Width;
+            }
+
+            // virtual member to fill in the now borderless rectangle
+            PaintIcon(e,r);
+        }
+    }
+
     public class CustomIgnorableException : Exception // just something that makes it easy to ignore in the debugger
     {
         public CustomIgnorableException(string s) : base(s) {}

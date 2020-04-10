@@ -204,15 +204,15 @@ namespace lotwtool
             Main.chr_blit(d, chr_cache, mp.rom[mto+3]+po, 8, 8, zoom_);
         }
 
-        void draw_sprite(BitmapData d, int s, int a, int x, int y, int zoom_=0)
+        void draw_sprite(BitmapData d, int s, int a, int x, int y, int zoom_=0, bool bound=true)
         {
             // a = -1 grey
             // a = -2 highlight
             // a = -3 preselect
             // else a is palette
             if (s>=256) return;
-            if ((x+16) > 1024) return;
-            if ((y+16) > 192) return;
+            if (bound && (x+16) > 1024) return;
+            if (bound && (y+16) > 192) return;
             if (zoom_ < 1) zoom_ = zoom;
             if (a >= 0) a &= 3;
             else
@@ -235,7 +235,7 @@ namespace lotwtool
             if (sprite)
             {
                 if (palette >= 4) palette = 3 - palette; // 4,5 = -1,-2 for draw_sprite
-                draw_sprite(d,tile,palette,x,y,zoom_);
+                draw_sprite(d,tile,palette,x,y,zoom_,false);
             }
             else
             {

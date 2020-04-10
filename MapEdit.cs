@@ -32,6 +32,7 @@ namespace lotwtool
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache;
+        bool chr_cache_extra;
         public uint[][] palette;
         public MapEditHex infohex = null;
         public MapEditTile tilepal = null;
@@ -55,6 +56,16 @@ namespace lotwtool
                 {
                     mp.chr_cache((page * 64) + i, (slot * 64) + i + (p * 512), chr_cache, palette[p + (slot & 4)]);
                 }
+            }
+        }
+
+        void cache_page_extra(int slot, int page) // 3 extra colours (grey/highlight/preselect)
+        {
+            for (int i = 0; i < 64; ++i)
+            {
+                mp.chr_cache((page * 64) + i, (slot * 64) + i + (4 * 512), chr_cache, Main.GREY);
+                mp.chr_cache((page * 64) + i, (slot * 64) + i + (5 * 512), chr_cache, Main.HIGHLIGHT);
+                mp.chr_cache((page * 64) + i, (slot * 64) + i + (6 * 512), chr_cache, Main.PRESELECT);
             }
         }
 
@@ -86,11 +97,25 @@ namespace lotwtool
                 }
             }
 
-            chr_cache = new uint[4 * 8 * 64 * 64];
+            chr_cache = new uint[7 * 8 * 64 * 64];
             int[] chri = chr_set();
             for (int i=0; i<8; ++i)
             {
                 cache_page(i, chri[i]);
+            }
+            chr_cache_extra = false; // invalidate extra cache for on-demand use
+        }
+
+        public void cache_extra() // on-demand caching for grey/highlight
+        {
+            if (!chr_cache_extra)
+            {
+                int[] chri = chr_set();
+                for (int i=0; i<8; ++i)
+                {
+                    cache_page_extra(i, chri[i]);
+                }
+                chr_cache_extra = true;
             }
         }
 
@@ -166,19 +191,65 @@ namespace lotwtool
                 Main.draw_vline(d,x*16*zoom,0,12*16*zoom,Main.GRID);
         }
 
-        void draw_sprite(BitmapData d, int s, int a, int x, int y)
+        void draw_metatile(BitmapData d, byte tile, int palette, int x, int y, int zoom_)
         {
+            byte metatile_page = mp.rom[ro+0x300];
+            int mto = 16 + (1024 * 8 * 9) + (metatile_page * 256) + ((tile&63) * 4);
+            if ((mto+4) > mp.rom.Length) return;
+            int po = 512 * palette;
+            if (palette >= 4) cache_extra();
+            Main.chr_blit(d, chr_cache, mp.rom[mto+0]+po, 0, 0, zoom_);
+            Main.chr_blit(d, chr_cache, mp.rom[mto+1]+po, 0, 8, zoom_);
+            Main.chr_blit(d, chr_cache, mp.rom[mto+2]+po, 8, 0, zoom_);
+            Main.chr_blit(d, chr_cache, mp.rom[mto+3]+po, 8, 8, zoom_);
+        }
+
+        void draw_sprite(BitmapData d, int s, int a, int x, int y, int zoom_=0)
+        {
+            // a = -1 grey
+            // a = -2 highlight
+            // a = -3 preselect
+            // else a is palette
             if (s>=256) return;
             if ((x+16) > 1024) return;
             if ((y+16) > 192) return;
+            if (zoom_ < 1) zoom_ = zoom;
+            if (a >= 0) a &= 3;
+            else
+            {
+                cache_extra();
+                a = 3-a;
+            }
 
             int t = ((s & 1)<<8) | (s & 0xFE); // NES 16px sprite tile selector
-            t |= (512 * (a & 3)); // select palette
+            t |= (512 * a); // select palette
 
-            Main.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom);
-            Main.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom);
-            Main.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom);
-            Main.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom);
+            Main.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom_);
+            Main.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom_);
+            Main.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom_);
+            Main.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom_);
+        }
+
+        public void draw_icon(BitmapData d, byte tile, int palette, int x, int y, bool sprite, int zoom_=1) // for map properties
+        {
+            if (sprite)
+            {
+                if (palette >= 4) palette = 3 - palette; // 4,5 = -1,-2 for draw_sprite
+                draw_sprite(d,tile,palette,x,y,zoom_);
+            }
+            else
+            {
+                draw_metatile(d,tile,palette,x,y,zoom_);
+            }
+        }
+
+        public Bitmap make_icon(byte tile, int palette, bool sprite, int zoom_=1) // for map properties
+        {
+            Bitmap b = new Bitmap(16*zoom_, 16*zoom_, PixelFormat.Format32bppArgb);
+            BitmapData d = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
+            draw_icon(d,tile,palette,0,0,sprite,zoom_);
+            b.UnlockBits(d);
+            return b;
         }
 
         void draw_items(BitmapData d)

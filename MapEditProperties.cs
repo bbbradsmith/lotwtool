@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -57,8 +58,6 @@ namespace lotwtool
             mp = mp_;
             me = me_;
         }
-
-        // TODO ranges, validations, dropdown lists, visual representations, pickers, etc...
 
         [DisplayName("Metatile Page")]
         [Category("Tileset")]
@@ -141,6 +140,7 @@ namespace lotwtool
         [Category("Treasure")]
         [Description("30A - Contents of the treasure chest.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(TreasureEditor),typeof(UITypeEditor))]
         public int TreasureContents
         {
             get { return mp.rom[ro+0x30A]; }
@@ -189,6 +189,7 @@ namespace lotwtool
         [Category("Shop")]
         [Description("310 - First shop item.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(ShopEditor),typeof(UITypeEditor))]
         public int ShopItem0
         {
             get { return mp.rom[ro+0x310]; }
@@ -217,6 +218,7 @@ namespace lotwtool
         [Category("Shop")]
         [Description("312 - Second shop item.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(ShopEditor),typeof(UITypeEditor))]
         public int ShopItem1
         {
             get { return mp.rom[ro+0x312]; }
@@ -479,12 +481,138 @@ namespace lotwtool
             return value;
         }
     }
-    public class TypeCHR2kEditor : TypeCHREditor
+    public class TypeCHR2kEditor : TypeCHREditor { public TypeCHR2kEditor() : base(true ) { } }
+    public class TypeCHR1kEditor : TypeCHREditor { public TypeCHR1kEditor() : base(false) { } }
+
+    public class CollectibleItemEditor : UITypeEditor
     {
-        public TypeCHR2kEditor() : base(true) { }
+        protected bool shop;
+        public CollectibleItemEditor(bool shop_) { shop = shop_; }
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.DropDown; }
+        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
+        public override void PaintValue(PaintValueEventArgs e)
+        {
+            // remove black border (more legible without it)
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
+            // create square image rectangle (unfortunately will be squished, can't make it taller)
+            Rectangle r = new Rectangle(e.Bounds.X+1, e.Bounds.Y+1, e.Bounds.Width-2, e.Bounds.Height-2);
+            if (r.Width > r.Height)
+            {
+                r.X = r.X + ((r.Width - r.Height) / 2);
+                r.Width = r.Height;
+            }
+            if (r.Height > r.Width)
+            {
+                r.Y = r.Y + ((r.Height - r.Width) / 2);
+                r.Height = r.Width;
+            }
+            // draw icon
+            MapProperties mep = (MapProperties)e.Context.Instance;
+            byte sprite = (byte)(0x81 + ((int)e.Value*4));
+            if (shop) sprite += (8*4);
+            Bitmap b = mep.me.make_icon(sprite,1,true,1);
+            e.Graphics.DrawImage(b,r);
+        }
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            if (value.GetType() != typeof(int)) return value;
+            IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            if( edSvc != null )
+            {
+                MapProperties mep = (MapProperties)context.Instance;
+                CollectibleItemControl prop = new CollectibleItemControl(mep.me, shop, (int)value);
+                edSvc.DropDownControl(prop);
+                return prop.result;
+            }
+            return value;
+        }
     }
-    public class TypeCHR1kEditor : TypeCHREditor
+    public class TreasureEditor : CollectibleItemEditor { public TreasureEditor() : base(false) { } }
+    public class ShopEditor     : CollectibleItemEditor { public ShopEditor()     : base(true ) { } }
+
+    public class CollectibleItemControl : UserControl
     {
-        public TypeCHR1kEditor() : base(false) { }
+        const int zoom = 2;
+        public int result;
+        public int hover = -1;
+        MapEdit me;
+        bool shop;
+        Bitmap b = null;
+        public CollectibleItemControl(MapEdit me_, bool shop_, int value)
+        {
+            me = me_;
+            shop = shop_;
+            result = value;
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            Width = zoom * 16 * 8;
+            Height = zoom * 16 * (shop ? 2 : 3);
+        }
+        BitmapData draw_lock()
+        {
+            return b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
+        }
+        void draw_unlock(BitmapData d)
+        {
+            b.UnlockBits(d);
+        }
+        void draw_tile(BitmapData d, int i)
+        { 
+            if (i<0 || i>=(shop?16:24)) return;
+            int x = i % 8;
+            int y = i / 8;
+            int palette = 4;
+            if (i == result) palette = 6;
+            if (i == hover) palette = 5;
+            if (shop) i += 8;
+            me.draw_icon(d,(byte)(0x81+(i*4)),palette,x*16,y*16,true,zoom);
+        }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (b == null)
+            {
+                b = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+                BitmapData d = draw_lock();
+                for (int i=0; i<(shop?16:24);++i)
+                    draw_tile(d,i);
+                draw_unlock(d);
+            }
+            e.Graphics.DrawImage(b,0,0);
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            int y = e.Y / (16 * zoom);
+            int x = e.X / (16 * zoom);
+            if (x>=0 && x<8 && y>=0 && y <(shop?2:3))
+            {
+                int new_hover = (y*8)+x;
+                if (new_hover != hover)
+                {
+                    BitmapData d = draw_lock();
+                    int old_hover = hover;
+                    hover = new_hover;
+                    draw_tile(d,old_hover);
+                    draw_tile(d,hover);
+                    draw_unlock(d);
+                    Refresh();
+                }
+            }
+        }
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            int y = e.Y / (16 * zoom);
+            int x = e.X / (16 * zoom);
+            if (x>=0 && x<8 && y>=0 && y <(shop?2:3))
+            {
+                result = (y*8)+x;
+                ParentForm.Close();
+            }
+        }
     }
+
+
+
+
 }

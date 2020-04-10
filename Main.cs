@@ -1062,11 +1062,9 @@ namespace lotwtool
     {
         const int zoom = 32;
         public uint result;
-        protected uint original;
         public PropertyPaletteControl(uint value)
         {
             result = value;
-            original = value;
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             Width = zoom * 4;
             Height = zoom;

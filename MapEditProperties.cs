@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace lotwtool
 {
@@ -45,8 +47,8 @@ namespace lotwtool
 
     public class MapProperties
     {
-        Main mp;
-        MapEdit me;
+        public Main mp;
+        public MapEdit me;
         int ro;
 
         public MapProperties(Main mp_, MapEdit me_, int ro_)
@@ -76,6 +78,7 @@ namespace lotwtool
         [Category("Tileset")]
         [Description("305 - Selects the first 2K page of CHR to use for the background.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(TypeCHR2kEditor),typeof(UITypeEditor))]
         public int CHR0
         {
             get { return mp.rom[ro+0x305]; }
@@ -91,6 +94,7 @@ namespace lotwtool
         [Category("Tileset")]
         [Description("306 - Selects the second 2K page of CHR to use for the background.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(TypeCHR2kEditor),typeof(UITypeEditor))]
         public int CHR1
         {
             get { return mp.rom[ro+0x306]; }
@@ -106,6 +110,7 @@ namespace lotwtool
         [Category("Tileset")]
         [Description("301 - Selects the 1K page of CHR to use for enemies.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(TypeCHR1kEditor),typeof(UITypeEditor))]
         public int CHREnemy
         {
             get { return mp.rom[ro+0x301]; }
@@ -447,5 +452,39 @@ namespace lotwtool
         [Description("$0D inventory")] VD = 0x0D,
         [Description("$0E pickup")]    VE = 0x0E,
         [Description("$0F unused")]    VF = 0x0F,
+    }
+
+    public class TypeCHREditor : UITypeEditor
+    {
+        protected bool dualpage;
+        public TypeCHREditor(bool dualpage_) { dualpage = dualpage_; }
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.Modal; }
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            if (value.GetType() != typeof(int)) return value;
+            MapProperties mep = (MapProperties)context.Instance;
+            CHRSelect cs = new CHRSelect(mep.mp,true);
+            cs.StartPosition = FormStartPosition.CenterParent;
+            cs.preselect = (int)value;
+            cs.dualpage = dualpage;
+            cs.sprite = !dualpage;
+            if (cs.ShowDialog() == DialogResult.OK)
+            {
+                if (cs.highlight >= 0 && cs.highlight < mep.mp.chr_count)
+                {
+                    value = cs.highlight;
+                    if (dualpage) value = (int)value & ~1;
+                }
+            }
+            return value;
+        }
+    }
+    public class TypeCHR2kEditor : TypeCHREditor
+    {
+        public TypeCHR2kEditor() : base(true) { }
+    }
+    public class TypeCHR1kEditor : TypeCHREditor
+    {
+        public TypeCHR1kEditor() : base(false) { }
     }
 }

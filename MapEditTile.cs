@@ -21,6 +21,23 @@ namespace lotwtool
         const uint SELECT = 0xFFFFFFFF;
         int zoom = 2;
         static int default_zoom = 2;
+        bool modal = false;
+        public bool show_palselect = true;
+        public byte result = 0x00; // modal result
+
+        byte get_tile()
+        {
+            return modal ? result : me.draw_tile;
+        }
+
+        public void set_modal_tile(int tile, int palette, int combo=-1) // -1 not to set one or the other
+        {
+            if (tile >= 0)    result = (byte)((result & 0xC0) | (tile & 0x3F));
+            if (palette >= 0) result = (byte)((result & 0x3F) | (palette<<6));
+            if (combo >= 0)   result = (byte)combo;
+            updateTileStatus(result);
+            redraw();
+        }
 
         void cache_tile(int rom_index, int cache_index)
         {
@@ -63,7 +80,7 @@ namespace lotwtool
             int[] XO = { 0, 0, 8, 8 };
             int[] YO = { 0, 8, 0, 8 };
 
-            int ts = me.draw_tile & 63;
+            int ts = get_tile() & 63;
             for (int t=0; t<64; ++t)
             {
                 int tx = t % 8;
@@ -91,19 +108,23 @@ namespace lotwtool
             {
                 Main.draw_box(d,i*pw,0,pw,h,me.palette[i/4][i%4]);
             }
-            int ps = me.draw_tile >> 6;
+            int ps = get_tile() >> 6;
             int pw4 = pw*4;
-            Main.draw_outbox(d,ps*pw4,0,pw4,h,SELECT);
-            Main.draw_outbox(d,ps*pw4+1,1,pw4-2,h-2,BLACK);
+            if (show_palselect)
+            {
+                Main.draw_outbox(d,ps*pw4,0,pw4,h,SELECT);
+                Main.draw_outbox(d,ps*pw4+1,1,pw4-2,h-2,BLACK);
+            }
 
             bpal.UnlockBits(d);
             paletteBox.Image = bpal;
         }
 
-        public MapEditTile(MapEdit me_, Main parent)
+        public MapEditTile(MapEdit me_, Main parent, bool modal_=false)
         {
             mp = parent;
             me = me_;
+            modal = modal_;
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
             int x = me.room % 4;
@@ -114,12 +135,19 @@ namespace lotwtool
             updateZoom();
             //redraw(); // done by updateZoom
             toolStripTipLabel.Text = "RMB = Edit";
-            updateTileStatus(me.draw_tile);
+            updateTileStatus(get_tile());
+            if (modal)
+            {
+                actionToolStripMenuItem.Enabled = false;
+                undoToolStripMenuItem.Enabled = false; // just in case action doesn't disable it too
+                toolStripTipLabel.Text = "";
+            }
         }
 
         private void MapEditTile_FormClosing(object sender, FormClosingEventArgs e)
         {
-            me.tilepal = null;
+            if (!modal)
+                me.tilepal = null;
         }
 
         private void updateZoom()
@@ -159,13 +187,26 @@ namespace lotwtool
             zoom = 4; updateZoom();
         }
 
+       public void updateTileStatus(byte t, int p = -1)
+        {
+            string s = string.Format("{0:X2} ({1:X1}:{2:X2})",t,t>>6,t&63);
+            if (!show_palselect) s = string.Format("{0:X2}",t&63);
+            if (p >= 0 && p < 16)
+            {
+                int ro = 16 + (1024 * me.room);
+                s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
+            }
+            s += " " + me.get_tile_type(t);
+            toolStripStatusLabel.Text = s;
+        }
+
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             int tx = e.X / (16 * zoom);
             int ty = e.Y / (16 * zoom);
             int t = (ty * 8) + tx;
 
-            if (e.Button == MouseButtons.Right && tx >= 0 && tx < 8 && ty >= 0 && ty < 8)
+            if (!modal && e.Button == MouseButtons.Right && tx >= 0 && tx < 8 && ty >= 0 && ty < 8)
             {
                 int ro = 16 + (1024 * me.room);
                 byte mt_page = mp.rom[ro+0x300];
@@ -195,39 +236,49 @@ namespace lotwtool
             else pictureBox_MouseMove(sender,e);
         }
 
-        public void updateTileStatus(byte t, int p = -1)
-        {
-            string s = string.Format("{0:X2} ({1:X1}:{2:X2})",t,t>>6,t&63);
-            if (p >= 0 && p < 16)
-            {
-                int ro = 16 + (1024 * me.room);
-                s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
-            }
-            s += " " + me.get_tile_type(t);
-            toolStripStatusLabel.Text = s;
-        }
-
+ 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            int tx = e.X / (16 * zoom);
-            int ty = e.Y / (16 * zoom);
+            int tx = (e.X / (16 * zoom)) % 8; // wrap if off-window
+            int ty = (e.Y / (16 * zoom)) % 8;
             int t = (ty * 8) + tx;
 
-            byte new_tile = (byte)((me.draw_tile & 0xC0) | t);
+            byte new_tile = (byte)((get_tile() & 0xC0) | t);
 
             if (e.Button == MouseButtons.Left)
             {
-                me.draw_tile = new_tile;
+                if(modal)
+                    result = new_tile;
+                else
+                    me.draw_tile = new_tile;
                 redraw();
             }
 
             updateTileStatus(new_tile);
         }
 
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            int tx = e.X / (16 * zoom);
+            int ty = e.Y / (16 * zoom);
+            int t = (ty * 8) + tx;
+
+            if (modal && e.Button == MouseButtons.Left && tx >= 0 && tx < 8 && ty >= 0 && ty < 8)
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
+
+        private void pictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            updateTileStatus(get_tile()); // revert when mouse leaves
+        }
+
         private void paletteBox_MouseDown(object sender, MouseEventArgs e)
         {
             int px = e.X / (8 * zoom);
-            if (e.Button == MouseButtons.Right && px >= 0 && px < 16)
+            if (!modal && e.Button == MouseButtons.Right && px >= 0 && px < 16)
             {
                 int ro = 16 + (1024 * me.room) + 0x3E0 + px;
                 byte old = mp.rom[ro];
@@ -253,11 +304,14 @@ namespace lotwtool
         {
             int px = e.X / (8 * zoom);
             int p = px / 4;
-            byte new_tile = (byte)((me.draw_tile & 63) | (p<<6));
+            byte new_tile = (byte)((get_tile() & 63) | (p<<6));
 
             if (e.Button == MouseButtons.Left)
             {
-                me.draw_tile = new_tile;
+                if (modal)
+                    result = new_tile;
+                else
+                    me.draw_tile = new_tile;
                 redraw();
             }
 
@@ -266,12 +320,50 @@ namespace lotwtool
 
         private void MapEditTile_KeyDown(object sender, KeyEventArgs e)
         {
-            me.MapEdit_KeyDown(sender,e);
-        }
+            if (modal)
+            {
+                if (!e.Modifiers.HasFlag(Keys.Control) && !e.Modifiers.HasFlag(Keys.Shift))
+                {
+                    switch (e.KeyCode)
+                    {
+                        // set palette
+                        case Keys.D1:
+                        case Keys.D2:
+                        case Keys.D3:
+                        case Keys.D4:
+                            set_modal_tile(-1,e.KeyCode - Keys.D1); break;
 
-        private void pictureBox_MouseLeave(object sender, EventArgs e)
-        {
-            updateTileStatus(me.draw_tile); // revert when mouse leaves
+                        // select tile
+                        case Keys.OemOpenBrackets:
+                            set_modal_tile((result-1)&0x3F,-1); break; // decrement tile
+                        case Keys.OemCloseBrackets:
+                            set_modal_tile((result+1)&0x3F,-1); break; // increment tile
+                        case Keys.Left:
+                            set_modal_tile((result & 0x38) | ((result-1) & 0x07), -1); break; // wrapping select
+                        case Keys.Right:
+                            set_modal_tile((result & 0x38) | ((result+1) & 0x07), -1); break;
+                        case Keys.Up:
+                            set_modal_tile((result & 0x07) | ((result-8) & 0x38), -1); break;
+                        case Keys.Down:
+                            set_modal_tile((result & 0x07) | ((result+8) & 0x38), -1); break;
+
+                        case Keys.Enter:
+                            DialogResult = DialogResult.OK;
+                            Close();
+                            break;
+                        case Keys.Escape:
+                            Close();
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                me.MapEdit_KeyDown(sender,e);
+            }
         }
     }
 }

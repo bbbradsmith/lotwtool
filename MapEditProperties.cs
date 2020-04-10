@@ -303,6 +303,7 @@ namespace lotwtool
         [Category("Secret Wall")]
         [Description("302 - The tile which will secretly be replaced when touched.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(GreyPropertyTileEditor),typeof(UITypeEditor))]
         public int SecretWallTile
         {
             get { return mp.rom[ro+0x302]; }
@@ -319,6 +320,7 @@ namespace lotwtool
         [Category("Secret Wall")]
         [Description("303 - The tile which will replace the secret wall when touched.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(PropertyTileEditor),typeof(UITypeEditor))]
         public int SecretWallReplace
         {
             get { return mp.rom[ro+0x303]; }
@@ -335,6 +337,7 @@ namespace lotwtool
         [Category("Secret Wall")]
         [Description("304 - The tile which will replace a block when moved or destroyed.")]
         [TypeConverter(typeof(HexByteConverter))]
+        [Editor(typeof(PropertyTileEditor),typeof(UITypeEditor))]
         public int BlockReplace
         {
             get { return mp.rom[ro+0x304]; }
@@ -453,7 +456,7 @@ namespace lotwtool
         [Description("$0C home")]      VC = 0x0C,
         [Description("$0D inventory")] VD = 0x0D,
         [Description("$0E pickup")]    VE = 0x0E,
-        [Description("$0F unused")]    VF = 0x0F,
+        [Description("$0F roas?")]     VF = 0x0F,
     }
 
     public class TypeCHREditor : UITypeEditor
@@ -612,7 +615,55 @@ namespace lotwtool
         }
     }
 
-
-
-
+    public class PropertyTileEditor : UITypeEditor
+    {
+        protected bool grey = false;
+        public PropertyTileEditor() { }
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) { return UITypeEditorEditStyle.Modal; }
+        public override bool GetPaintValueSupported(ITypeDescriptorContext context) { return true; }
+        public override void PaintValue(PaintValueEventArgs e)
+        {
+            // remove black border (more legible without it)
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
+            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
+            // create square image rectangle (unfortunately will be squished, can't make it taller)
+            Rectangle r = new Rectangle(e.Bounds.X+1, e.Bounds.Y+1, e.Bounds.Width-2, e.Bounds.Height-2);
+            if (r.Width > r.Height)
+            {
+                r.X = r.X + ((r.Width - r.Height) / 2);
+                r.Width = r.Height;
+            }
+            if (r.Height > r.Width)
+            {
+                r.Y = r.Y + ((r.Height - r.Width) / 2);
+                r.Height = r.Width;
+            }
+            // draw icon
+            MapProperties mep = (MapProperties)e.Context.Instance;
+            byte tile = (byte)(int)e.Value;
+            Bitmap b = mep.me.make_icon(tile,grey?4:(tile>>6),false,1);
+            e.Graphics.DrawImage(b,r);
+        }
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            if (value.GetType() != typeof(int)) return value;
+            MapProperties mep = (MapProperties)context.Instance;
+            MapEditTile et = new MapEditTile(mep.me, mep.mp, true);
+            et.StartPosition = FormStartPosition.CenterParent;
+            et.show_palselect = !grey;
+            et.set_modal_tile(-1,-1,(int)value);
+            if (et.ShowDialog() == DialogResult.OK)
+            {
+                value = (int)et.result;
+                if (grey) value = (int)(et.result & 0x3F);
+            }
+            return value;
+        }
+    }
+    public class GreyPropertyTileEditor : PropertyTileEditor
+    {
+        public GreyPropertyTileEditor() {  grey = true; }
+    }
 }

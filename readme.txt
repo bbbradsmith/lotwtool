@@ -1,7 +1,7 @@
 Legacy of the Wizard Tool
 
 Version 1
-2019
+2020
 Brad Smith
 
 https://github.com/bbbradsmith/lotwtool

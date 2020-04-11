@@ -970,6 +970,7 @@ namespace lotwtool
         public static string GetEnumDescription(System.Type value, string name)
         {
             FieldInfo fi = value.GetField(name);
+            if (fi == null) return name;
             DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute),false);
             return (attributes.Length>0) ? attributes[0].Description : name;
         }

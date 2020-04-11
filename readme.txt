@@ -31,14 +31,39 @@ is accidentally left unsaved after a test, the patch may persist.
 This can be removed in the Global menu.
 
 I recommend also using the Global menu to give yourself all items,
-and a supply of keys as well, and editing the home map 3,16 to put an
-extra ladder next to the door of the Drasle residence to enter more quickly.
+and a supply of keys as well, and temporarily editing the home map 3,16 to put
+an extra ladder next to the door of the Drasle residence to enter more quickly.
 
 
 The Inn in map 1,16 will look strange in the editor. To make changes to it,
 use the Map Properties tool to temporarily set its Metatile Page to $1F,
 instead of $0D, and its correct tiles will appear. (The game has a special
 override that does this just for the inn.)
+
+
+The Dragon is stored like another room of the map, but its graphics are
+stored as Metatile Page definitions. Open the Dragon map, and use the
+Map Properties to select pages $10 through $17 to view and edit the
+Dragon's graphics.
+
+
+CHR can be edited by clicking a tile in the CHR view, but it may be easier
+to edit pixel art like this in a graphics editor of your choice. Right
+click on the CHR page in the CHR view for an option to export/import as PNG.
+
+
+The title screen editor is functional, but simple. In its action menu,
+you can export a NAM file that is a standard NES nametable format.
+If you export the CHR pages as well, you can use Shiru's "NES Screen Tool"
+to edit instead, which has a few more features:
+
+https://shiru.untergrund.net/software.shtml
+
+
+The "Unused Screen" seems to be an early version of the title screen
+that was accidentally left in the ROM, in the same format as the actual
+title screen. Unfortunately its CHR tiles seem to have been lost, but
+access is provided in this editor for the curious.
 
 
 Requirements

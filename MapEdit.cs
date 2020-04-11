@@ -406,7 +406,8 @@ namespace lotwtool
                 int eo = ro + 0x320 + (i*16);
                 if (!mp.rom_compare(eo, new byte[] { 0,0,0,0,0,0,0,0,0,0 }))
                 {
-                    s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+8]); // behaviour
+                    //s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+7]); // mystery
+                    //s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+8]); // behaviour
                 }
             }*/
 

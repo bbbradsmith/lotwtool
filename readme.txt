@@ -41,9 +41,9 @@ instead of $0D, and its correct tiles will appear. (The game has a special
 override that does this just for the inn.)
 
 
-The Dragon is stored like another room of the map, but its graphics are
-stored as Metatile Page definitions. Open the Dragon map, and use the
-Map Properties to select pages $10 through $17 to view and edit the
+The Dragon is stored like another room of the map, but its images are
+put together with Metatile Page definitions. Open the Dragon map, and use
+the Map Properties to select pages $10 through $17 to view and edit the
 Dragon's graphics.
 
 
@@ -64,6 +64,9 @@ The "Unused Screen" seems to be an early version of the title screen
 that was accidentally left in the ROM, in the same format as the actual
 title screen. Unfortunately its CHR tiles seem to have been lost, but
 access is provided in this editor for the curious.
+
+
+If you figure out what monster byte 7 does, please let me know!
 
 
 Requirements

@@ -171,10 +171,9 @@ namespace lotwtool
             }
         }
 
-        // TODO find out what this does
         [DisplayName("Unknown 7")]
         [Category("Unknown")]
-        [Description("7 - Affects selected sprite appearance?")]
+        [Description("7 - Always 0-3. Seems to get read every frame. What is the effect?")]
         [TypeConverter(typeof(HexByteConverter))]
         public int SpriteOther
         {
@@ -185,7 +184,6 @@ namespace lotwtool
             }
         }
 
-        // TODO click a palette?
         [DisplayName("Draw Attribute")]
         [Category("Appearance")]
         [Description("1 - Low 2 bits select the colour palette to use." +

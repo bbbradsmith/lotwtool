@@ -43,7 +43,9 @@
             this.mapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CHRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.titleScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unusedScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dragonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.closeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,8 +65,6 @@
             this.buttonDragon = new System.Windows.Forms.Button();
             this.buttonUnusedScreen = new System.Windows.Forms.Button();
             this.buttonMisc = new System.Windows.Forms.Button();
-            this.unusedScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dragonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tableLayoutPanelTop.SuspendLayout();
             this.tableLayoutPanelGrid.SuspendLayout();
@@ -179,7 +179,7 @@
             this.toolStripMenuItem3,
             this.closeAllToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // mapsToolStripMenuItem
@@ -207,12 +207,26 @@
             this.titleScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.titleScreenToolStripMenuItem.Text = "&Title Screen";
             // 
+            // unusedScreenToolStripMenuItem
+            // 
+            this.unusedScreenToolStripMenuItem.Enabled = false;
+            this.unusedScreenToolStripMenuItem.Name = "unusedScreenToolStripMenuItem";
+            this.unusedScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.unusedScreenToolStripMenuItem.Text = "&Unused Screen";
+            // 
             // creditsToolStripMenuItem
             // 
             this.creditsToolStripMenuItem.Enabled = false;
             this.creditsToolStripMenuItem.Name = "creditsToolStripMenuItem";
             this.creditsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.creditsToolStripMenuItem.Text = "Credits";
+            // 
+            // dragonToolStripMenuItem
+            // 
+            this.dragonToolStripMenuItem.Enabled = false;
+            this.dragonToolStripMenuItem.Name = "dragonToolStripMenuItem";
+            this.dragonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dragonToolStripMenuItem.Text = "&Dragon";
             // 
             // miscToolStripMenuItem
             // 
@@ -407,6 +421,7 @@
             // buttonDragon
             // 
             this.buttonDragon.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDragon.Enabled = false;
             this.buttonDragon.Location = new System.Drawing.Point(187, 132);
             this.buttonDragon.Name = "buttonDragon";
             this.buttonDragon.Size = new System.Drawing.Size(178, 37);
@@ -418,6 +433,7 @@
             // buttonUnusedScreen
             // 
             this.buttonUnusedScreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonUnusedScreen.Enabled = false;
             this.buttonUnusedScreen.Location = new System.Drawing.Point(3, 132);
             this.buttonUnusedScreen.Name = "buttonUnusedScreen";
             this.buttonUnusedScreen.Size = new System.Drawing.Size(178, 37);
@@ -429,6 +445,7 @@
             // buttonMisc
             // 
             this.buttonMisc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonMisc.Enabled = false;
             this.buttonMisc.Location = new System.Drawing.Point(371, 89);
             this.buttonMisc.Name = "buttonMisc";
             this.tableLayoutPanelGrid.SetRowSpan(this.buttonMisc, 2);
@@ -437,20 +454,6 @@
             this.buttonMisc.Text = "Global";
             this.buttonMisc.UseVisualStyleBackColor = true;
             this.buttonMisc.Click += new System.EventHandler(this.buttonMisc_Click);
-            // 
-            // unusedScreenToolStripMenuItem
-            // 
-            this.unusedScreenToolStripMenuItem.Enabled = false;
-            this.unusedScreenToolStripMenuItem.Name = "unusedScreenToolStripMenuItem";
-            this.unusedScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.unusedScreenToolStripMenuItem.Text = "&Unused Screen";
-            // 
-            // dragonToolStripMenuItem
-            // 
-            this.dragonToolStripMenuItem.Enabled = false;
-            this.dragonToolStripMenuItem.Name = "dragonToolStripMenuItem";
-            this.dragonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dragonToolStripMenuItem.Text = "&Dragon";
             // 
             // Main
             // 

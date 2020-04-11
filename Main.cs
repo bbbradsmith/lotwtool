@@ -16,7 +16,7 @@ namespace lotwtool
 {
     public partial class Main : Form, RomRefresh
     {
-        const string VERSION = "0"; // TODO set this on first release
+        const string VERSION = "1. 2020-04-10";
 
         // ROM state
 

@@ -258,14 +258,13 @@ namespace lotwtool
             }
         }
 
-        // TODO dropdown list
         [DisplayName("Behaviour")]
         [Category("Attributes")]
         [Description("8 - Behaviour type.")]
-        [TypeConverter(typeof(HexByteConverter))]
-        public int Behave
+        [TypeConverter(typeof(EnumDescriptionConverter))]
+        public BehaveEnum Behave
         {
-            get { return mp.rom[eo+0x8]; }
+            get { return (BehaveEnum)mp.rom[eo+0x8]; }
             set {
                 mp.rom_modify(eo+0x8,(byte)value);
                 me.redraw_info();
@@ -284,6 +283,19 @@ namespace lotwtool
                 me.redraw_info();
             }
         }
+    }
+
+    public enum BehaveEnum
+    {
+        [Description("$00 wander, jump")]        V00 = 0x00,
+        [Description("$01 fly in a line")]       V01 = 0x01,
+        [Description("$02 walk on ground")]      V02 = 0x02,
+        [Description("$03 follow player, jump")] V03 = 0x03,
+        [Description("$04 fly toward player")]   V04 = 0x04,
+        [Description("$05 ceiling crawl")]       V05 = 0x05,
+        [Description("$06 sleeping lion")]       V06 = 0x06,
+        [Description("$07 fly random line")]     V07 = 0x07,
+        [Description("$08 boss projectile")]     V08 = 0x08,
     }
 
     public class PropertySpriteEditor : BoxlessSquareIconEditor

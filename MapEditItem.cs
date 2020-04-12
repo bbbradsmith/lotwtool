@@ -168,13 +168,13 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Unknown 7")]
-        [Category("Unknown")]
-        [Description("7 - Always 0-3. Seems to get read every frame. What is the effect?")]
-        [TypeConverter(typeof(HexByteConverter))]
-        public int SpriteOther
+        [DisplayName("Sprite Animation")]
+        [Category("Appearance")]
+        [Description("7 - Controls animation style of sprite.")]
+        [TypeConverter(typeof(EnumDescriptionConverter))]
+        public AnimEnum SpriteAnim
         {
-            get { return mp.rom[eo+0x7]; }
+            get { return (AnimEnum)mp.rom[eo+0x7]; }
             set {
                 mp.rom_modify(eo+0x7,(byte)value);
                 me.redraw_info();
@@ -291,6 +291,14 @@ namespace lotwtool
         [Description("$06 sleeping lion")]       V06 = 0x06,
         [Description("$07 fly random line")]     V07 = 0x07,
         [Description("$08 boss projectile")]     V08 = 0x08,
+    }
+
+    public enum AnimEnum
+    {
+        [Description("$00 0 flipping")]       V00 = 0x00,
+        [Description("$01 0,1 always")]       V01 = 0x01,
+        [Description("$02 0,1/climb flip 2")] V02 = 0x02,
+        [Description("$03 0,1,2,3 always")]   V03 = 0x03,
     }
 
     public class PropertySpriteEditor : BoxlessSquareIconEditor

@@ -63,9 +63,6 @@ title screen. Unfortunately its CHR tiles seem to have been lost, but
 access is provided in this editor for the curious.
 
 
-If you figure out what monster byte 7 does, please let me know!
-
-
 Requirements
 ------------
 
@@ -111,6 +108,7 @@ Changes
 2 beta. 2020-04-12
 - Adjusted selection colours.
 - Every room has exactly 9 monsters. Deleting one is impossible. Removed item create/delete features, replaced "delete" with "default".
+- Enemy byte 7 determined to be an animation style control.
 
 
 License

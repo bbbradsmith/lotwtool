@@ -1,6 +1,6 @@
 Legacy of the Wizard Tool
 
-Version 2 beta
+Version 2
 2020
 Brad Smith
 
@@ -105,9 +105,11 @@ Changes
 1. 2020-04-10
 - First release.
 
-2 beta. 2020-04-12
+2. 2020-04-12
 - Adjusted selection colours.
-- Every room has exactly 9 monsters. Deleting one is impossible. Removed item create/delete features, replaced "delete" with "default".
+- Every room has exactly 9 monsters. Deleting one is impossible.
+-- Removed item create/delete features.
+-- Replaced "delete" with "default".
 - Enemy byte 7 determined to be an animation style control.
 - Inn cost can be edited.
 - Number of crowns needed for Celina teleport can be edited.

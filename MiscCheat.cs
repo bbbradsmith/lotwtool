@@ -435,10 +435,10 @@ namespace lotwtool
         }
         */
 
-        // Drops
+        // Misc
 
         [DisplayName("Inn Cost")]
-        [Category("Drops")]
+        [Category("Misc")]
         [Description("1E099+1E0A4")]
         [TypeConverter(typeof(IntByteConverter))]
         public int InnCost
@@ -447,6 +447,35 @@ namespace lotwtool
             set { mp.rom_modify(16+0x1E099,(byte)value);
                   mp.rom_modify(16+0x1E0A4,(byte)value,true); }
         }
+
+        [DisplayName("Crowns for Teleport")]
+        [Category("Misc")]
+        [Description("1DD3A - Crowns needed before Celina teleport works.")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int CrownTeleport
+        {
+            get { return mp.rom[16+0x1DD3A]; }
+            set { mp.rom_modify(16+0x1DD3A,(byte)value); }
+        }
+
+        [DisplayName("Credits Palette")]
+        [Category("Misc")]
+        [Description("1B2CD/1B2DB at 5 byte interval.")]
+        [TypeConverter(typeof(Hex32ByteConverter))]
+        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
+        public uint CreditsPalette
+        {
+            get { return ((uint)mp.rom[credit_offset+ 0] << 24) |
+                         ((uint)mp.rom[credit_offset+ 5] << 16) |
+                         ((uint)mp.rom[credit_offset+10] <<  8) |
+                         ((uint)mp.rom[credit_offset+15] <<  0); }
+            set { mp.rom_modify(       credit_offset+ 0,(byte)((value>>24)&0xFF));
+                  mp.rom_modify(       credit_offset+ 5,(byte)((value>>16)&0xFF),true);
+                  mp.rom_modify(       credit_offset+10,(byte)((value>> 8)&0xFF),true);
+                  mp.rom_modify(       credit_offset+15,(byte)((value>> 0)&0xFF),true); }
+        }
+
+        // Drops
 
         [DisplayName("Bread Life")]
         [Category("Drops")]
@@ -866,23 +895,5 @@ namespace lotwtool
             get { return mp.rom_hex32(family_offset+46); }
             set { mp.rom_modify_hex32(family_offset+46,value); }
         }
-
-        [DisplayName("Credits Palette")]
-        [Category("Misc")]
-        [Description("1B2CD/1B2DB at 5 byte interval.")]
-        [TypeConverter(typeof(Hex32ByteConverter))]
-        [Editor(typeof(TypePaletteEditor),typeof(UITypeEditor))]
-        public uint CreditsPalette
-        {
-            get { return ((uint)mp.rom[credit_offset+ 0] << 24) |
-                         ((uint)mp.rom[credit_offset+ 5] << 16) |
-                         ((uint)mp.rom[credit_offset+10] <<  8) |
-                         ((uint)mp.rom[credit_offset+15] <<  0); }
-            set { mp.rom_modify(       credit_offset+ 0,(byte)((value>>24)&0xFF));
-                  mp.rom_modify(       credit_offset+ 5,(byte)((value>>16)&0xFF),true);
-                  mp.rom_modify(       credit_offset+10,(byte)((value>> 8)&0xFF),true);
-                  mp.rom_modify(       credit_offset+15,(byte)((value>> 0)&0xFF),true); }
-        }
-
     }
 }

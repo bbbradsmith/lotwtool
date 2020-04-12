@@ -31,7 +31,7 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutHeaderPanel = new System.Windows.Forms.TableLayoutPanel();
             this.comboBox = new System.Windows.Forms.ComboBox();
@@ -61,7 +61,7 @@
             // 
             this.actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
-            this.deleteItemToolStripMenuItem});
+            this.defaultItemToolStripMenuItem});
             this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
             this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.actionToolStripMenuItem.Text = "&Action";
@@ -70,17 +70,17 @@
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
-            // deleteItemToolStripMenuItem
+            // defaultItemToolStripMenuItem
             // 
-            this.deleteItemToolStripMenuItem.Name = "deleteItemToolStripMenuItem";
-            this.deleteItemToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.deleteItemToolStripMenuItem.Text = "&Delete Item";
-            this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
+            this.defaultItemToolStripMenuItem.Name = "defaultItemToolStripMenuItem";
+            this.defaultItemToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.defaultItemToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.defaultItemToolStripMenuItem.Text = "&Default Item";
+            this.defaultItemToolStripMenuItem.Click += new System.EventHandler(this.defaultItemToolStripMenuItem_Click);
             // 
             // tableLayoutPanel
             // 
@@ -127,10 +127,7 @@
             "5",
             "6",
             "7",
-            "8",
-            "9",
-            "10",
-            "11"});
+            "8"});
             this.comboBox.Location = new System.Drawing.Point(73, 3);
             this.comboBox.Name = "comboBox";
             this.comboBox.Size = new System.Drawing.Size(180, 21);
@@ -225,6 +222,6 @@
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
-        private System.Windows.Forms.ToolStripMenuItem deleteItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultItemToolStripMenuItem;
     }
 }

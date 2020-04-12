@@ -40,7 +40,7 @@ namespace lotwtool
 
         public void set_item(int item)
         {
-            if (item < 0 || item >= 16) return;
+            if (item < 0 || item >= 9) return;
             me.last_item = item;
             comboBox.SelectedIndex = item;
             int eo = ro + 0x320 + (item*16);
@@ -76,17 +76,14 @@ namespace lotwtool
             set_item(comboBox.SelectedIndex);
         }
 
-        private void deleteItemToolStripMenuItem_Click(object sender, EventArgs e)
+        private void defaultItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int item = comboBox.SelectedIndex;
-            if (item < 0 || item >= 12) return;
-
+            if (item < 0 || item >= 9) return;
             int eo = 16 + (1024 * me.room) + 0x320 + (item*16);
             mp.rom_modify_start();
-            for (int i=0; i<16; ++i)
-            {
-                mp.rom_modify(eo+i,0,true);
-            }
+            byte[] DEFAULT_MONSTER = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
+            mp.rom_modify_range(eo,DEFAULT_MONSTER);
             redraw();
             me.redraw();
             mp.refresh_map(me.room);

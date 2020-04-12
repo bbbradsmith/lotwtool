@@ -1,6 +1,6 @@
 Legacy of the Wizard Tool
 
-Version 1
+Version 2 beta
 2020
 Brad Smith
 
@@ -107,6 +107,10 @@ Changes
 
 1. 2020-04-10
 - First release.
+
+2 beta. 2020-04-12
+- Adjusted selection colours.
+- Every room has exactly 9 monsters. Deleting one is impossible. Removed item create/delete features, replaced "delete" with "default".
 
 
 License

@@ -255,7 +255,7 @@ namespace lotwtool
         void draw_items(BitmapData d)
         {
             if (!items) return;
-            for (int i=11; i>=0; --i)
+            for (int i=8; i>=0; --i)
             {
                 int eo = ro + 0x320 + (i*16);
                 int s = mp.rom[eo+0]; // sprite
@@ -292,7 +292,7 @@ namespace lotwtool
             }
 
             // items
-            for (int i=0; i<12; ++i)
+            for (int i=0; i<9; ++i)
             {
                 int eo = ro + 0x320 + (i*16);
                 if (mp.rom[eo+0] == 0) continue;
@@ -401,15 +401,21 @@ namespace lotwtool
             //s += string.Format("= {0:X2} {1:X2}",mp.rom[ro+0x30B],mp.rom[ro+0x315]);
 
             // querying item fields
-            /*for (int i=0; i<12; ++i)
+            /*int enemy_count = 0;
+            for (int i=0; i<12; ++i)
             {
                 int eo = ro + 0x320 + (i*16);
                 if (!mp.rom_compare(eo, new byte[] { 0,0,0,0,0,0,0,0,0,0 }))
                 {
+                    ++enemy_count;
                     //s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+7]); // mystery
                     //s += string.Format("\nItem {0,2}[8]: {1:X2}",i,mp.rom[eo+8]); // behaviour
+                    //s += string.Format("\nEnemy {0:D2}: ",i) + mp.romhex(eo,16); // all enemies
+                    if (i >= 9) s += string.Format("\nUnexpected Enemy {0:D2}: ",i) + mp.romhex(eo,16);
                 }
-            }*/
+                else if (i < 9) s += string.Format("\nEmpty Enemy {0:D2}",i);
+            }
+            if (enemy_count != 9) s += string.Format("\nUnusual Enemy Count: {0}",enemy_count);*/
 
             // querying unused item data fields
             /*
@@ -815,9 +821,9 @@ namespace lotwtool
                 if (drag_item >= 0)
                     modetips = "Shift = Free Y";
                 else if (item >= 0)
-                    modetips = "LMB = Drag, Ctrl+LMB = Create, RMB = Edit";
+                    modetips = "LMB = Drag, RMB = Edit";
                 else
-                    modetips = "Ctrl+LMB = Create";
+                    modetips = "";
             }
 
             toolStripStatusLabel.Text = modeinfo + tileinfo + iteminfo;
@@ -869,39 +875,11 @@ namespace lotwtool
                 }
                 else if (e.Button == MouseButtons.Left)
                 {
-                    if (ModifierKeys.HasFlag(Keys.Control)) // try to create default item
-                    {
-                        for (int i=0; i<12; ++i)
-                        {
-                            bool empty = true;
-                            for (int j=0; j<16; ++j) empty &= mp.rom[ro+0x320+(i*16)+j] == 0;
-                            if (empty)
-                            {
-                                drag_item = i;
-                                break;
-                            }
-                        }
-                        if (drag_item >= 0)
-                        {
-                            mp.rom_modify_start();
-                            byte[] monster = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
-                            monster[2] = (byte)(x / 16);
-                            monster[3] = (byte)(y & (~15));
-                            for (int i=0; i<monster.Length; ++i)
-                                mp.rom_modify(ro+0x320+(drag_item*16)+i, monster[i], true);
-                            redraw();
-                            redraw_info();
-                            mp.refresh_map(room);
-                        }
-                    }
-                    else // try to pick up an item
-                    {
-                        drag_item = pick_item(x,y);
-                        if (drag_item >= 0) mp.rom_modify_start();
-                    }
-
+                    // try to pick up an item
+                    drag_item = pick_item(x,y);
                     if (drag_item >= 0)
                     {
+                        mp.rom_modify_start();
                         Tuple<int,int> ipos = pos_item(drag_item);
                         drag_y = y;
                         drag_item_y = ipos.Item2;

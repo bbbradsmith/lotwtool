@@ -437,6 +437,17 @@ namespace lotwtool
 
         // Drops
 
+        [DisplayName("Inn Cost")]
+        [Category("Drops")]
+        [Description("1E099+1E0A4")]
+        [TypeConverter(typeof(IntByteConverter))]
+        public int InnCost
+        {
+            get { return mp.rom[16+0x1E099]; }
+            set { mp.rom_modify(16+0x1E099,(byte)value);
+                  mp.rom_modify(16+0x1E0A4,(byte)value,true); }
+        }
+
         [DisplayName("Bread Life")]
         [Category("Drops")]
         [Description("1DB2C")]

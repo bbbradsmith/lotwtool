@@ -109,6 +109,7 @@ Changes
 - Adjusted selection colours.
 - Every room has exactly 9 monsters. Deleting one is impossible. Removed item create/delete features, replaced "delete" with "default".
 - Enemy byte 7 determined to be an animation style control.
+- Inn cost can be edited.
 
 
 License

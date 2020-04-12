@@ -16,7 +16,7 @@ namespace lotwtool
 {
     public partial class Main : Form, RomRefresh
     {
-        const string VERSION = "1. 2020-04-10";
+        const string VERSION = "2 beta. 2020-04-12";
 
         // ROM state
 
@@ -66,18 +66,18 @@ namespace lotwtool
 
         public static readonly uint[] HIGHLIGHT =
         {
-            0xFF662244,
-            0xFF883366,
+            0xFF772255,
+            0xFFAA3377,
             0xFFCC4488,
             0xFFFFCCDD,
         };
 
         public static readonly uint[] PRESELECT =
         {
-            0xFF446622,
-            0xFF668833,
-            0xFF88CC44,
-            0xFFDDFFCC,
+            0xFF224466,
+            0xFF336688,
+            0xFF4488CC,
+            0xFFCCDDFF,
         };
 
         public const uint GRID = 0xFFFFFF00; // yellow

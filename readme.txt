@@ -80,8 +80,8 @@ Unstable preview builds:
 https://ci.appveyor.com/project/bbbradsmith/lotwtool/branch/master/artifacts
 
 
-Acknowledgements
-----------------
+Acknowledgements & Links
+------------------------
 
 YY - DS4v
 https://www.romhacking.net/utilities/170/
@@ -97,6 +97,9 @@ Some notes about the game's memory usage that helped me figure out cheats.
 
 LSD4 - Unofficial archive of Legacy of the Wizard / Dragon Slayer 4
 http://lsd4.starfree.jp/
+
+RHDN Data Crystal - ROM hacking notes, complete map format
+https://datacrystal.romhacking.net/wiki/Legacy_of_the_Wizard
 
 
 Changes

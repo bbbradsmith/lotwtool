@@ -126,7 +126,7 @@ It is made freely available under the the terms of the Creative Commons Attribut
 https://creativecommons.org/licenses/by/4.0/
 
 Source code is available at GitHub:
-https://github.com/bbbradsmith/binxelview
+https://github.com/bbbradsmith/lotwtool
 
 Support this project on Patreon:
 https://www.patreon.com/rainwarrior

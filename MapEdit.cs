@@ -1066,7 +1066,7 @@ namespace lotwtool
                 "I = Item mode\n" +
                 "P = Open tile palette\n" +
                 "Space = Toggle mode\n" +
-                "Ctrl + Shift + LMB = Save and run from here\n" +
+                "Ctrl + Alt + LMB = Save and run from here\n" +
                 "\n"+
                 "Terrain mode:\n" +
                 "LMB = Draw tile\n" +

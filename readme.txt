@@ -1,7 +1,7 @@
 Legacy of the Wizard Tool
 
-Version 2
-2020
+Version 3
+2021
 Brad Smith
 
 https://github.com/bbbradsmith/lotwtool
@@ -116,6 +116,9 @@ Changes
 - Enemy byte 7 determined to be an animation style control.
 - Inn cost can be edited.
 - Number of crowns needed for Celina teleport can be edited.
+
+3. 2021-07-26
+- Fixed description of Ctrl + Alt + LMB in help dialog.
 
 
 License

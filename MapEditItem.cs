@@ -309,8 +309,9 @@ namespace lotwtool
         {
             MapItemProperties mip = (MapItemProperties)e.Context.Instance;
             byte sprite = (byte)(int)e.Value;
-            int palette = mip.mp.rom[mip.eo+0x1] & 3;
-            Bitmap b = mip.me.make_icon(sprite,palette,true,1);
+            //int palette = mip.mp.rom[mip.eo+0x1] & 3;
+            uint ora = mip.mp.rom[mip.eo+0x1]; // MSX2 uses OR attributes
+            Bitmap b = mip.me.make_icon(sprite,0,ora,true,1);
             e.Graphics.DrawImage(b,r);
         }
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
@@ -320,14 +321,16 @@ namespace lotwtool
             if( edSvc != null )
             {
                 int iv = (int)value;
-                int i = (((iv & 1) ^ 1) << 6) | (iv >> 2);
+                //int i = (((iv & 1) ^ 1) << 6) | (iv >> 2);
+                int i = iv;
                 MapItemProperties mip = (MapItemProperties)context.Instance;
                 SpriteControl prop = new SpriteControl(mip.me, i);
                 edSvc.DropDownControl(prop);
                 iv = prop.result;
                 if (prop.valid)
                 {
-                    return ((iv>>6)^1) | ((iv & 63) << 2);
+                    //return ((iv>>6)^1) | ((iv & 63) << 2);
+                    return iv & 63;
                 }
             }
             return value;
@@ -366,8 +369,9 @@ namespace lotwtool
             int palette = 4;
             if (i == result) palette = 6;
             if (i == hover) palette = 5;
-            int s = ((i>>6)^1) | ((i & 63) << 2);
-            me.draw_icon(d,(byte)s,palette,x*16,y*16,true,zoom);
+            //int s = ((i>>6)^1) | ((i & 63) << 2);
+            int s = i;
+            me.draw_icon(d,(byte)s,palette,0,x*16,y*16,true,zoom);
         }
         protected override void OnPaint(PaintEventArgs e)
         {

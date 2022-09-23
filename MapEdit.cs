@@ -32,6 +32,8 @@ namespace lotwtool
         Main mp;
         Bitmap bmp = null;
         uint[] chr_cache;
+        uint[] spr_cache;
+        uint[] spo_cache;
         bool chr_cache_extra;
         public uint[] base_palette;
         public uint[][] palette;
@@ -55,8 +57,13 @@ namespace lotwtool
             {
                 for (int p = 0; p < 4; ++p)
                 {
-                    mp.chr_cache((page * 64) + i, (slot * 64) + i + (p * 512), chr_cache, palette[p + (slot & 4)]);
+                    if (slot < 4)
+                        mp.chr_cache((page * 64) + i, (slot * 64) + i + (p * 512), chr_cache, palette[p + (slot & 4)]);
+                    else
+                        mp.spr_cache((page * 64) + i, (slot * 64) + i + (p * 512), spr_cache, palette[p + (slot & 4)]);
                 }
+                if (slot >= 4)
+                        mp.spo_cache((page * 64) + i, (slot * 64) + i            , spo_cache);
             }
         }
 
@@ -64,9 +71,18 @@ namespace lotwtool
         {
             for (int i = 0; i < 64; ++i)
             {
-                mp.chr_cache((page * 64) + i, (slot * 64) + i + (4 * 512), chr_cache, Main.GREY);
-                mp.chr_cache((page * 64) + i, (slot * 64) + i + (5 * 512), chr_cache, Main.HIGHLIGHT);
-                mp.chr_cache((page * 64) + i, (slot * 64) + i + (6 * 512), chr_cache, Main.PRESELECT);
+                if (slot < 4)
+                {
+                    mp.chr_cache((page * 64) + i, (slot * 64) + i + (4 * 512), chr_cache, Main.GREY);
+                    mp.chr_cache((page * 64) + i, (slot * 64) + i + (5 * 512), chr_cache, Main.HIGHLIGHT);
+                    mp.chr_cache((page * 64) + i, (slot * 64) + i + (6 * 512), chr_cache, Main.PRESELECT);
+                }
+                else
+                {
+                    mp.spr_cache((page * 64) + i, (slot * 64) + i + (4 * 512), spr_cache, Main.GREY);
+                    mp.spr_cache((page * 64) + i, (slot * 64) + i + (5 * 512), spr_cache, Main.HIGHLIGHT);
+                    mp.spr_cache((page * 64) + i, (slot * 64) + i + (6 * 512), spr_cache, Main.PRESELECT);
+                }
             }
         }
 
@@ -74,15 +90,15 @@ namespace lotwtool
         {
             int[] chri = new int[8];
             //chri[0] = mp.rom[ro + 0x305] & (~1); // NES bank numbers
-            chri[0] = 4 * (mp.rom[ro + 0x305] - 0x10); // MSX2 bank numbers?
+            chri[0] = 4 * (mp.rom[ro + 0x305] - 0x10); // MSX2 page numbers
             chri[1] = chri[0] + 1;
             //chri[2] = mp.rom[ro + 0x306] & (~1);
-            chri[2] = 4 * (mp.rom[ro + 0x306] - 0x10) + 2; // MSX2 bank numbers?
+            chri[2] = 4 * (mp.rom[ro + 0x306] - 0x10) + 2; // MSX2 page numbers
             chri[3] = chri[2] + 1;
-            chri[5] = mp.rom[ro + 0x301];
-            chri[4] = 0x3A; // always Roas
-            chri[6] = 0x3E; // always items 0
-            chri[7] = 0x3F; // always items 0
+            chri[4] = 0x06; // always Roas
+            chri[5] = mp.rom[ro + 0x301] + 0x0C; // MSX2 enemy sprites
+            chri[6] = 0x0A; // always items 0
+            chri[7] = 0x0B; // always items 1
             return chri;
         }
 
@@ -106,10 +122,13 @@ namespace lotwtool
                     int r = ((i<<2) & 0x0C) | (j & 0x03);
                     if ((j & 3) == 0) r = 0;
                     palette[i][j] = base_palette[r];
+                    if (r == 0 && i >= 4) palette[i][j] = 0;
                 }
             }
 
             chr_cache = new uint[7 * 8 * 64 * 64];
+            spr_cache = new uint[7 * 8 * 64 * 64];
+            spo_cache = new uint[    8 * 64 * 64];
             int[] chri = chr_set();
             for (int i=0; i<8; ++i)
             {
@@ -216,7 +235,7 @@ namespace lotwtool
             Main.chr_blit(d, chr_cache, mp.rom[mto+3]+po, 8, 8, zoom_);
         }
 
-        void draw_sprite(BitmapData d, int s, int a, int x, int y, int zoom_=0, bool bound=true)
+        void draw_sprite(BitmapData d, int s, int a, uint o, int x, int y, int zoom_=0, bool bound=true)
         {
             // a = -1 grey
             // a = -2 highlight
@@ -233,21 +252,31 @@ namespace lotwtool
                 a = 3-a;
             }
 
-            int t = ((s & 1)<<8) | (s & 0xFE); // NES 16px sprite tile selector
-            t |= (512 * a); // select palette
-
-            Main.chr_blit_mask(d, chr_cache, t+0x00, x+0, y+0, zoom_);
-            Main.chr_blit_mask(d, chr_cache, t+0x01, x+0, y+8, zoom_);
-            Main.chr_blit_mask(d, chr_cache, t+0x02, x+8, y+0, zoom_);
-            Main.chr_blit_mask(d, chr_cache, t+0x03, x+8, y+8, zoom_);
+            //int t = ((s & 1)<<8) | (s & 0xFE); // NES 16px sprite tile selector
+            int t = ((s * 4) & 0xFF) | 0x100;
+            if (o == 0)
+            {
+                t |= (512 * a); // select palette
+                Main.chr_blit_mask(d, spr_cache, t+0x00, x+0, y+0, zoom_);
+                Main.chr_blit_mask(d, spr_cache, t+0x01, x+0, y+8, zoom_);
+                Main.chr_blit_mask(d, spr_cache, t+0x02, x+8, y+0, zoom_);
+                Main.chr_blit_mask(d, spr_cache, t+0x03, x+8, y+8, zoom_);
+            }
+            else
+            {
+                Main.spo_blit_mask(d, spo_cache, t+0x00, x+0, y+0, zoom_, o >> 4, o & 0x0F, base_palette);
+                Main.spo_blit_mask(d, spo_cache, t+0x01, x+0, y+8, zoom_, o >> 4, o & 0x0F, base_palette);
+                Main.spo_blit_mask(d, spo_cache, t+0x02, x+8, y+0, zoom_, o >> 4, o & 0x0F, base_palette);
+                Main.spo_blit_mask(d, spo_cache, t+0x03, x+8, y+8, zoom_, o >> 4, o & 0x0F, base_palette);
+            }
         }
 
-        public void draw_icon(BitmapData d, byte tile, int palette, int x, int y, bool sprite, int zoom_=1) // for map properties
+        public void draw_icon(BitmapData d, byte tile, int palette, uint ora, int x, int y, bool sprite, int zoom_=1) // for map properties
         {
             if (sprite)
             {
                 if (palette >= 4) palette = 3 - palette; // 4,5 = -1,-2 for draw_sprite
-                draw_sprite(d,tile,palette,x,y,zoom_,false);
+                draw_sprite(d,tile,palette,ora,x,y,zoom_,false);
             }
             else
             {
@@ -255,11 +284,11 @@ namespace lotwtool
             }
         }
 
-        public Bitmap make_icon(byte tile, int palette, bool sprite, int zoom_=1) // for map properties
+        public Bitmap make_icon(byte tile, int palette, uint ora, bool sprite, int zoom_=1) // for map properties
         {
             Bitmap b = new Bitmap(16*zoom_, 16*zoom_, PixelFormat.Format32bppArgb);
             BitmapData d = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
-            draw_icon(d,tile,palette,0,0,sprite,zoom_);
+            draw_icon(d,tile,palette,ora,0,0,sprite,zoom_);
             b.UnlockBits(d);
             return b;
         }
@@ -276,7 +305,7 @@ namespace lotwtool
                 int y = mp.rom[eo+3]; // y pixel
                 x *= 16;
                 if (s == 0) continue;
-                draw_sprite(d,s,a,x,y);
+                draw_sprite(d,s,0,(uint)a,x,y);
             }
 
             // treasure
@@ -288,8 +317,8 @@ namespace lotwtool
                 //int a = (s >= 8) ? 1 : 0; // palette is selected by type
                 // (using palette 1 always instead, colour 0 is replaced by player anyway and not really valid in map data)
                 x *= 16;
-                s = 0x81 + (s*4);
-                draw_sprite(d,s,1,x,y);
+                s += 0x20;
+                draw_sprite(d,s,0,0,x,y); // TODO palette is a particular OR combination of 2 values?
             }
         }
 

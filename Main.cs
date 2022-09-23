@@ -28,6 +28,8 @@ namespace lotwtool
         public int chr_count = 0;
         public int map_offset = 0;
         public int map_count = 0;
+        public int spr_offset = 0;
+        public int spr_count = 0;
 
         List<RomRefresh> refreshers = new List<RomRefresh>();
         List<MapEdit> mapedits = new List<MapEdit>();
@@ -168,21 +170,24 @@ namespace lotwtool
             chr_count = 0;
             map_offset = 0;
             map_count = 0;
+            spr_offset = 0;
+            spr_count = 0;
 
-            map_offset = 0xC000;
+            map_offset = 0x0C000;
             map_count = 4 * 18;
             if (map_offset + (map_count * 1024) > rom.Length)
                 map_count = (rom.Length - map_offset) / 1024;
             chr_offset = 0x20000;
-            chr_count = (rom.Length - chr_offset) / 1024;
-            // TODO spr_offset 0x31000, 32000 for MSX1?
+            chr_count = (rom.Length - chr_offset) / 2048;
+            spr_offset = 0x31000;
+            spr_count = (rom.Length - spr_offset) / 1024;
 
             labelCHRCountValue.Text = string.Format("{0}", chr_count);
             labelMapCountValue.Text = string.Format("{0}", map_count);
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
-            buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000;
+            buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000; // TODO find this stuff in MSX2 ROM
             buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000;
             buttonCredits.Enabled = rom.Length >= 16+0x1C000;
             buttonDragon.Enabled = rom.Length >= 16+0x1C000;
@@ -222,7 +227,7 @@ namespace lotwtool
             int co = cache_index * 64;
             if ((ro + 32) > rom.Length || ro < chr_offset)
             {
-                for (int i=0; i<32; ++i) cache[co+i] = 0;
+                for (int i=0; i<64; ++i) cache[co+i] = 0;
                 return;
             }
             for (int y = 0; y < 8; ++y)
@@ -231,6 +236,56 @@ namespace lotwtool
                 {
                     int p = (rom[ro + (y*4) + (x/2)] >> (4-((x&1)*4))) & 0x0F;
                     cache[co + x + (y * 8)] = palette[p];
+                }
+            }
+        }
+
+        public void spr_cache(int rom_index, int cache_index, uint[] cache, uint[] palette)
+        {
+            // SPR = 2bpp planar 16x16 tiles broken into 8x8 tiles
+            int ro = spr_offset;
+            ro += (rom_index >> 2) * 64;
+            ro += (rom_index &  2) * 8;
+            ro += (rom_index &  1) * 8;
+            int co = cache_index * 64;
+            if ((ro + 40) > rom.Length || ro < spr_offset)
+            {
+                for (int i=0; i<64; ++i) cache[co+i] = 0;
+                return;
+            }
+            for (int y = 0; y < 8; ++y)
+            {
+                for (int x = 0; x < 8; ++x)
+                {
+                    byte p0 = (byte)((rom[ro+ 0+y+(x/8)] >> (7-(x&7))) & 0x01);
+                    byte p1 = (byte)((rom[ro+32+y+(x/8)] >> (7-(x&7))) & 0x01);
+                    int p = p0 | (p1 << 1);
+                    cache[co + x + (y * 8)] = palette[p];
+                }
+            }
+        }
+
+        public void spo_cache(int rom_index, int cache_index, uint[] cache)
+        {
+            // SPR = 2bpp planar 16x16 tiles broken into 8x8 tiles, store 2bpp result
+            int ro = spr_offset;
+            ro += (rom_index >> 2) * 64;
+            ro += (rom_index &  2) * 8;
+            ro += (rom_index &  1) * 8;
+            int co = cache_index * 64;
+            if ((ro + 40) > rom.Length || ro < spr_offset)
+            {
+                for (int i=0; i<64; ++i) cache[co+i] = 0;
+                return;
+            }
+            for (int y = 0; y < 8; ++y)
+            {
+                for (int x = 0; x < 8; ++x)
+                {
+                    byte p0 = (byte)((rom[ro+ 0+y+(x/8)] >> (7-(x&7))) & 0x01);
+                    byte p1 = (byte)((rom[ro+32+y+(x/8)] >> (7-(x&7))) & 0x01);
+                    int p = p0 | (p1 << 1);
+                    cache[co + x + (y * 8)] = (uint)p;
                 }
             }
         }
@@ -331,6 +386,44 @@ namespace lotwtool
                                     uint c = chrline[px];
                                     if (c != 0)
                                         scanline[sx] = c;
+                                    ++sx;
+                                }
+                            }
+                            scanline += stride;
+                        }
+                        chrline += 8;
+                    }
+                }
+            }
+        }
+
+        public static void spo_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom, uint or0, uint or1, uint[] palette)
+        {
+            x *= zoom;
+            y *= zoom;
+            unsafe
+            {
+                uint* braw = (uint*)bd.Scan0.ToPointer();
+                int stride = bd.Stride / 4;
+                fixed (uint* fcc = cache)
+                {
+                    uint* scanline = braw + (stride * y) + x;
+                    uint* chrline = fcc + (tile * 64);
+                    for (int py = 0; py < 8; ++py)
+                    {
+                        for (int yz = 0; yz < zoom; ++yz)
+                        {
+                            int sx = 0;
+                            for (int px = 0; px < 8; ++px)
+                            {
+                                for (int xz = 0; xz < zoom; ++xz)
+                                {
+                                    uint c = chrline[px];
+                                    if (c != 0)
+                                    {
+                                        uint p = ((c & 1) * or0) | (((c & 2) >> 1) * or1);
+                                        scanline[sx] = palette[p];
+                                    }
                                     ++sx;
                                 }
                             }

@@ -23,20 +23,31 @@ namespace lotwtool
         public int preselect = -1;
         public bool dualpage = false; // for selecting 2k CHR pages
         bool modal = false;
+        int chr_count = 0;
 
         void cache_tile(int i)
         {
-            int cc_tiles = 64 * mp.chr_count;
-            mp.chr_cache(i, i, chr_cache, Main.GREY);
-            mp.chr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
-            mp.chr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
+            int cc_tiles = 64 * chr_count;
+            if (!sprite)
+            {
+                mp.chr_cache(i, i, chr_cache, Main.GREY);
+                mp.chr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
+                mp.chr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
+            }
+            else
+            {
+                mp.spr_cache(i, i, chr_cache, Main.GREY);
+                mp.spr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
+                mp.spr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
+            }
         }
 
         void cache()
         {
-            int cc_tiles = 64 * mp.chr_count;
+            chr_count = sprite ? mp.spr_count : mp.chr_count;
+            int cc_tiles = 64 * chr_count;
             chr_cache = new uint[3 * cc_tiles * 64];
-            for (int i = 0; i < (mp.chr_count * 64); ++i)
+            for (int i = 0; i < (chr_count * 64); ++i)
             {
                 cache_tile(i);
             }
@@ -44,15 +55,15 @@ namespace lotwtool
 
         void redraw_page(BitmapData d, int page, bool highlight, bool export=false)
         {
-            if (page < 0 || page >= mp.chr_count) return;
+            if (page < 0 || page >= chr_count) return;
 
             int z = zoom;
             int yo = page * 32;
             int to = page * 64;
             if (highlight)
-                to += (64 * mp.chr_count); // use HIGHLIGHT version
+                to += (64 * chr_count); // use HIGHLIGHT version
             else if (page == preselect || (dualpage && page == (preselect ^ 1)))
-                to += (2 * 64 * mp.chr_count); // use PRESELECT version
+                to += (2 * 64 * chr_count); // use PRESELECT version
 
             if (export)
             {
@@ -87,21 +98,22 @@ namespace lotwtool
 
         void redraw()
         {
-            if (mp.chr_count < 1)
+            chr_count = sprite ? mp.spr_count : mp.chr_count;
+            if (chr_count < 1)
             {
                 bmp = null;
                 return;
             }
 
             int w = 128 * zoom;
-            int h = 32 * mp.chr_count * zoom;
+            int h = 32 * chr_count * zoom;
 
             if (bmp == null || bmp.Width != w || bmp.Height != h)
             {
                 bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             }
             BitmapData d = draw_lock();
-            for (int page = 0; page < mp.chr_count; ++page)
+            for (int page = 0; page < chr_count; ++page)
             {
                 redraw_page(d, page, page == highlight || (dualpage && page == (highlight^1)));
             }
@@ -155,7 +167,7 @@ namespace lotwtool
         {
             backgroundToolStripMenuItem.Checked = !sprite;
             spriteToolStripMenuItem.Checked = sprite;
-            redraw();
+            refresh_all();
         }
 
         private void backgroundToolStripMenuItem_Click(object sender, EventArgs e)
@@ -262,7 +274,7 @@ namespace lotwtool
 
         private void importPNGToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (highlight < 0 || highlight >= mp.chr_count)
+            if (highlight < 0 || highlight >= chr_count)
             {
                 MessageBox.Show("No CHR selected.","CHR import error!");
                 return;
@@ -333,7 +345,7 @@ namespace lotwtool
 
         private void exportPNGToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (highlight < 0 || highlight >= mp.chr_count)
+            if (highlight < 0 || highlight >= chr_count)
             {
                 MessageBox.Show("No CHR selected.","CHR export error!");
                 return;
@@ -363,7 +375,7 @@ namespace lotwtool
 
         private void importCHRToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (highlight < 0 || highlight >= mp.chr_count)
+            if (highlight < 0 || highlight >= chr_count)
             {
                 MessageBox.Show("No CHR selected.","CHR import error!");
                 return;
@@ -399,7 +411,7 @@ namespace lotwtool
 
         private void exportCHRToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (highlight < 0 || highlight >= mp.chr_count)
+            if (highlight < 0 || highlight >= chr_count)
             {
                 MessageBox.Show("No CHR selected.","CHR export error!");
                 return;
@@ -436,7 +448,7 @@ namespace lotwtool
             {
                 t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
             }
-            if (t >= 0 && t < (mp.chr_count * 64))
+            if (t >= 0 && t < (chr_count * 64))
             {
                 if (!modal)
                 {

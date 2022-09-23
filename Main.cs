@@ -942,13 +942,13 @@ namespace lotwtool
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ABOUT_TEXT =
-                "LotW Tool MSX\n" +
+                "LotW Tool MSX2\n" +
                 "\n" +
-                "An editor for Dragon Slayer IV (MSX2/MSX).\n" +
+                "An editor for Dragon Slayer IV (MSX2).\n" +
                 "\n" +
                 "Brad Smith\n" +
                 "Version: " + VERSION;
-            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool MSX");
+            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool MSX2");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)

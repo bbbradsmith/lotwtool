@@ -27,7 +27,7 @@ namespace lotwtool
         {
             get { return room_internal; }
             set { room_internal = value;
-                  ro = 16 + (1024 * room_internal); }
+                  ro = mp.map_offset + (1024 * room_internal); }
         }
         Main mp;
         Bitmap bmp = null;
@@ -72,11 +72,13 @@ namespace lotwtool
         public int[] chr_set()
         {
             int[] chri = new int[8];
-            chri[0] = mp.rom[ro + 0x305] & (~1);
-            chri[2] = mp.rom[ro + 0x306] & (~1);
-            chri[5] = mp.rom[ro + 0x301];
+            //chri[0] = mp.rom[ro + 0x305] & (~1); // NES bank numbers
+            chri[0] = 4 * (mp.rom[ro + 0x305] - 0x10); // MSX2 bank numbers?
             chri[1] = chri[0] + 1;
+            //chri[2] = mp.rom[ro + 0x306] & (~1);
+            chri[2] = 4 * (mp.rom[ro + 0x306] - 0x10) + 2; // MSX2 bank numbers?
             chri[3] = chri[2] + 1;
+            chri[5] = mp.rom[ro + 0x301];
             chri[4] = 0x3A; // always Roas
             chri[6] = 0x3E; // always items 0
             chri[7] = 0x3F; // always items 0
@@ -86,14 +88,24 @@ namespace lotwtool
         public void cache()
         {
             palette = new uint[8][];
-            for (int i = 0; i < 8; ++i)
+            for (int i = 0; i <  8; ++i)
             {
-                palette[i] = new uint[4];
-                for (int j=0; j<4; ++j)
+                palette[i] = new uint[16];
+                for (int j = 0; j < 16; ++j)
                 {
-                    int p = mp.rom[ro+0x3E0+(i*4)+j] & 63;
-                    palette[i][j] = Main.NES_PALETTE[p] | 0xFF000000;
-                    if (i>=4 && j==0) palette[i][j] = 0x00000000;
+                    byte p0 = mp.rom[ro+0x3E0+(j*2)+0];
+                    byte p1 = mp.rom[ro+0x3E0+(j*2)+1];
+                    uint r = (uint)(((p0 >> 4) & 0x07) * 255 / 7);
+                    uint b = (uint)(((p0 >> 0) & 0x07) * 255 / 7);
+                    uint g = (uint)(((p1 >> 0) & 0x07) * 255 / 7);
+                    palette[i][j] = 0xFF000000 | (r << 16) | (g << 8) | b;
+                }
+                // reduce to 4-colour palettes
+                for (int j = 0; j < 16; ++j)
+                {
+                    int r = ((i<<2) & 0x0C) | (j & 0x03);
+                    if ((j & 3) == 0) r = 0;
+                    palette[i][j] = palette[i][r];
                 }
             }
 
@@ -143,7 +155,7 @@ namespace lotwtool
 
             // metatile tables are in 256 byte pages in bank 9
             byte metatile_page = mp.rom[ro+0x300];
-            int mto = 16 + (1024 * 8 * 9) + (metatile_page * 256);
+            int mto = mp.map_offset + (1024 * 8 * 9) + (metatile_page * 256);
             if ((mto+256) > mp.rom.Length) return;
 
             int[] XO = { 0, 0, 8, 8 };
@@ -194,7 +206,7 @@ namespace lotwtool
         void draw_metatile(BitmapData d, byte tile, int palette, int x, int y, int zoom_)
         {
             byte metatile_page = mp.rom[ro+0x300];
-            int mto = 16 + (1024 * 8 * 9) + (metatile_page * 256) + ((tile&63) * 4);
+            int mto = mp.map_offset + (1024 * 8 * 9) + (metatile_page * 256) + ((tile&63) * 4);
             if ((mto+4) > mp.rom.Length) return;
             int po = 512 * palette;
             if (palette >= 4) cache_extra();

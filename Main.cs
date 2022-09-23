@@ -26,6 +26,7 @@ namespace lotwtool
         public string filename = "";
         public int chr_offset = 0;
         public int chr_count = 0;
+        public int map_offset = 0;
         public int map_count = 0;
 
         List<RomRefresh> refreshers = new List<RomRefresh>();
@@ -62,6 +63,18 @@ namespace lotwtool
             0xFF555555,
             0xFFAAAAAA,
             0xFFFFFFFF,
+            0xFF000000,
+            0xFF555555,
+            0xFFAAAAAA,
+            0xFFFFFFFF,
+            0xFF000000,
+            0xFF555555,
+            0xFFAAAAAA,
+            0xFFFFFFFF,
+            0xFF000000,
+            0xFF555555,
+            0xFFAAAAAA,
+            0xFFFFFFFF,
         };
 
         public static readonly uint[] HIGHLIGHT =
@@ -70,10 +83,34 @@ namespace lotwtool
             0xFFAA3377,
             0xFFCC4488,
             0xFFFFCCDD,
+            0xFF772255,
+            0xFFAA3377,
+            0xFFCC4488,
+            0xFFFFCCDD,
+            0xFF772255,
+            0xFFAA3377,
+            0xFFCC4488,
+            0xFFFFCCDD,
+            0xFF772255,
+            0xFFAA3377,
+            0xFFCC4488,
+            0xFFFFCCDD,
         };
 
         public static readonly uint[] PRESELECT =
         {
+            0xFF224466,
+            0xFF336688,
+            0xFF4488CC,
+            0xFFCCDDFF,
+            0xFF224466,
+            0xFF336688,
+            0xFF4488CC,
+            0xFFCCDDFF,
+            0xFF224466,
+            0xFF336688,
+            0xFF4488CC,
+            0xFFCCDDFF,
             0xFF224466,
             0xFF336688,
             0xFF4488CC,
@@ -129,23 +166,16 @@ namespace lotwtool
             // set file boundaries
             chr_offset = 0;
             chr_count = 0;
+            map_offset = 0;
             map_count = 0;
-            if (rom.Length >= 16)
-            {
-                int ines_prg = rom[4];
-                int ines_chr = rom[5];
-                int prg_max = 16 + (ines_prg * 16 * 1024);
-                int chr_max = prg_max + (ines_chr * 8 * 1024);
-                if (prg_max > rom.Length) prg_max = rom.Length;
-                if (chr_max > rom.Length) chr_max = rom.Length;
-                map_count = 4 * 18;
-                chr_count = ines_chr * 8;
-                chr_offset = 16 + (ines_prg * 16 * 1024);
-                if (16 + (map_count * 1024) > prg_max)
-                    map_count = (prg_max - 16) / 1024;
-                if (16 + chr_offset + (chr_count * 1024) > chr_max)
-                    chr_max = (chr_max - chr_offset) / 1024;
-            }
+
+            map_offset = 0xC000;
+            map_count = 4 * 18;
+            if (map_offset + (map_count * 1024) > rom.Length)
+                map_count = (rom.Length - map_offset) / 1024;
+            chr_offset = 0x20000;
+            chr_count = (rom.Length - chr_offset) / 1024;
+            // TODO spr_offset 0x31000, 32000 for MSX1?
 
             labelCHRCountValue.Text = string.Format("{0}", chr_count);
             labelMapCountValue.Text = string.Format("{0}", map_count);
@@ -186,24 +216,21 @@ namespace lotwtool
 
         public void chr_cache(int rom_index, int cache_index, uint[] cache, uint[] palette)
         {
+            // CHR = 4bpp chunky 8x8 tiles for backgrounds
             // decodes a tile from the ROM, and stores it in cache with given palette
-            int ro = chr_offset + (rom_index * 16);
+            int ro = chr_offset + (rom_index * 32);
             int co = cache_index * 64;
-            if ((ro + 16) > rom.Length || ro < chr_offset)
+            if ((ro + 32) > rom.Length || ro < chr_offset)
             {
-                for (int i=0; i<16; ++i) cache[co+i] = 0;
+                for (int i=0; i<32; ++i) cache[co+i] = 0;
                 return;
             }
             for (int y = 0; y < 8; ++y)
             {
-                byte p0 = rom[ro + y];
-                byte p1 = rom[ro + y + 8];
                 for (int x = 0; x < 8; ++x)
                 {
-                    int p = ((p0 >> 7) & 1) | ((p1 >> 6) & 2);
+                    int p = (rom[ro + (y*4) + (x/2)] >> (4-((x&1)*4))) & 0x0F;
                     cache[co + x + (y * 8)] = palette[p];
-                    p0 <<= 1;
-                    p1 <<= 1;
                 }
             }
         }
@@ -780,14 +807,13 @@ namespace lotwtool
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ABOUT_TEXT =
-                "LotW Tool\n" +
+                "LotW Tool MSX\n" +
                 "\n" +
-                "An editor for Legacy of the Wizard (NES)\n" +
-                "and Dragon Slayer IV (Famicom).\n" +
+                "An editor for Dragon Slayer IV (MSX2/MSX).\n" +
                 "\n" +
                 "Brad Smith\n" +
                 "Version: " + VERSION;
-            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool");
+            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool MSX");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)

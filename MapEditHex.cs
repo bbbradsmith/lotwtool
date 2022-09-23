@@ -16,7 +16,7 @@ namespace lotwtool
 
         public void redraw()
         {
-            int ro = 16 + (1024 * me.room);
+            int ro = mp.map_offset + (1024 * me.room);
             string s = "";
             for (int l=0; l<16; ++l)
             {

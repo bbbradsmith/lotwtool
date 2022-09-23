@@ -65,9 +65,9 @@ namespace lotwtool
 
         public void redraw()
         {
-            int ro = 16 + (1024 * me.room);
+            int ro = mp.map_offset + (1024 * me.room);
             byte metatile_page = mp.rom[ro+0x300];
-            int mto = 16 + (1024 * 8 * 9) + (metatile_page * 256);
+            int mto = mp.map_offset + (1024 * 8 * 9) + (metatile_page * 256);
             if ((mto+256) > mp.rom.Length) return;
 
             // tile selector
@@ -193,7 +193,7 @@ namespace lotwtool
             if (!show_palselect) s = string.Format("{0:X2}",t&63);
             if (p >= 0 && p < 16)
             {
-                int ro = 16 + (1024 * me.room);
+                int ro = mp.map_offset + (1024 * me.room);
                 s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
             }
             s += " " + me.get_tile_type(t);
@@ -208,7 +208,7 @@ namespace lotwtool
 
             if (!modal && e.Button == MouseButtons.Right && tx >= 0 && tx < 8 && ty >= 0 && ty < 8)
             {
-                int ro = 16 + (1024 * me.room);
+                int ro = mp.map_offset + (1024 * me.room);
                 byte mt_page = mp.rom[ro+0x300];
                 byte chr0 = mp.rom[ro+0x305];
                 byte chr1 = mp.rom[ro+0x306];
@@ -216,7 +216,7 @@ namespace lotwtool
                 m.StartPosition = FormStartPosition.CenterParent;
                 if (m.ShowDialog() == DialogResult.OK)
                 {
-                    int mto = 16 + (1024 * 8 * 9) + (mt_page * 256) + (t * 4);
+                    int mto = mp.map_offset + (1024 * 8 * 9) + (mt_page * 256) + (t * 4);
 
                     bool chrchgd = false;
                     mp.rom_modify_start();
@@ -280,7 +280,7 @@ namespace lotwtool
             int px = e.X / (8 * zoom);
             if (!modal && e.Button == MouseButtons.Right && px >= 0 && px < 16)
             {
-                int ro = 16 + (1024 * me.room) + 0x3E0 + px;
+                int ro = mp.map_offset + (1024 * me.room) + 0x3E0 + px;
                 byte old = mp.rom[ro];
                 PalettePick p = new PalettePick(old & 63);
                 p.StartPosition = FormStartPosition.CenterParent;

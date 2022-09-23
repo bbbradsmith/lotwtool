@@ -31,7 +31,7 @@ namespace lotwtool
             int x = me.room % 4;
             int y = me.room / 4;
             Text = string.Format("Map Properties {0},{1} ({2})",x,y,me.room);
-            int ro = 16 + (1024 * me.room);
+            int ro = mp.map_offset + (1024 * me.room);
             propertyGrid.SelectedObject = new MapProperties(mp, me, ro);
         }
 

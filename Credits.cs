@@ -23,10 +23,22 @@ namespace lotwtool
         {
             uint[] palette =
             {
-                Main.NES_PALETTE[nes_pal[0]],
+                Main.NES_PALETTE[nes_pal[0]], // TODO 16 colors
                 Main.NES_PALETTE[nes_pal[1]],
                 Main.NES_PALETTE[nes_pal[2]],
                 Main.NES_PALETTE[nes_pal[3]],
+                Main.NES_PALETTE[nes_pal[4]],
+                Main.NES_PALETTE[nes_pal[5]],
+                Main.NES_PALETTE[nes_pal[6]],
+                Main.NES_PALETTE[nes_pal[7]],
+                Main.NES_PALETTE[nes_pal[8]],
+                Main.NES_PALETTE[nes_pal[9]],
+                Main.NES_PALETTE[nes_pal[10]],
+                Main.NES_PALETTE[nes_pal[11]],
+                Main.NES_PALETTE[nes_pal[12]],
+                Main.NES_PALETTE[nes_pal[13]],
+                Main.NES_PALETTE[nes_pal[14]],
+                Main.NES_PALETTE[nes_pal[15]],
             };
 
             chr_cache = new uint[256*64];

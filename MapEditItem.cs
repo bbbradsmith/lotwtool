@@ -51,7 +51,7 @@ namespace lotwtool
         {
             me = parent;
             mp = mp_;
-            ro = 16 + (1024 * me.room);
+            ro = mp.map_offset + (1024 * me.room);
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
             int x = me.room % 4;
@@ -80,7 +80,7 @@ namespace lotwtool
         {
             int item = comboBox.SelectedIndex;
             if (item < 0 || item >= 9) return;
-            int eo = 16 + (1024 * me.room) + 0x320 + (item*16);
+            int eo = mp.map_offset + (1024 * me.room) + 0x320 + (item*16);
             mp.rom_modify_start();
             byte[] DEFAULT_MONSTER = { 0x51, 0x03, 0x00, 0x00, 0x0D, 0x01, 0x5D, 0x02, 0x02, 0x01 }; // 0,0 default Meta Black
             mp.rom_modify_range(eo,DEFAULT_MONSTER);

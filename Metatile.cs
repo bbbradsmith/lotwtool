@@ -91,7 +91,7 @@ namespace lotwtool
 
             chr[0] = chr0;
             chr[1] = chr1;
-            int mto = 16 + (1024 * 8 * 9) + (mt_index * 4);
+            int mto = mp.map_offset + (1024 * 8 * 9) + (mt_index * 4);
             if ((mto + 4) <= mp.rom.Length)
             {
                 for (int i=0; i<4; ++i) mt[i] = mp.rom[mto+i];

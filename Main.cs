@@ -207,11 +207,11 @@ namespace lotwtool
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
-            buttonTitleScreen.Enabled = rom.Length >= 0x726B + 1024;
-            buttonUnusedScreen.Enabled = false; // rom.Length >= 16+0x19000; // don't think this exists in MSX2
-            buttonCredits.Enabled = rom.Length >= 0x0726B;
+            buttonTitleScreen.Enabled = rom.Length >= 0x6B35 + 1024;
+            buttonUnusedScreen.Enabled = false; // rom.Length >= 16+0x19000; // don't think this exists in MSX1
+            buttonCredits.Enabled = rom.Length >= 0x06BE5;
             buttonDragon.Enabled = rom.Length >= map_offset+0x1C000;
-            buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX2 properties not yet known
+            buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX1 properties not yet known
             // TODO chr editor doesn't work
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
@@ -846,17 +846,17 @@ namespace lotwtool
 
         private void buttonTitleScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 0x726B;
+            int ADDRESS = 0x6B35;
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
-            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E);
+            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E); // TODO CHR selection
             title_screen.Show();
             add_refresh(title_screen);
         }
 
         private void buttonUnusedScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 16+0x17BCA; // don't think this exists on MSX2
+            int ADDRESS = 16+0x17BCA; // don't think this exists on MSX1
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
             title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E);
@@ -871,12 +871,12 @@ namespace lotwtool
             //   85 0C = STA $0C
             //   A9 .. = LDA #..
             //   85 0D = STA $0D
-            int credits_loc = 0x6AF7;
+            int credits_loc = 0x62E2;
 
             // credits are an ASCII string
             string credits_text = "";
             int pos = 0;
-            for (; (credits_loc+pos)<(0x726B); ++pos)
+            for (; (credits_loc+pos)<(0x6B34); ++pos)
             {
                 byte b = rom[credits_loc+pos];
                 if (b == 0) break;
@@ -885,14 +885,15 @@ namespace lotwtool
                 else
                     credits_text += ((char)b).ToString();
             }
-            if ((credits_loc + pos) >= (0x726B))
+            if ((credits_loc + pos) >= (0x6B34))
             {
-                MessageBox.Show("Credits not terminated with 0. Corrupt ROM?", "Credits error!");
-                return;
+                // MSX1 doesn't seem to have a terminal?
+                //MessageBox.Show("Credits not terminated with 0. Corrupt ROM?", "Credits error!");
+                //return;
             }
             // following credits are 0 padding up to 1BFA3 or 1BF00,
             // scanning to figure out how much total space we have to use for credits
-            for (; (credits_loc+pos)<(0x726B); ++pos)
+            for (; (credits_loc+pos)<(0x6B34); ++pos)
             {
                 if (rom[credits_loc+pos] != 0) break;
             }
@@ -901,7 +902,8 @@ namespace lotwtool
             Credits c = new Credits(this,credits_text);
             while (c.ShowDialog() == DialogResult.OK)
             {
-                int count = 1; // +1 for terminal 0
+                //int count = 1; // +1 for terminal 0
+                int count = 0;
                 foreach (char t in c.result)
                     if (t != '\r') ++count;
                 if (count >= pos_max)
@@ -942,13 +944,13 @@ namespace lotwtool
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ABOUT_TEXT =
-                "LotW Tool MSX\n" +
+                "LotW Tool MSX1\n" +
                 "\n" +
-                "An editor for Dragon Slayer IV (MSX2/MSX).\n" +
+                "An editor for Dragon Slayer IV (MSX1).\n" +
                 "\n" +
                 "Brad Smith\n" +
                 "Version: " + VERSION;
-            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool MSX");
+            MessageBox.Show(ABOUT_TEXT, "About the LotW Tool MSX1");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)

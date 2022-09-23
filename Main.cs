@@ -412,6 +412,35 @@ namespace lotwtool
             return s;
         }
 
+        public static uint msx2_palette_to_index(uint msx2_val) // MSX2 0GRB to bgr777
+        {
+            return ((msx2_val & 0x070) >> 4) | // r
+                   ((msx2_val & 0x700) >> 5) | // g
+                   ((msx2_val & 0x007) << 6) ; // b
+        }
+
+        public static uint msx2_palette_to_ARGB(uint val)
+        {
+            uint r = ((val >> 4) & 0x7) * 255 / 7;
+            uint g = ((val >> 8) & 0x7) * 255 / 7;
+            uint b = ((val >> 0) & 0x7) * 255 / 7;
+            return 0xFF000000 | (r << 16) | (g << 8) | b;
+        }
+
+        public static uint msx2_index_to_palette(uint index) // bgr777 to MSX2 0GRB
+        {
+            return ((index & 0x007) << 4) | // r
+                   ((index & 0x038) << 5) | // g
+                   ((index & 0x1C0) >> 6) ; // b
+        }
+
+        public static uint msx2_0GRB_to_0RGB(uint val) // 0GRB to 0RGB for readable hex display
+        {
+            return ((val & 0x070) << 4) | // r
+                   ((val & 0x700) >> 4) | // g
+                   ((val & 0x007) << 0) ; // b
+        }
+
         // ROM modification and undo
 
         public void undo()
@@ -501,6 +530,18 @@ namespace lotwtool
                     v |= rom[address+i];
             }
             return v;
+        }
+
+        public bool rom_modify_uint16(int address, uint v, bool append=false)
+        {
+            return rom_modify_range(address, new byte[] {
+                    (byte)((v>> 0)&0xFF),
+                    (byte)((v>> 8)&0xFF)}, append);
+        }
+
+        public uint rom_uint16(int address) // reads 16-bit value, little endian
+        {
+            return (uint)(rom[address] | (rom[address+1] << 8));
         }
 
         public bool rom_compare(int address, byte[] c) // check ROM for a specific string
@@ -1061,7 +1102,7 @@ namespace lotwtool
             int hh = e.Bounds.Height / 2;
             for (int i=0; i<4; ++i)
             {
-                uint p = (((uint)e.Value) >> (8*(3-i))) & 0xFF;
+                uint p = (((uint)e.Value) >> (8*(3-i))) & 0xFF; // TODO where does this come from?
                 int x = e.Bounds.X;
                 int y = e.Bounds.Y;
                 int w = hw;
@@ -1100,7 +1141,7 @@ namespace lotwtool
         {
             for (int i=0; i<4; ++i)
             {
-                uint p = (result >> (8*(3-i))) & 0xFF;
+                uint p = (result >> (8*(3-i))) & 0xFF; // TODO where does this come from?
                 e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p])), new Rectangle(i*zoom,0,zoom,zoom));
             }
         }
@@ -1110,7 +1151,7 @@ namespace lotwtool
             if (i < 0 || i >= 4) return;
             int s = (8*(3-i));
             uint old = (result >> s) & 0xFF;
-            PalettePick p = new PalettePick((int)(old & 63));
+            PalettePick p = new PalettePick((int)(old & 63)); // TODO not sure how this works?
             p.StartPosition = FormStartPosition.CenterParent;
             if (p.ShowDialog() == DialogResult.OK)
             {

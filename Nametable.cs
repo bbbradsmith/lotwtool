@@ -40,7 +40,7 @@ namespace lotwtool
                 for (int j=0; j<4; ++j)
                 {
                     int p = mp.rom[no+0x400+(i*4)+j] & 63;
-                    palettes[i][j] = Main.NES_PALETTE[p];
+                    palettes[i][j] = Main.NES_PALETTE[p]; // TODO this isn't the format anymore
                 }
             }
             return palettes;
@@ -309,7 +309,7 @@ namespace lotwtool
 
             if (e.Button == MouseButtons.Right)
             {
-                byte old = mp.rom[a];
+                byte old = mp.rom[a]; // TODO MSX palettes?
                 PalettePick pp = new PalettePick(old & 63);
                 pp.StartPosition = FormStartPosition.CenterParent;
                 if (pp.ShowDialog() == DialogResult.OK)

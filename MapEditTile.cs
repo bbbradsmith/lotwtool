@@ -106,7 +106,7 @@ namespace lotwtool
             int pw = w / 16;
             for (int i=0; i<16; ++i)
             {
-                Main.draw_box(d,i*pw,0,pw,h,me.palette[i/4][i%4]);
+                Main.draw_box(d,i*pw,0,pw,h,me.base_palette[i]);
             }
             int ps = get_tile() >> 6;
             int pw4 = pw*4;
@@ -194,7 +194,7 @@ namespace lotwtool
             if (p >= 0 && p < 16)
             {
                 int ro = mp.map_offset + (1024 * me.room);
-                s += string.Format(" {0:X2}",mp.rom[ro+0x3E0+p]);
+                s += string.Format(" {0:X3}",Main.msx2_0GRB_to_0RGB(mp.rom_uint16(ro+0x3E0+(p*2))));
             }
             s += " " + me.get_tile_type(t);
             toolStripStatusLabel.Text = s;
@@ -280,14 +280,14 @@ namespace lotwtool
             int px = e.X / (8 * zoom);
             if (!modal && e.Button == MouseButtons.Right && px >= 0 && px < 16)
             {
-                int ro = mp.map_offset + (1024 * me.room) + 0x3E0 + px;
-                byte old = mp.rom[ro];
-                PalettePick p = new PalettePick(old & 63);
+                int ro = mp.map_offset + (1024 * me.room) + 0x3E0 + (px * 2);
+                uint old = mp.rom_uint16(ro);
+                PalettePick p = new PalettePick((int)old);
                 p.StartPosition = FormStartPosition.CenterParent;
                 if (p.ShowDialog() == DialogResult.OK)
                 {
-                    byte np = (byte)p.picked;
-                    if (mp.rom_modify(ro, np))
+                    uint np = (uint)p.picked;
+                    if (mp.rom_modify_uint16(ro, np))
                     {
                         mp.refresh_map(me.room);
                         me.cache();

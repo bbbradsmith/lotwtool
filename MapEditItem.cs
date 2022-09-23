@@ -32,7 +32,7 @@ namespace lotwtool
             int pw = w / 16;
             for (int i=0; i<16; ++i)
             {
-                Main.draw_box(d,i*pw,0,pw,h,Main.NES_PALETTE[mp.rom[ro+0x3F0+i]]);
+                Main.draw_box(d,i*pw,0,pw,h,me.base_palette[i]);
             }
             bmp.UnlockBits(d);
             pictureBox.Image = bmp;
@@ -95,14 +95,14 @@ namespace lotwtool
             int p = e.X / 16;
             if (p >= 0 && p < 16)
             {
-                int po = ro + 0x3F0 + p;
-                byte old = mp.rom[po];
-                PalettePick pp = new PalettePick(old & 63);
+                int po = ro + 0x3E0 + (p*2);
+                uint old = mp.rom_uint16(po);
+                PalettePick pp = new PalettePick((int)old);
                 pp.StartPosition = FormStartPosition.CenterParent;
                 if (pp.ShowDialog() == DialogResult.OK)
                 {
-                    byte np = (byte)pp.picked;
-                    if (mp.rom_modify(po, np))
+                    uint np = (uint)pp.picked;
+                    if (mp.rom_modify_uint16(po, np))
                     {
                         mp.refresh_map(me.room);
                         me.cache();
@@ -119,7 +119,7 @@ namespace lotwtool
         {
             int p = e.X / 16;
             if (p >= 0 && p < 16)
-                toolStripStatusLabel.Text = string.Format("{0}:{1} = {2:X2}",p/4,p%4,mp.rom[ro+0x3F0+p]);
+                toolStripStatusLabel.Text = string.Format("{0}:{1} = {2:X3}",p/4,p%4,Main.msx2_0GRB_to_0RGB(mp.rom_uint16(ro+0x3E0+(p*2))));
         }
     }
 

@@ -12,7 +12,7 @@ namespace lotwtool
 {
     public partial class PalettePick : Form
     {
-        int zoom = 16;
+        int zoom = 12;
         public int picked = -1;
 
         public PalettePick(int select)
@@ -20,14 +20,20 @@ namespace lotwtool
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
 
-            Bitmap bmp = new Bitmap(16*zoom, 4*zoom, PixelFormat.Format32bppArgb);
+            if (select > 0)
+                select = (int)Main.msx2_palette_to_index((uint)select);
+
+            Bitmap bmp = new Bitmap(16*zoom, 32*zoom, PixelFormat.Format32bppArgb);
             BitmapData d = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
-            for (int y=0; y<4; ++y)
+            for (int y=0; y<32; ++y)
             {
                 for (int x=0; x<16; ++x)
                 {
-                    int p = x+(y*16);
-                    uint c = Main.NES_PALETTE[p];
+                    uint p = (uint)(x+(y*16));
+                    uint r = ((p >> 0) & 0x7) * 255 / 7;
+                    uint g = ((p >> 3) & 0x7) * 255 / 7;
+                    uint b = ((p >> 6) & 0x7) * 255 / 7;
+                    uint c = 0xFF000000 | (r << 16) | (g << 8) | b;
                     Main.draw_box(d,x*zoom,y*zoom,zoom,zoom,c);
                     if (p == select)
                     {
@@ -38,8 +44,9 @@ namespace lotwtool
             }
             bmp.UnlockBits(d);
             pictureBox.Image = bmp;
-            if (select >0 && select < 64)
-                toolStripStatusLabel.Text = string.Format("{0:X2}",select);
+
+            if (select > 0 && select < 512)
+                toolStripStatusLabel.Text = string.Format("{0:X3}",Main.msx2_0GRB_to_0RGB(Main.msx2_index_to_palette((uint)select)));
         }
 
         private void PalettePick_KeyDown(object sender, KeyEventArgs e)
@@ -54,10 +61,11 @@ namespace lotwtool
         {
             int px = e.X / zoom;
             int py = e.Y / zoom;
-            int p = px + (py*zoom);
-            if (px >= 0 && px < 16 && py >= 0 && py < 4)
+            int p = px + (py*16);
+            if (px >= 0 && px < 16 && py >= 0 && py < 32)
             {
-                picked = p;
+                picked = -1;
+                if (p>=0) picked = (int)Main.msx2_index_to_palette((uint)p);
                 Close();
                 DialogResult = DialogResult.OK;
             }
@@ -67,8 +75,8 @@ namespace lotwtool
         {
             int px = e.X / zoom;
             int py = e.Y / zoom;
-            int p = px + (py*zoom);
-            toolStripStatusLabel.Text = string.Format("{0:X2}",p);
+            int p = px + (py*16);
+            toolStripStatusLabel.Text = string.Format("{0:X3}",Main.msx2_0GRB_to_0RGB(Main.msx2_index_to_palette((uint)p)));
         }
     }
 }

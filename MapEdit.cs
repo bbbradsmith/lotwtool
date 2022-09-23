@@ -33,6 +33,7 @@ namespace lotwtool
         Bitmap bmp = null;
         uint[] chr_cache;
         bool chr_cache_extra;
+        public uint[] base_palette;
         public uint[][] palette;
         public MapEditHex infohex = null;
         public MapEditTile tilepal = null;
@@ -87,25 +88,24 @@ namespace lotwtool
 
         public void cache()
         {
+            base_palette = new uint[16];
+            for (int i = 0; i < 16; ++i)
+            {
+                byte p0 = mp.rom[ro+0x3E0+(i*2)+0];
+                byte p1 = mp.rom[ro+0x3E0+(i*2)+1];
+                base_palette[i] = Main.msx2_palette_to_ARGB((uint)(p0 | (p1 << 8)));
+            }
+
             palette = new uint[8][];
             for (int i = 0; i <  8; ++i)
             {
+                // remap to 4-colour palettes
                 palette[i] = new uint[16];
-                for (int j = 0; j < 16; ++j)
-                {
-                    byte p0 = mp.rom[ro+0x3E0+(j*2)+0];
-                    byte p1 = mp.rom[ro+0x3E0+(j*2)+1];
-                    uint r = (uint)(((p0 >> 4) & 0x07) * 255 / 7);
-                    uint b = (uint)(((p0 >> 0) & 0x07) * 255 / 7);
-                    uint g = (uint)(((p1 >> 0) & 0x07) * 255 / 7);
-                    palette[i][j] = 0xFF000000 | (r << 16) | (g << 8) | b;
-                }
-                // reduce to 4-colour palettes
                 for (int j = 0; j < 16; ++j)
                 {
                     int r = ((i<<2) & 0x0C) | (j & 0x03);
                     if ((j & 3) == 0) r = 0;
-                    palette[i][j] = palette[i][r];
+                    palette[i][j] = base_palette[r];
                 }
             }
 

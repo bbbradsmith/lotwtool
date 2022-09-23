@@ -210,18 +210,20 @@ namespace lotwtool
             {
                 int ro = mp.map_offset + (1024 * me.room);
                 byte mt_page = mp.rom[ro+0x300];
-                byte chr0 = mp.rom[ro+0x305];
-                byte chr1 = mp.rom[ro+0x306];
+                byte chr0 = (byte)(4 * (mp.rom[ro+0x305] - 0x10));
+                byte chr1 = (byte)(4 * (mp.rom[ro+0x306] - 0x10) + 2);
                 Metatile m = new Metatile(mp,(mt_page*64)+t,chr0,chr1);
                 m.StartPosition = FormStartPosition.CenterParent;
                 if (m.ShowDialog() == DialogResult.OK)
                 {
                     int mto = mp.map_offset + (1024 * 8 * 9) + (mt_page * 256) + (t * 4);
+                    chr0 = (byte)((m.chr[0] / 4) + 0x10);
+                    chr1 = (byte)(((m.chr[1] - 2) / 4) + 0x10);
 
                     bool chrchgd = false;
                     mp.rom_modify_start();
-                    chrchgd |= mp.rom_modify(ro+0x305,(byte)m.chr[0],true);
-                    chrchgd |= mp.rom_modify(ro+0x306,(byte)m.chr[1],true);
+                    chrchgd |= mp.rom_modify(ro+0x305,chr0,true);
+                    chrchgd |= mp.rom_modify(ro+0x306,chr1,true);
                     bool changed = chrchgd;
                     changed |= mp.rom_modify(mto+0,(byte)m.mt[0],true);
                     changed |= mp.rom_modify(mto+1,(byte)m.mt[1],true);

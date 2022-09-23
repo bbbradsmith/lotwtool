@@ -15,6 +15,7 @@ namespace lotwtool
     {
         Main mp;
         public int no; // offset to data
+        public int[] chr = new int[2];
         uint[] chr_cache = null;
         Bitmap bnmt = null;
         Bitmap btil = null;
@@ -26,8 +27,7 @@ namespace lotwtool
 
         int[] chr_set()
         {
-            byte chr0 = mp.rom[no+0x420];
-            byte chr1 = mp.rom[no+0x421];
+            int chr0 = chr[0]; int chr1 = chr[1];
             return new int[] { chr0 & (~1), chr0 | 1, chr1 & (~1), chr1 | 1};
         }
 
@@ -36,11 +36,11 @@ namespace lotwtool
             uint[][] palettes = new uint[8][];
             for (int i=0; i<8; ++i)
             {
-                palettes[i] = new uint[4];
-                for (int j=0; j<4; ++j)
+                palettes[i] = new uint[16];
+                for (int j=0; j<16; ++j)
                 {
-                    int p = mp.rom[no+0x400+(i*4)+j] & 63;
-                    palettes[i][j] = Main.NES_PALETTE[p]; // TODO this isn't the format anymore
+                    uint p = mp.rom_uint16(no+0x3C0+(j*2));
+                    palettes[i][j] = Main.msx2_palette_to_ARGB(p);
                 }
             }
             return palettes;
@@ -79,8 +79,9 @@ namespace lotwtool
                 for (int x=0; x<32; ++x)
                 {
                     int t = mp.rom[no+(y*32)+x];
-                    byte ra = mp.rom[no+0x3C0+(x/4)+((y/4)*8)];
-                    int a = (ra >> ((x&2) | ((y<<1)&4))) & 3;
+                    //byte ra = mp.rom[no+0x3C0+(x/4)+((y/4)*8)];
+                    //int a = (ra >> ((x&2) | ((y<<1)&4))) & 3;
+                    int a = 0;
                     Main.chr_blit(d, chr_cache, t+(256*a), x*8, y*8, zoom);
                 }
             }
@@ -143,7 +144,7 @@ namespace lotwtool
                 int py = (i / 4) * ph;
                 for (int j=0; j<4; ++j)
                 {
-                    Main.draw_box(d,px+(j*pw),py,pw,ph,palettes[i][j]);
+                    Main.draw_box(d,px+(j*pw),py,pw,ph,palettes[i][(j+(i*4)) & 15]);
                 }
                 if (i == pal_select)
                 {
@@ -185,10 +186,12 @@ namespace lotwtool
 
         public void refresh_close() { this.Close(); }
 
-        public Nametable(Main parent, int offset)
+        public Nametable(Main parent, int offset, int chr0, int chr1)
         {
             mp = parent;
             no = offset;
+            chr[0] = chr0;
+            chr[1] = chr1;
             chr_cache = new uint[256*6*64];
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
@@ -214,22 +217,23 @@ namespace lotwtool
 
 
             int na = no+(ty*32)+tx;
-            int aa = no+0x3C0+(tx/4)+((ty/4)*8);
+            //int aa = no+0x3C0+(tx/4)+((ty/4)*8);
             int ms = (tx&2) | ((ty<<1)&4);
 
             byte t = mp.rom[na];
-            byte ra = mp.rom[aa];
-            int a = (ra >> ms) & 3;
+            //byte ra = mp.rom[aa];
+            //int a = (ra >> ms) & 3;
+            int a = 0;
 
             if (e.Button == MouseButtons.Left)
             {
                 if (!ModifierKeys.HasFlag(Keys.Shift)) // hold shift for just attribute
                     t = (byte)tile_select;
                 a = pal_select;
-                ra = (byte)((ra & (~(3<<ms))) | (a<<ms));
+                //ra = (byte)((ra & (~(3<<ms))) | (a<<ms));
                 bool changed = false;
                 changed |= mp.rom_modify(na,t,true);
-                changed |= mp.rom_modify(aa,ra,true);
+                //changed |= mp.rom_modify(aa,ra,true);
                 if (changed)
                     redraw_nametable();
             }
@@ -267,7 +271,8 @@ namespace lotwtool
                 {
                     if (cs.highlight >= 0 && cs.highlight < mp.chr_count)
                     {
-                        if (mp.rom_modify(no+0x420+c,(byte)cs.highlight))
+                        chr[c] = cs.highlight;
+                        //if (mp.rom_modify(no+0x420+c,(byte)cs.highlight))
                         {
                             cache();
                             redraw();
@@ -302,20 +307,21 @@ namespace lotwtool
         {
             int px = (e.X * 4) / picturePalette.Width;
             int py = (e.Y * 2) / picturePalette.Height;
+            py = 0;
             int p = (py * 4) + px;
             int c = ((e.X * 16) / picturePalette.Width) % 4;
-            int a = no+0x400+((p*4)+c);
+            int a = no+0x3C0+(((p*4)+c)*2);
             if (px < 0 || px >= 4 || py < 0 || py >= 2) return;
 
             if (e.Button == MouseButtons.Right)
             {
-                byte old = mp.rom[a]; // TODO MSX palettes?
-                PalettePick pp = new PalettePick(old & 63);
+                uint old = mp.rom_uint16(a);
+                PalettePick pp = new PalettePick((int)old);
                 pp.StartPosition = FormStartPosition.CenterParent;
                 if (pp.ShowDialog() == DialogResult.OK)
                 {
-                    byte np = (byte)pp.picked;
-                    if (mp.rom_modify(a, np))
+                    uint np = (uint)pp.picked;
+                    if (mp.rom_modify_uint16(a, np))
                     {
                         cache();
                         redraw();

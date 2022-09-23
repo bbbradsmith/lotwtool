@@ -568,6 +568,8 @@ namespace lotwtool
             if (x < 0 || x >= 64 || y < 0 || y >= 240) return;
             y = y & (~0xF); // snap to grid
 
+            // MSX2 don't know yet how to make this patch
+            /*
             // apply patch for starting position
             mp.rom_modify_start();
 
@@ -604,7 +606,7 @@ namespace lotwtool
             if ((RUN_FROM_HERE_PATCH1.Length != RUN_FROM_HERE_UNPATCH1.Length) ||
                 (patch2.Length != RUN_FROM_HERE_UNPATCH2.Length))
                 throw new Exception("Fatal error! Run from here patch length mismatch?");
-
+            */
 
             // save and run
             if (mp.saveFile(mp.filename))
@@ -613,7 +615,7 @@ namespace lotwtool
             }
 
             // undo the patch
-            mp.undo();
+            //mp.undo();
         }
         static public void remove_run_from_here(Main mp)
         {

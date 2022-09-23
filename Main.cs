@@ -187,11 +187,11 @@ namespace lotwtool
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
-            buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000; // TODO find this stuff in MSX2 ROM
-            buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000; // TODO
+            buttonTitleScreen.Enabled = rom.Length >= 0x726B + 1024;
+            buttonUnusedScreen.Enabled = false; // rom.Length >= 16+0x19000; // don't think this exists in MSX2
             buttonCredits.Enabled = rom.Length >= 0x0726B;
             buttonDragon.Enabled = rom.Length >= map_offset+0x1C000;
-            buttonMisc.Enabled = rom.Length >= 16+0x20000; // TODO
+            buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX2 properties not yet known
             // TODO chr editor doesn't work
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
@@ -695,7 +695,7 @@ namespace lotwtool
 
         public void add_map_edit(int room)
         {
-            if (room >= map_count && room != 0x4E) return;
+            //if (room >= map_count && room != 0x4E) return;
             foreach (MapEdit m in mapedits)
             {
                 if (m.room == room)
@@ -826,20 +826,20 @@ namespace lotwtool
 
         private void buttonTitleScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 16+0x19EC9;
+            int ADDRESS = 0x726B;
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
-            title_screen = new Nametable(this, ADDRESS);
+            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E);
             title_screen.Show();
             add_refresh(title_screen);
         }
 
         private void buttonUnusedScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 16+0x17BCA;
+            int ADDRESS = 16+0x17BCA; // don't think this exists on MSX2
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
-            title_screen = new Nametable(this, ADDRESS);
+            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E);
             title_screen.Show();
             add_refresh(title_screen);
         }
@@ -1183,7 +1183,7 @@ namespace lotwtool
                 int h = hh;
                 if ((i&1)!=0) { x += hw; w = e.Bounds.Width - hw; }
                 if ((i&2)!=0) { y += hh; h = e.Bounds.Height - hh; }
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p])), new Rectangle(x,y,w,h));
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p&63])), new Rectangle(x,y,w,h));
             }
         }
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
@@ -1216,7 +1216,7 @@ namespace lotwtool
             for (int i=0; i<4; ++i)
             {
                 uint p = (result >> (8*(3-i))) & 0xFF; // TODO where does this come from?
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p])), new Rectangle(i*zoom,0,zoom,zoom));
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p&63])), new Rectangle(i*zoom,0,zoom,zoom));
             }
         }
         protected override void OnMouseDown(MouseEventArgs e)

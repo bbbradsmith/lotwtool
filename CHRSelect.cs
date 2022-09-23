@@ -152,6 +152,10 @@ namespace lotwtool
                 undoToolStripMenuItem.Enabled = false; // just in case action doesn't disable it too
                 pictureBox.ContextMenuStrip = null;
             }
+            // disabled for MSX2
+            importCHRToolStripMenuItem.Enabled = false;
+            importPNGToolStripMenuItem.Enabled = false;
+            exportCHRToolStripMenuItem.Enabled = false;
         }
 
         private void CHRSelect_Shown(object sender, EventArgs e)
@@ -251,7 +255,7 @@ namespace lotwtool
             d.Title = "Save Image";
             d.DefaultExt = "png";
             d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
-            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + ".chr.png";
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + (sprite ? ".spr.png" : ".chr.png");
             if (d.ShowDialog() == DialogResult.OK)
             {
                 highlight = -1;
@@ -355,7 +359,7 @@ namespace lotwtool
             d.Title = "Export CHR Image";
             d.DefaultExt = "png";
             d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
-            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + string.Format(".chr.{0:X2}.png",highlight);
+            d.FileName = System.IO.Path.GetFileNameWithoutExtension(mp.filename) + string.Format(sprite ? ".spr.{0:X2}.png" : ".chr.{0:X2}.png",highlight);
             if (d.ShowDialog() == DialogResult.OK)
             {
                 Bitmap b = new Bitmap(128, 32, PixelFormat.Format32bppArgb);

@@ -206,6 +206,7 @@
             this.titleScreenToolStripMenuItem.Name = "titleScreenToolStripMenuItem";
             this.titleScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.titleScreenToolStripMenuItem.Text = "&Title Screen";
+            this.titleScreenToolStripMenuItem.Click += new System.EventHandler(this.buttonTitleScreen_Click);
             // 
             // unusedScreenToolStripMenuItem
             // 
@@ -213,6 +214,7 @@
             this.unusedScreenToolStripMenuItem.Name = "unusedScreenToolStripMenuItem";
             this.unusedScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.unusedScreenToolStripMenuItem.Text = "&Unused Screen";
+            this.unusedScreenToolStripMenuItem.Click += new System.EventHandler(this.buttonUnusedScreen_Click);
             // 
             // creditsToolStripMenuItem
             // 
@@ -220,6 +222,7 @@
             this.creditsToolStripMenuItem.Name = "creditsToolStripMenuItem";
             this.creditsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.creditsToolStripMenuItem.Text = "Credits";
+            this.creditsToolStripMenuItem.Click += new System.EventHandler(this.buttonUnusedScreen_Click);
             // 
             // dragonToolStripMenuItem
             // 
@@ -227,6 +230,7 @@
             this.dragonToolStripMenuItem.Name = "dragonToolStripMenuItem";
             this.dragonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dragonToolStripMenuItem.Text = "&Dragon";
+            this.dragonToolStripMenuItem.Click += new System.EventHandler(this.buttonDragon_Click);
             // 
             // miscToolStripMenuItem
             // 

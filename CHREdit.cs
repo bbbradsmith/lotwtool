@@ -19,7 +19,7 @@ namespace lotwtool
         Bitmap bmp = null;
         Bitmap bpal = null;
         int color_select = 0;
-        const uint SELECT = 0xFFFF0000;
+        const uint SELECT = 0xFFFFFF00;
         bool drawing = false;
         int zoom = 12;
         static int default_zoom = 12;
@@ -46,7 +46,12 @@ namespace lotwtool
         void redraw()
         {
             for (int i=0; i<9; ++i)
-                mp.chr_cache(tiles[i],i,chr_cache,Main.GREY);
+            {
+                if (!sprite)
+                    mp.chr_cache(tiles[i],i,chr_cache,Main.CHREDIT);
+                else
+                    mp.spr_cache(tiles[i],i,chr_cache,Main.GREY);
+            }
 
             // CHR view
             int span = 8 * zoom;
@@ -83,16 +88,18 @@ namespace lotwtool
             // width same as pictureBox
             h = w / 4;
             if (bpal == null || bpal.Width != w || bpal.Height != h)
-                bpal = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+                bpal = new Bitmap(w, h*4, PixelFormat.Format32bppArgb);
             d = bpal.LockBits(new Rectangle(0, 0, bpal.Width, bpal.Height), ImageLockMode.WriteOnly, bpal.PixelFormat);
 
-            for (int i=0; i<4; ++i)
+            for (int i=0; i<16; ++i)
             {
-                Main.draw_box(d,i*h,0,h,h,Main.GREY[i]);
+                int ix = i%4;
+                int iy = i/4;
+                Main.draw_box(d,ix*h,iy*h,h,h,Main.CHREDIT[i]);
                 if (i == color_select)
                 {
-                    Main.draw_outbox(d,i*h,0,h,h,SELECT);
-                    Main.draw_outbox(d,(i*h)+1,1,h-2,h-2,SELECT);
+                    Main.draw_outbox(d,ix*h,iy*h,h,h,SELECT);
+                    Main.draw_outbox(d,(ix*h)+1,(iy*h)+1,h-2,h-2,SELECT);
                 }
             }
 
@@ -145,9 +152,11 @@ namespace lotwtool
         {
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
             {
-                color_select = e.X / (zoom * 6);
-                if (color_select < 0) color_select = 0;
-                if (color_select > 3) color_select = 3;
+                int cx = e.X / (zoom * 6);
+                int cy = e.Y / (zoom * 6);
+                if (cx < 0 || cx > 3) return;
+                if (cy < 0 || cy > 3) return;
+                color_select = cx + (cy * 4);
                 redraw();
             }
         }
@@ -202,27 +211,56 @@ namespace lotwtool
 
             string status = "...";
 
-            int co = mp.chr_offset + (t*16) + py;
+            int co = mp.chr_offset + (t*32); // 4bpp chunky CHR
+            if (sprite) // 2bpp packed SPR
+            {
+                co = mp.spr_offset;
+                co += (t >> 2) * 64;
+                co += (t &  2) * 8;
+                co += (t &  1) * 8;
+            }
+
             if (valid)
             {
-                int sh = 7-px;
-                byte p0 = mp.rom[co+0];
-                byte p1 = mp.rom[co+8];
-                p = (  (p0 >> sh)        & 1) |
-                    ((((p1 >> sh)) << 1) & 2);
+                int bo0 = 0;
+                int bo1 = 0;
+                int sh = 0;
+
+                if (!sprite)
+                {
+                    bo0 = co + (py*4) + (px/2);
+                    sh = (4-((px&1)*4));
+                    p = (mp.rom[bo0] >> sh) & 0x0F;
+                }
+                else
+                {
+                    bo0 = co+ 0+py+(px/8);
+                    bo1 = co+32+py+(px/8);
+                    sh = (7-(px&7));
+                    byte pb0 = (byte)((mp.rom[bo0] >> sh) & 0x01);
+                    byte pb1 = (byte)((mp.rom[bo1] >> sh) & 0x01);
+                    p = pb0 | (pb1 << 1);
+                }
 
                 if (e.Button == MouseButtons.Left && drawing && q == 4)
                 {
-                    byte bit = (byte)(1 << sh);
-                    byte mask = (byte)~bit;
-                    byte np0 = (byte)(p0 & mask);
-                    byte np1 = (byte)(p1 & mask);
-                    if ((color_select & 1) != 0) np0 |= bit;
-                    if ((color_select & 2) != 0) np1 |= bit;
-
                     bool changed = false;
-                    changed |= mp.rom_modify(co+0,np0,true);
-                    changed |= mp.rom_modify(co+8,np1,true);
+
+                    if (!sprite)
+                    {
+                        byte mask = (byte)~(0x0F << sh);
+                        byte bm = (byte)((mp.rom[bo0] & mask) | ((color_select & 0xF) << sh));
+                        changed |= mp.rom_modify(bo0,bm,true);
+                    }
+                    else
+                    {
+                        byte mask = (byte)~(0x01 << sh);
+                        byte bm0 = (byte)((mp.rom[bo0] & mask) | ((color_select & 1) << sh));
+                        byte bm1 = (byte)((mp.rom[bo1] & mask) | (((color_select & 2) >> 1) << sh));
+                        changed |= mp.rom_modify(bo0,bm0,true);
+                        changed |= mp.rom_modify(bo1,bm1,true);
+                    }
+
                     if (changed)
                     {
                         //redraw(); // refresh_chr will do this
@@ -251,10 +289,10 @@ namespace lotwtool
         {
             switch (e.KeyCode)
             {
-                case Keys.D1: color_select = 0; break;
-                case Keys.D2: color_select = 1; break;
-                case Keys.D3: color_select = 2; break;
-                case Keys.D4: color_select = 3; break;
+                case Keys.D1: color_select =  0; break;
+                case Keys.D2: color_select = 13; break;
+                case Keys.D3: color_select = 14; break;
+                case Keys.D4: color_select = 15; break;
                 default:
                     return;
             }
@@ -288,7 +326,7 @@ namespace lotwtool
             paletteBox.Top = (225-dspan)+span;
             int w = (208-dspan)+span;
             if (w < 137) w = 137; // keep Options menu visible
-            Size = new Size(w, (336-(dspan+dspan/4))+(span+span/4));
+            Size = new Size(w, (336-(dspan+dspan/4))+(span+span));
             redraw();
         }
 

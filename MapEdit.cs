@@ -318,7 +318,7 @@ namespace lotwtool
                 // (using palette 1 always instead, colour 0 is replaced by player anyway and not really valid in map data)
                 x *= 16;
                 s += 0x20;
-                draw_sprite(d,s,0,0,x,y); // TODO palette is a particular OR combination of 2 values?
+                draw_sprite(d,s,0,0,x,y);
             }
         }
 

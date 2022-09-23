@@ -79,6 +79,26 @@ namespace lotwtool
             0xFFFFFFFF,
         };
 
+        public static readonly uint[] CHREDIT =
+        {
+            0xFF000000,
+            0xFFFF4444,
+            0xFFFF8888,
+            0xFFFFCCCC,
+            0xFF008800,
+            0xFF44FF00,
+            0xFF88FF88,
+            0xFFCCFFCC,
+            0xFF000088,
+            0xFF4444FF,
+            0xFFAAAAFF,
+            0xFFCCCCFF,
+            0xFF880000,
+            0xFF555555,
+            0xFFAAAAAA,
+            0xFFFFFFFF,
+        };
+
         public static readonly uint[] HIGHLIGHT =
         {
             0xFF772255,
@@ -1176,7 +1196,7 @@ namespace lotwtool
             int hh = e.Bounds.Height / 2;
             for (int i=0; i<4; ++i)
             {
-                uint p = (((uint)e.Value) >> (8*(3-i))) & 0xFF; // TODO where does this come from?
+                uint p = (((uint)e.Value) >> (8*(3-i))) & 0xFF; // TODO MSX2 palettes
                 int x = e.Bounds.X;
                 int y = e.Bounds.Y;
                 int w = hw;
@@ -1215,7 +1235,7 @@ namespace lotwtool
         {
             for (int i=0; i<4; ++i)
             {
-                uint p = (result >> (8*(3-i))) & 0xFF; // TODO where does this come from?
+                uint p = (result >> (8*(3-i))) & 0xFF; // TODO MSX2 palettes
                 e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb((int)Main.NES_PALETTE[p&63])), new Rectangle(i*zoom,0,zoom,zoom));
             }
         }
@@ -1225,7 +1245,7 @@ namespace lotwtool
             if (i < 0 || i >= 4) return;
             int s = (8*(3-i));
             uint old = (result >> s) & 0xFF;
-            PalettePick p = new PalettePick((int)(old & 63)); // TODO not sure how this works?
+            PalettePick p = new PalettePick((int)(old & 63)); // TODO MSX2 palettes
             p.StartPosition = FormStartPosition.CenterParent;
             if (p.ShowDialog() == DialogResult.OK)
             {

@@ -53,7 +53,7 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 276);
+            this.statusStrip.Location = new System.Drawing.Point(0, 420);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(192, 22);
             this.statusStrip.TabIndex = 0;
@@ -111,20 +111,20 @@
             // 
             this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
             this.gridToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.gridToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.gridToolStripMenuItem.Text = "&Grid";
             this.gridToolStripMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(163, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
             // 
             // zoom4xToolStripMenuItem
             // 
             this.zoom4xToolStripMenuItem.Name = "zoom4xToolStripMenuItem";
             this.zoom4xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
-            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.zoom4xToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.zoom4xToolStripMenuItem.Text = "Zoom 4x";
             this.zoom4xToolStripMenuItem.Click += new System.EventHandler(this.zoom4xToolStripMenuItem_Click);
             // 
@@ -134,7 +134,7 @@
             this.zoom8xToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.zoom8xToolStripMenuItem.Name = "zoom8xToolStripMenuItem";
             this.zoom8xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.zoom8xToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.zoom8xToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.zoom8xToolStripMenuItem.Text = "Zoom 8x";
             this.zoom8xToolStripMenuItem.Click += new System.EventHandler(this.zoom8xToolStripMenuItem_Click);
             // 
@@ -142,7 +142,7 @@
             // 
             this.zoom12xToolStripMenuItem.Name = "zoom12xToolStripMenuItem";
             this.zoom12xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.zoom12xToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.zoom12xToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.zoom12xToolStripMenuItem.Text = "Zoom 12x";
             this.zoom12xToolStripMenuItem.Click += new System.EventHandler(this.zoom12xToolStripMenuItem_Click);
             // 
@@ -150,7 +150,7 @@
             // 
             this.zoom16xToolStripMenuItem.Name = "zoom16xToolStripMenuItem";
             this.zoom16xToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
-            this.zoom16xToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.zoom16xToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.zoom16xToolStripMenuItem.Text = "Zoom 16x";
             this.zoom16xToolStripMenuItem.Click += new System.EventHandler(this.zoom16xToolStripMenuItem_Click);
             // 
@@ -177,7 +177,7 @@
             // 
             this.paletteBox.Location = new System.Drawing.Point(0, 225);
             this.paletteBox.Name = "paletteBox";
-            this.paletteBox.Size = new System.Drawing.Size(192, 48);
+            this.paletteBox.Size = new System.Drawing.Size(192, 192);
             this.paletteBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.paletteBox.TabIndex = 3;
             this.paletteBox.TabStop = false;
@@ -188,7 +188,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(192, 298);
+            this.ClientSize = new System.Drawing.Size(192, 442);
             this.Controls.Add(this.paletteBox);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.statusStrip);

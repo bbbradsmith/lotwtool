@@ -188,10 +188,11 @@ namespace lotwtool
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
             buttonTitleScreen.Enabled = rom.Length >= 16+0x1B000; // TODO find this stuff in MSX2 ROM
-            buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000;
-            buttonCredits.Enabled = rom.Length >= 16+0x1C000;
-            buttonDragon.Enabled = rom.Length >= 16+0x1C000;
-            buttonMisc.Enabled = rom.Length >= 16+0x20000;
+            buttonUnusedScreen.Enabled = rom.Length >= 16+0x19000; // TODO
+            buttonCredits.Enabled = rom.Length >= 0x0726B;
+            buttonDragon.Enabled = rom.Length >= map_offset+0x1C000;
+            buttonMisc.Enabled = rom.Length >= 16+0x20000; // TODO
+            // TODO chr editor doesn't work
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
             CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;
@@ -850,32 +851,12 @@ namespace lotwtool
             //   85 0C = STA $0C
             //   A9 .. = LDA #..
             //   85 0D = STA $0D
-            int credits_loc = 16 + 0x1B79C;
-            int credits_pal = 16 + 0x1B2CD;
-            if      (rom_compare(16 + 0x1B183, new byte[] { 0xA9,0x9C,0x85,0x0C,0xA9,0xB7,0x85,0x0D }))
-            { } // Legacy of the Wizard (default)
-            else if (rom_compare(16 + 0x1B191, new byte[] { 0xA9,0xAA,0x85,0x0C,0xA9,0xB7,0x85,0x0D }))
-            {   // Dragon Slayer 4
-                credits_loc = 16 + 0x1B7AA;
-                credits_pal = 16 + 0x1B2DB;
-            }
-            else
-            {
-                MessageBox.Show("Could not identify credits location. Corrupt ROM?", "Credits error!");
-                return;
-            }
-
-            byte[] cpal = {
-                rom[credits_pal+ 0],
-                rom[credits_pal+ 5],
-                rom[credits_pal+10],
-                rom[credits_pal+15]
-            };
+            int credits_loc = 0x6AF7;
 
             // credits are an ASCII string
             string credits_text = "";
             int pos = 0;
-            for (; (credits_loc+pos)<(16+0x1C000); ++pos)
+            for (; (credits_loc+pos)<(0x726B); ++pos)
             {
                 byte b = rom[credits_loc+pos];
                 if (b == 0) break;
@@ -884,20 +865,20 @@ namespace lotwtool
                 else
                     credits_text += ((char)b).ToString();
             }
-            if ((credits_loc + pos) >= (16+0x1C000))
+            if ((credits_loc + pos) >= (0x726B))
             {
                 MessageBox.Show("Credits not terminated with 0. Corrupt ROM?", "Credits error!");
                 return;
             }
             // following credits are 0 padding up to 1BFA3 or 1BF00,
             // scanning to figure out how much total space we have to use for credits
-            for (; (credits_loc+pos)<(16+0x1C000); ++pos)
+            for (; (credits_loc+pos)<(0x726B); ++pos)
             {
                 if (rom[credits_loc+pos] != 0) break;
             }
             int pos_max = pos;
 
-            Credits c = new Credits(this,credits_text,cpal);
+            Credits c = new Credits(this,credits_text);
             while (c.ShowDialog() == DialogResult.OK)
             {
                 int count = 1; // +1 for terminal 0

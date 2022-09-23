@@ -15,36 +15,18 @@ namespace lotwtool
         Main mp;
         Bitmap bmp;
         uint[] chr_cache = null;
-        byte[] nes_pal = null;
-        const int CHR0 = 0x20;
+        readonly int[] CHR = { 0x21, 0x21, 0x30, 0x31 };
         public string result;
 
         void cache()
         {
-            uint[] palette =
-            {
-                Main.NES_PALETTE[nes_pal[0]], // TODO 16 colors
-                Main.NES_PALETTE[nes_pal[1]],
-                Main.NES_PALETTE[nes_pal[2]],
-                Main.NES_PALETTE[nes_pal[3]],
-                Main.NES_PALETTE[nes_pal[4]],
-                Main.NES_PALETTE[nes_pal[5]],
-                Main.NES_PALETTE[nes_pal[6]],
-                Main.NES_PALETTE[nes_pal[7]],
-                Main.NES_PALETTE[nes_pal[8]],
-                Main.NES_PALETTE[nes_pal[9]],
-                Main.NES_PALETTE[nes_pal[10]],
-                Main.NES_PALETTE[nes_pal[11]],
-                Main.NES_PALETTE[nes_pal[12]],
-                Main.NES_PALETTE[nes_pal[13]],
-                Main.NES_PALETTE[nes_pal[14]],
-                Main.NES_PALETTE[nes_pal[15]],
-            };
-
             chr_cache = new uint[256*64];
-            for (int i=0; i<256; ++i)
+            for (int i=0; i<4; ++i)
             {
-                mp.chr_cache((CHR0*64)+i,i,chr_cache,palette);
+                for (int j=0; j<64; ++j)
+                {
+                    mp.chr_cache((CHR[i]*64)+j,(i*64)+j,chr_cache,Main.GREY);
+                }
             }
         }
 
@@ -91,12 +73,11 @@ namespace lotwtool
             pictureBox.Image = bmp;
         }
 
-        public Credits(Main parent, string start_text, byte[] nes_pal_)
+        public Credits(Main parent, string start_text)
         {
             mp = parent;
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
-            nes_pal = nes_pal_;
             cache();
             textBox.Text = start_text;
             //redraw(); // already done by assigning textBot.Text

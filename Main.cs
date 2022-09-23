@@ -212,7 +212,6 @@ namespace lotwtool
             buttonCredits.Enabled = rom.Length >= 0x0726B;
             buttonDragon.Enabled = rom.Length >= map_offset+0x1C000;
             buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX2 properties not yet known
-            // TODO chr editor doesn't work
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
             CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;

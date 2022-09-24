@@ -30,15 +30,11 @@ namespace lotwtool
             int cc_tiles = 64 * chr_count;
             if (!sprite)
             {
-                mp.chr_cache(i, i, chr_cache, Main.GREY);
-                mp.chr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
-                mp.chr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
+                mp.chr_cache(i, i, chr_cache);
             }
             else
             {
-                mp.spr_cache(i, i, chr_cache, Main.GREY);
-                mp.spr_cache(i, cc_tiles + i, chr_cache, Main.HIGHLIGHT);
-                mp.spr_cache(i,( cc_tiles * 2) + i, chr_cache, Main.PRESELECT);
+                mp.spr_cache(i, i, chr_cache);
             }
         }
 
@@ -46,7 +42,7 @@ namespace lotwtool
         {
             chr_count = sprite ? mp.spr_count : mp.chr_count;
             int cc_tiles = 64 * chr_count;
-            chr_cache = new uint[3 * cc_tiles * 64];
+            chr_cache = new uint[cc_tiles * 64];
             for (int i = 0; i < (chr_count * 64); ++i)
             {
                 cache_tile(i);
@@ -60,10 +56,9 @@ namespace lotwtool
             int z = zoom;
             int yo = page * 32;
             int to = page * 64;
-            if (highlight)
-                to += (64 * chr_count); // use HIGHLIGHT version
-            else if (page == preselect || (dualpage && page == (preselect ^ 1)))
-                to += (2 * 64 * chr_count); // use PRESELECT version
+            int c = 15;
+            if (highlight) c = Main.HIGHLIGHT;
+            else if (page == preselect || (dualpage && page == (preselect ^ 1))) c = Main.PRESELECT;
 
             if (export)
             {
@@ -80,7 +75,7 @@ namespace lotwtool
                     {
                         t = (((x * 2) & 31) ^ (y & 1)) + ((y & (~1)) * 16);
                     }
-                    Main.chr_blit(d, chr_cache, to + t, x * 8, yo + y * 8, z);
+                    Main.chr_blit(d, chr_cache, to + t, x * 8, yo + y * 8, z, c);
                 }
             }
         }

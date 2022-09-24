@@ -54,12 +54,7 @@ namespace lotwtool
             {
                 for (int j=0; j<64; ++j) // tile in page
                 {
-                    for (int k=0; k<4; ++k) // colour
-                    {
-                        mp.chr_cache(chr[i]*64+j, (256*k)+(i*64)+j, chr_cache, palettes[k]);
-                    }
-                    mp.chr_cache(chr[i]*64+j, (256*4)+(i*64)+j, chr_cache, Main.GREY);
-                    mp.chr_cache(chr[i]*64+j, (256*5)+(i*64)+j, chr_cache, Main.HIGHLIGHT);
+                    mp.chr_cache(chr[i]*64+j, (i*64)+j, chr_cache);
                 }
             }
         }
@@ -81,8 +76,8 @@ namespace lotwtool
                     int t = mp.rom[no+(y*32)+x];
                     //byte ra = mp.rom[no+0x3C0+(x/4)+((y/4)*8)];
                     //int a = (ra >> ((x&2) | ((y<<1)&4))) & 3;
-                    int a = 0;
-                    Main.chr_blit(d, chr_cache, t+(256*a), x*8, y*8, zoom);
+                    int c = 11; // TODO colour?
+                    Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
                 }
             }
 
@@ -113,9 +108,10 @@ namespace lotwtool
                 for (int x=0; x<16; ++x)
                 {
                     int t = x+(y*16);
-                    if (t == tile_select) t += (256*5); // highlight
-                    else                  t += (256*4); // grey
-                    Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom);
+                    int c = 15; // TODO colour
+                    if (t == tile_select) c = Main.HIGHLIGHT;
+                    else                  c = Main.GREY;
+                    Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
                 }
             }
 
@@ -192,7 +188,7 @@ namespace lotwtool
             no = offset;
             chr[0] = chr0;
             chr[1] = chr1;
-            chr_cache = new uint[256*6*64];
+            chr_cache = new uint[256*64];
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
             this.Text = string.Format("Nametable {0:X}",no-16);

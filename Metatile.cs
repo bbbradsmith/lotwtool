@@ -23,8 +23,7 @@ namespace lotwtool
         const int MZOOM = 8;
         void cache_tile(int rom_index, int cache_index)
         {
-            mp.chr_cache(rom_index, cache_index, chr_cache, Main.GREY);
-            mp.chr_cache(rom_index, cache_index+256, chr_cache, Main.HIGHLIGHT);
+            mp.chr_cache(rom_index, cache_index, chr_cache);
         }
 
         void cache_page(int slot, int page)
@@ -37,7 +36,7 @@ namespace lotwtool
 
         void cache()
         {
-            chr_cache = new uint[2 * 256 * 64];
+            chr_cache = new uint[256 * 64];
             cache_page(0,chr[0] & (~1));
             cache_page(1,chr[0] | 1);
             cache_page(2,chr[1] & (~1));
@@ -55,10 +54,11 @@ namespace lotwtool
             for (int i=0; i<256; ++i)
             {
                 int t = i;
-                if (i == mt[mti]) t += 256; // assigned tile to metatile
+                int c = 15;
+                if (i == mt[mti]) c = Main.HIGHLIGHT;
                 int x = i % 16;
                 int y = i / 16;
-                Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom);
+                Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
             }
             tbmp.UnlockBits(d);
             tileBox.Image = tbmp;
@@ -72,10 +72,11 @@ namespace lotwtool
             for (int i=0; i<4; ++i)
             {
                 int t = mt[i];
-                if (i == mti) t += 256; // selected metatile quadrant
+                int c = 15;
+                if (i == mti) c = Main.HIGHLIGHT;
                 int x = i / 2; // X/Y swapped for metatile
                 int y = i % 2;
-                Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom);
+                Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
             }
             mbmp.UnlockBits(d);
             metatileBox.Image = mbmp;

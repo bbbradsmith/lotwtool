@@ -25,7 +25,7 @@ namespace lotwtool
             {
                 for (int j=0; j<64; ++j)
                 {
-                    mp.chr_cache((CHR[i]*64)+j,(i*64)+j,chr_cache,Main.GREY);
+                    mp.chr_cache((CHR[i]*64)+j,(i*64)+j,chr_cache);
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace lotwtool
                 bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             }
             BitmapData d = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
-            Main.draw_box(d,0,0,w,h,Main.GREY[0]);
+            Main.draw_box(d,0,0,w,h,Main.MSX_PALETTE[Main.GREY]);
 
             int x = 0;
             int y = 0;
@@ -63,8 +63,8 @@ namespace lotwtool
                 int tile = ((c<<1) & 0xE0) | (c & 0x0F);
                 if (x < 32)
                 {
-                    Main.chr_blit(d,chr_cache,tile+ 0,x*8,((y*2)+0)*8,zoom);
-                    Main.chr_blit(d,chr_cache,tile+16,x*8,((y*2)+1)*8,zoom);
+                    Main.chr_blit(d,chr_cache,tile+ 0,x*8,((y*2)+0)*8,zoom,15);
+                    Main.chr_blit(d,chr_cache,tile+16,x*8,((y*2)+1)*8,zoom,15);
                 }
                 x += 1;
             }

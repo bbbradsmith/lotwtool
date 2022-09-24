@@ -39,6 +39,26 @@ namespace lotwtool
         Stack<List<int>> undo_stack = new Stack<List<int>>();
         public bool misc_errors_shown = false;
 
+        public static readonly uint[] MSX_PALETTE =
+        {
+            0xFF000000,
+            0xFF010101,
+            0xFF3EB849,
+            0xFF74D07D,
+            0xFF5955E0,
+            0xFF8076F1,
+            0xFFB95E51,
+            0xFF65DBEF,
+            0xFFDB6559,
+            0xFFFF897D,
+            0xFFCCC35E,
+            0xFFDED087,
+            0xFF3AA241,
+            0xFFB766B5,
+            0xFFCCCCCC,
+            0xFFFFFFFF,
+        };
+
         public static readonly uint[] NES_PALETTE =
         {
             0xFF656665, 0xFF001E9C, 0xFF200DAC, 0xFF44049C,
@@ -59,91 +79,22 @@ namespace lotwtool
             0xFFAEEEEE, 0xFFBABCB9, 0xFF000000, 0xFF000000,
         };
 
-        public static readonly uint[] GREY =
-        {
-            0xFF000000,
-            0xFF555555,
-            0xFFAAAAAA,
-            0xFFFFFFFF,
-            0xFF000000,
-            0xFF555555,
-            0xFFAAAAAA,
-            0xFFFFFFFF,
-            0xFF000000,
-            0xFF555555,
-            0xFFAAAAAA,
-            0xFFFFFFFF,
-            0xFF000000,
-            0xFF555555,
-            0xFFAAAAAA,
-            0xFFFFFFFF,
-        };
-
         public static readonly uint[] CHREDIT =
         {
             0xFF000000,
-            0xFFFF4444,
-            0xFFFF8888,
-            0xFFFFCCCC,
-            0xFF008800,
-            0xFF44FF00,
-            0xFF88FF88,
-            0xFFCCFFCC,
-            0xFF000088,
-            0xFF4444FF,
-            0xFFAAAAFF,
-            0xFFCCCCFF,
-            0xFF880000,
-            0xFF555555,
-            0xFFAAAAAA,
             0xFFFFFFFF,
+            0xFFFF0000, // HACK TODO
+            0xFF00FFFF, // HACK TODO
         };
 
-        public static readonly uint[] HIGHLIGHT =
-        {
-            0xFF772255,
-            0xFFAA3377,
-            0xFFCC4488,
-            0xFFFFCCDD,
-            0xFF772255,
-            0xFFAA3377,
-            0xFFCC4488,
-            0xFFFFCCDD,
-            0xFF772255,
-            0xFFAA3377,
-            0xFFCC4488,
-            0xFFFFCCDD,
-            0xFF772255,
-            0xFFAA3377,
-            0xFFCC4488,
-            0xFFFFCCDD,
-        };
-
-        public static readonly uint[] PRESELECT =
-        {
-            0xFF224466,
-            0xFF336688,
-            0xFF4488CC,
-            0xFFCCDDFF,
-            0xFF224466,
-            0xFF336688,
-            0xFF4488CC,
-            0xFFCCDDFF,
-            0xFF224466,
-            0xFF336688,
-            0xFF4488CC,
-            0xFFCCDDFF,
-            0xFF224466,
-            0xFF336688,
-            0xFF4488CC,
-            0xFFCCDDFF,
-        };
+        public const int GREY      = 14; // MSX1 grey
+        public const int HIGHLIGHT = 8;  // MSX1 red
+        public const int PRESELECT = 5;  // MSX1 blue
 
         public const uint GRID = 0xFFFFFF00; // yellow
         public const uint GRID2 = 0xFFAAAA00; // dimmer yellow
         public const uint PAL_INNER = 0xFF000000;
         public const uint PAL_OUTER = 0xFFFFFFFF;
-
 
         // Common code
 
@@ -198,9 +149,9 @@ namespace lotwtool
             if (map_offset + (map_count * 1024) > rom.Length)
                 map_count = (rom.Length - map_offset) / 1024;
             chr_offset = 0x20000;
-            chr_count = (rom.Length - chr_offset) / 2048;
+            chr_count = (rom.Length - chr_offset) / 1024;
             spr_offset = 0x31000;
-            spr_count = (rom.Length - spr_offset) / 1024;
+            spr_count = (rom.Length - spr_offset) / 512;
 
             labelCHRCountValue.Text = string.Format("{0}", chr_count);
             labelMapCountValue.Text = string.Format("{0}", map_count);
@@ -210,7 +161,7 @@ namespace lotwtool
             buttonTitleScreen.Enabled = rom.Length >= 0x6B35 + 1024;
             buttonUnusedScreen.Enabled = false; // rom.Length >= 16+0x19000; // don't think this exists in MSX1
             buttonCredits.Enabled = rom.Length >= 0x06BE5;
-            buttonDragon.Enabled = rom.Length >= map_offset+0x1C000;
+            buttonDragon.Enabled = false; // rom.Length >= map_offset+0x1C000; // doesn't exist in MSX1 (instead some duplicate rooms are here?)
             buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX1 properties not yet known
             // TODO chr editor doesn't work
 
@@ -240,36 +191,40 @@ namespace lotwtool
             return true;
         }
 
-        public void chr_cache(int rom_index, int cache_index, uint[] cache, uint[] palette)
+        public void chr_cache(int rom_index, int cache_index, uint[] cache)
         {
-            // CHR = 4bpp chunky 8x8 tiles for backgrounds
-            // decodes a tile from the ROM, and stores it in cache with given palette
-            int ro = chr_offset + (rom_index * 32);
+            // CHR = 1bpp 8x8 tiles for backgrounds + row colour table (256 tiles per 4k packet)
+            int ro = chr_offset;
+            ro += (rom_index >> 8) * 4096;
+            ro += (rom_index & 0xFF) * 8;
             int co = cache_index * 64;
-            if ((ro + 32) > rom.Length || ro < chr_offset)
+            if ((ro + (2048+8)) > rom.Length || ro < chr_offset)
             {
                 for (int i=0; i<64; ++i) cache[co+i] = 0;
                 return;
             }
             for (int y = 0; y < 8; ++y)
             {
+                byte c = rom[ro + y + 2048];
+                int c0 = c & 0x0F;
+                int c1 = c >> 4;
                 for (int x = 0; x < 8; ++x)
                 {
-                    int p = (rom[ro + (y*4) + (x/2)] >> (4-((x&1)*4))) & 0x0F;
-                    cache[co + x + (y * 8)] = palette[p];
+                    int p = (rom[ro + y] >> (7-x)) & 1;
+                    cache[co + x + (y * 8)] = (p != 0) ? MSX_PALETTE[c1] : MSX_PALETTE[c0];
                 }
             }
         }
 
-        public void spr_cache(int rom_index, int cache_index, uint[] cache, uint[] palette)
+        public void spr_cache(int rom_index, int cache_index, uint[] cache)
         {
-            // SPR = 2bpp planar 16x16 tiles broken into 8x8 tiles
+            // SPR = 1bpp 16x16 tiles for sprites
             int ro = spr_offset;
-            ro += (rom_index >> 2) * 64;
+            ro += (rom_index >> 2) * 32;
             ro += (rom_index &  2) * 8;
             ro += (rom_index &  1) * 8;
             int co = cache_index * 64;
-            if ((ro + 40) > rom.Length || ro < spr_offset)
+            if ((ro + 8) > rom.Length || ro < chr_offset)
             {
                 for (int i=0; i<64; ++i) cache[co+i] = 0;
                 return;
@@ -278,41 +233,15 @@ namespace lotwtool
             {
                 for (int x = 0; x < 8; ++x)
                 {
-                    byte p0 = (byte)((rom[ro+ 0+y+(x/8)] >> (7-(x&7))) & 0x01);
-                    byte p1 = (byte)((rom[ro+32+y+(x/8)] >> (7-(x&7))) & 0x01);
-                    int p = p0 | (p1 << 1);
-                    cache[co + x + (y * 8)] = palette[p];
+                    int p = (rom[ro + y] >> (7-x)) & 1;
+                    cache[co + x + (y * 8)] = (p != 0) ? 0xFFFFFFFF : 0xFF000000;
                 }
             }
         }
 
-        public void spo_cache(int rom_index, int cache_index, uint[] cache)
+        public static void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom, int c)
         {
-            // SPR = 2bpp planar 16x16 tiles broken into 8x8 tiles, store 2bpp result
-            int ro = spr_offset;
-            ro += (rom_index >> 2) * 64;
-            ro += (rom_index &  2) * 8;
-            ro += (rom_index &  1) * 8;
-            int co = cache_index * 64;
-            if ((ro + 40) > rom.Length || ro < spr_offset)
-            {
-                for (int i=0; i<64; ++i) cache[co+i] = 0;
-                return;
-            }
-            for (int y = 0; y < 8; ++y)
-            {
-                for (int x = 0; x < 8; ++x)
-                {
-                    byte p0 = (byte)((rom[ro+ 0+y+(x/8)] >> (7-(x&7))) & 0x01);
-                    byte p1 = (byte)((rom[ro+32+y+(x/8)] >> (7-(x&7))) & 0x01);
-                    int p = p0 | (p1 << 1);
-                    cache[co + x + (y * 8)] = (uint)p;
-                }
-            }
-        }
-
-        public static void chr_blit(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
-        {
+            c = c & 15;
             // draws a cached tile on a locked bitmap data
             x *= zoom;
             y *= zoom;
@@ -333,7 +262,7 @@ namespace lotwtool
                             {
                                 for (int xz = 0; xz < zoom; ++xz)
                                 {
-                                    scanline[sx] = chrline[px];
+                                    scanline[sx] = chrline[px] & MSX_PALETTE[c];
                                     ++sx;
                                 }
                             }
@@ -345,7 +274,7 @@ namespace lotwtool
             }
         }
 
-        public static void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom)
+        public static void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom) // TODO color lists
         {
             // draws a blend of two cached tiles
             x *= zoom;
@@ -383,8 +312,9 @@ namespace lotwtool
             }
         }
 
-        public static void chr_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom)
+        public static void chr_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom, int c)
         {
+            c = c & 15;
             x *= zoom;
             y *= zoom;
             unsafe
@@ -404,47 +334,10 @@ namespace lotwtool
                             {
                                 for (int xz = 0; xz < zoom; ++xz)
                                 {
-                                    uint c = chrline[px];
-                                    if (c != 0)
-                                        scanline[sx] = c;
-                                    ++sx;
-                                }
-                            }
-                            scanline += stride;
-                        }
-                        chrline += 8;
-                    }
-                }
-            }
-        }
-
-        public static void spo_blit_mask(BitmapData bd, uint[] cache, int tile, int x, int y, int zoom, uint or0, uint or1, uint[] palette)
-        {
-            x *= zoom;
-            y *= zoom;
-            unsafe
-            {
-                uint* braw = (uint*)bd.Scan0.ToPointer();
-                int stride = bd.Stride / 4;
-                fixed (uint* fcc = cache)
-                {
-                    uint* scanline = braw + (stride * y) + x;
-                    uint* chrline = fcc + (tile * 64);
-                    for (int py = 0; py < 8; ++py)
-                    {
-                        for (int yz = 0; yz < zoom; ++yz)
-                        {
-                            int sx = 0;
-                            for (int px = 0; px < 8; ++px)
-                            {
-                                for (int xz = 0; xz < zoom; ++xz)
-                                {
-                                    uint c = chrline[px];
-                                    if (c != 0)
-                                    {
-                                        uint p = ((c & 1) * or0) | (((c & 2) >> 1) * or1);
-                                        scanline[sx] = palette[p];
-                                    }
+                                    uint c_ = chrline[px];
+                                    // HACK this crashes?
+                                    //if (c_ != 0)
+                                    //    //scanline[sx] = c_ & MSX_PALETTE[c];
                                     ++sx;
                                 }
                             }

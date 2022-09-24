@@ -41,8 +41,7 @@ namespace lotwtool
 
         void cache_tile(int rom_index, int cache_index)
         {
-            mp.chr_cache(rom_index, cache_index, chr_cache, Main.GREY);
-            mp.chr_cache(rom_index, cache_index+256, chr_cache, Main.HIGHLIGHT);
+            mp.chr_cache(rom_index, cache_index, chr_cache);
         }
 
         void cache_page(int slot, int page)
@@ -55,7 +54,7 @@ namespace lotwtool
 
         public void cache()
         {
-            chr_cache = new uint[2 * 256 * 64];
+            chr_cache = new uint[256 * 64];
             int[] chri = me.chr_set();
             for (int i=0; i<4; ++i)
             {
@@ -88,8 +87,9 @@ namespace lotwtool
                 for (int i=0; i<4; ++i)
                 {
                     int mt = mp.rom[mto+(t*4)+i];
-                    if (t == ts) mt += 256; // highlight
-                    Main.chr_blit(d, chr_cache,mt,(tx*16)+XO[i],(ty*16)+YO[i],zoom);
+                    int c = 15;
+                    if (t == ts) c = Main.HIGHLIGHT;
+                    Main.chr_blit(d, chr_cache,mt,(tx*16)+XO[i],(ty*16)+YO[i],zoom,c);
                 }
             }
 
@@ -210,15 +210,15 @@ namespace lotwtool
             {
                 int ro = mp.map_offset + (1024 * me.room);
                 byte mt_page = mp.rom[ro+0x300];
-                byte chr0 = (byte)(4 * (mp.rom[ro+0x305] - 0x10));
-                byte chr1 = (byte)(4 * (mp.rom[ro+0x306] - 0x10) + 2);
+                byte chr0 = (byte)(8 * (mp.rom[ro+0x305] - 0x10));
+                byte chr1 = (byte)(8 * (mp.rom[ro+0x306] - 0x10) + 2);
                 Metatile m = new Metatile(mp,(mt_page*64)+t,chr0,chr1);
                 m.StartPosition = FormStartPosition.CenterParent;
                 if (m.ShowDialog() == DialogResult.OK)
                 {
                     int mto = mp.map_offset + (1024 * 8 * 9) + (mt_page * 256) + (t * 4);
-                    chr0 = (byte)((m.chr[0] / 4) + 0x10);
-                    chr1 = (byte)(((m.chr[1] - 2) / 4) + 0x10);
+                    chr0 = (byte)((m.chr[0] / 8) + 0x10);
+                    chr1 = (byte)(((m.chr[1] - 2) / 8) + 0x10);
 
                     bool chrchgd = false;
                     mp.rom_modify_start();

@@ -48,9 +48,9 @@ namespace lotwtool
             for (int i=0; i<9; ++i)
             {
                 if (!sprite)
-                    mp.chr_cache(tiles[i],i,chr_cache,Main.CHREDIT);
+                    mp.chr_cache(tiles[i],i,chr_cache);
                 else
-                    mp.spr_cache(tiles[i],i,chr_cache,Main.GREY);
+                    mp.spr_cache(tiles[i],i,chr_cache);
             }
 
             // CHR view
@@ -65,7 +65,7 @@ namespace lotwtool
             int[] XO = { 0, 8, 16, 0, 8, 16, 0, 8, 16 };
             int[] YO = { 0, 0, 0, 8, 8, 8, 16, 16, 16 };
             for (int i=0; i<9; ++i)
-                Main.chr_blit(d, chr_cache, i, XO[i], YO[i], zoom);
+                Main.chr_blit(d, chr_cache, i, XO[i], YO[i], zoom,15);
 
             // grid
             if (grid)

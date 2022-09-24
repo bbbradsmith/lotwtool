@@ -114,7 +114,7 @@ namespace lotwtool
                 {
                     int t = x+(y*16);
                     if (t == tile_select) t += (256*5); // highlight
-                    else                  t += (256*4); // grey
+                    //else                  t += (256*4); // grey
                     Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom);
                 }
             }

@@ -81,9 +81,7 @@ namespace lotwtool
             base_palette = new uint[16];
             for (int i = 0; i < 16; ++i)
             {
-                byte p0 = mp.rom[ro+0x3E0+(i*2)+0];
-                byte p1 = mp.rom[ro+0x3E0+(i*2)+1];
-                base_palette[i] = Main.msx2_palette_to_ARGB((uint)(p0 | (p1 << 8)));
+                base_palette[i] = Main.MSX_PALETTE[i];
             }
 
             palette = new uint[8][];
@@ -517,7 +515,7 @@ namespace lotwtool
             if (x < 0 || x >= 64 || y < 0 || y >= 240) return;
             y = y & (~0xF); // snap to grid
 
-            // MSX2 don't know yet how to make this patch
+            // MSX1 don't know yet how to make this patch
             /*
             // apply patch for starting position
             mp.rom_modify_start();

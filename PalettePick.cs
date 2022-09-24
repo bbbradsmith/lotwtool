@@ -20,9 +20,6 @@ namespace lotwtool
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
 
-            if (select > 0)
-                select = (int)Main.msx2_palette_to_index((uint)select);
-
             Bitmap bmp = new Bitmap(16*zoom, 32*zoom, PixelFormat.Format32bppArgb);
             BitmapData d = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
             for (int y=0; y<32; ++y)
@@ -46,7 +43,7 @@ namespace lotwtool
             pictureBox.Image = bmp;
 
             if (select > 0 && select < 512)
-                toolStripStatusLabel.Text = string.Format("{0:X3}",Main.msx2_0GRB_to_0RGB(Main.msx2_index_to_palette((uint)select)));
+                toolStripStatusLabel.Text = string.Format("{0:X1}",select);
         }
 
         private void PalettePick_KeyDown(object sender, KeyEventArgs e)
@@ -65,7 +62,7 @@ namespace lotwtool
             if (px >= 0 && px < 16 && py >= 0 && py < 32)
             {
                 picked = -1;
-                if (p>=0) picked = (int)Main.msx2_index_to_palette((uint)p);
+                if (p>=0) picked = p;
                 Close();
                 DialogResult = DialogResult.OK;
             }
@@ -76,7 +73,7 @@ namespace lotwtool
             int px = e.X / zoom;
             int py = e.Y / zoom;
             int p = px + (py*16);
-            toolStripStatusLabel.Text = string.Format("{0:X3}",Main.msx2_0GRB_to_0RGB(Main.msx2_index_to_palette((uint)p)));
+            toolStripStatusLabel.Text = string.Format("{0:X1}",p);
         }
     }
 }

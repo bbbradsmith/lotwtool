@@ -147,7 +147,7 @@ namespace lotwtool
                 undoToolStripMenuItem.Enabled = false; // just in case action doesn't disable it too
                 pictureBox.ContextMenuStrip = null;
             }
-            // disabled for MSX2
+            // disabled for MSX1
             importCHRToolStripMenuItem.Enabled = false;
             importPNGToolStripMenuItem.Enabled = false;
             exportCHRToolStripMenuItem.Enabled = false;

@@ -307,23 +307,25 @@ namespace lotwtool
             int a = no+0x3C0+(((p*4)+c)*2);
             if (px < 0 || px >= 4 || py < 0 || py >= 2) return;
 
+            // not editable on MSX1
+            picturePalette_MouseMove(sender,e);
+
             //if (e.Button == MouseButtons.Right)
-            if (false) // not editable on MSX1
-            {
-                uint old = mp.rom_uint16(a);
-                PalettePick pp = new PalettePick((int)old);
-                pp.StartPosition = FormStartPosition.CenterParent;
-                if (pp.ShowDialog() == DialogResult.OK)
-                {
-                    uint np = (uint)pp.picked;
-                    if (mp.rom_modify_uint16(a, np))
-                    {
-                        cache();
-                        redraw();
-                    }
-                }
-            }
-            else picturePalette_MouseMove(sender,e);
+            //{
+            //    uint old = mp.rom_uint16(a);
+            //    PalettePick pp = new PalettePick((int)old);
+            //    pp.StartPosition = FormStartPosition.CenterParent;
+            //    if (pp.ShowDialog() == DialogResult.OK)
+            //    {
+            //        uint np = (uint)pp.picked;
+            //        if (mp.rom_modify_uint16(a, np))
+            //        {
+            //            cache();
+            //            redraw();
+            //        }
+            //    }
+            //}
+            //else picturePalette_MouseMove(sender,e);
         }
 
         private void picturePalette_MouseMove(object sender, MouseEventArgs e)

@@ -69,10 +69,10 @@ namespace lotwtool
             //chri[2] = mp.rom[ro + 0x306] & (~1);
             chri[2] = 8 * (mp.rom[ro + 0x306] - 0x10) + 2; // MSX1 page numbers
             chri[3] = chri[2] + 1;
-            chri[4] = 0x06; // always Roas
-            chri[5] = mp.rom[ro + 0x301] + 0x0C; // MSX2 enemy sprites
-            chri[6] = 0x0A; // always items 0
-            chri[7] = 0x0B; // always items 1
+            chri[4] = 0x0C; // always Roas
+            chri[5] = mp.rom[ro + 0x301] + 0x38; // MSX1 enemy sprites
+            chri[6] = 0x28; // always items 0
+            chri[7] = 0x29; // always items 1
             return chri;
         }
 
@@ -153,7 +153,7 @@ namespace lotwtool
                     else // blend original and secret replacement
                     {
                         int smt = mp.rom[mto+((str&63)*4)+i] + ((str>>6) * 512);
-                        Main.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom);
+                        Main.chr_half(d, chr_cache, mt, smt, (x*16)+XO[i], (y*16)+YO[i], zoom, 15, 15);
                     }
                 }
                 else
@@ -254,7 +254,7 @@ namespace lotwtool
                 int y = mp.rom[eo+3]; // y pixel
                 x *= 16;
                 if (s == 0) continue;
-                draw_sprite(d,s,0,a,x,y);
+                draw_sprite(d,s,a,x,y);
             }
 
             // treasure
@@ -263,11 +263,11 @@ namespace lotwtool
                 int x = mp.rom[ro+0x308]; // x grid
                 int y = mp.rom[ro+0x309]; // y pixel
                 int s = mp.rom[ro+0x30A]; // contents
-                //int a = (s >= 8) ? 1 : 0; // palette is selected by type
+                int a = (s >= 8) ? 15 : 8; // palette is selected by type
                 // (using palette 1 always instead, colour 0 is replaced by player anyway and not really valid in map data)
                 x *= 16;
                 s += 0x20;
-                draw_sprite(d,s,0,0,x,y);
+                draw_sprite(d,s,a,x,y); 
             }
         }
 

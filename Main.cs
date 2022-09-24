@@ -79,14 +79,6 @@ namespace lotwtool
             0xFFAEEEEE, 0xFFBABCB9, 0xFF000000, 0xFF000000,
         };
 
-        public static readonly uint[] CHREDIT =
-        {
-            0xFF000000,
-            0xFFFFFFFF,
-            0xFFFF0000, // HACK TODO
-            0xFF00FFFF, // HACK TODO
-        };
-
         public const int GREY      = 14; // MSX1 grey
         public const int HIGHLIGHT = 8;  // MSX1 red
         public const int PRESELECT = 5;  // MSX1 blue
@@ -274,9 +266,11 @@ namespace lotwtool
             }
         }
 
-        public static void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom) // TODO color lists
+        public static void chr_half(BitmapData bd, uint[] cache, int tile0, int tile1, int x, int y, int zoom, int col0, int col1)
         {
             // draws a blend of two cached tiles
+            col0 &= 15;
+            col1 &= 15;
             x *= zoom;
             y *= zoom;
             unsafe
@@ -297,8 +291,8 @@ namespace lotwtool
                             {
                                 for (int xz = 0; xz < zoom; ++xz)
                                 {
-                                    uint c0 = chrline0[px];
-                                    uint c1 = chrline1[px];
+                                    uint c0 = chrline0[px] & MSX_PALETTE[col0];
+                                    uint c1 = chrline1[px] & MSX_PALETTE[col1];
                                     scanline[sx] = (((c0>>1)&0x7F7F7F) + ((c1>>1)&0x7F7F7F)) | 0xFF000000;
                                     ++sx;
                                 }
@@ -335,9 +329,8 @@ namespace lotwtool
                                 for (int xz = 0; xz < zoom; ++xz)
                                 {
                                     uint c_ = chrline[px];
-                                    // HACK this crashes?
-                                    //if (c_ != 0)
-                                    //    //scanline[sx] = c_ & MSX_PALETTE[c];
+                                    if (c_ != 0xFF000000)
+                                        scanline[sx] = c_ & MSX_PALETTE[c];
                                     ++sx;
                                 }
                             }

@@ -95,7 +95,7 @@ namespace lotwtool
             {
                 int ix = i%4;
                 int iy = i/4;
-                Main.draw_box(d,ix*h,iy*h,h,h,Main.CHREDIT[i]);
+                Main.draw_box(d,ix*h,iy*h,h,h,Main.MSX_PALETTE[i]);
                 if (i == color_select)
                 {
                     Main.draw_outbox(d,ix*h,iy*h,h,h,SELECT);

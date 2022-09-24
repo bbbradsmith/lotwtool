@@ -18,7 +18,9 @@ namespace lotwtool
         bool sprite;
         Bitmap bmp = null;
         Bitmap bpal = null;
-        int color_select = 0;
+        Bitmap bbit = null;
+        int[] color_select = {0,15};
+        int bit_select = 1;
         const uint SELECT = 0xFFFFFF00;
         bool drawing = false;
         int zoom = 12;
@@ -84,25 +86,41 @@ namespace lotwtool
             bmp.UnlockBits(d);
             pictureBox.Image = bmp;
 
+            // bit selector
+            if (bbit == null || bbit.Width != w || bbit.Height != span)
+                bbit = new Bitmap(w,span,PixelFormat.Format32bppArgb);
+            d = bbit.LockBits(new Rectangle(0,0,bbit.Width,bbit.Height), ImageLockMode.WriteOnly, bbit.PixelFormat);
+            for (int i=0; i<2; ++i)
+            {
+                int ix = i * (w/2);
+                int iy = 0;
+                Main.draw_box(d,ix,iy*span,w/2,span,(i>0)?0xFFFFFFFF:0xFF000000);
+                if (i == bit_select)
+                {
+                    Main.draw_outbox(d,ix,iy*span,w/2,span,SELECT);
+                    Main.draw_outbox(d,ix+1,iy+1,(w/2)-2,span-2,SELECT);
+                }
+            }
+            bbit.UnlockBits(d);
+            bitBox.Image = bbit;
+
             // palette selector
-            // width same as pictureBox
+            // width/height same as pictureBox
             h = w / 4;
             if (bpal == null || bpal.Width != w || bpal.Height != h)
                 bpal = new Bitmap(w, h*4, PixelFormat.Format32bppArgb);
             d = bpal.LockBits(new Rectangle(0, 0, bpal.Width, bpal.Height), ImageLockMode.WriteOnly, bpal.PixelFormat);
-
             for (int i=0; i<16; ++i)
             {
                 int ix = i%4;
                 int iy = i/4;
                 Main.draw_box(d,ix*h,iy*h,h,h,Main.MSX_PALETTE[i]);
-                if (i == color_select)
+                if (i == color_select[bit_select])
                 {
                     Main.draw_outbox(d,ix*h,iy*h,h,h,SELECT);
                     Main.draw_outbox(d,(ix*h)+1,(iy*h)+1,h-2,h-2,SELECT);
                 }
             }
-
             bpal.UnlockBits(d);
             paletteBox.Image = bpal;
         }
@@ -156,7 +174,7 @@ namespace lotwtool
                 int cy = e.Y / (zoom * 6);
                 if (cx < 0 || cx > 3) return;
                 if (cy < 0 || cy > 3) return;
-                color_select = cx + (cy * 4);
+                color_select[bit_select] = cx + (cy * 4);
                 redraw();
             }
         }
@@ -208,14 +226,21 @@ namespace lotwtool
             int px = (e.X % span) / zoom;
             int py = (e.Y % span) / zoom;
             int p = -1;
+            int[] pc = { -1, -1 };
 
             string status = "...";
 
-            int co = mp.chr_offset + (t*32); // 4bpp chunky CHR
-            if (sprite) // 2bpp packed SPR
+            int co = 0;
+            if (!sprite)
+            {
+                co = mp.chr_offset;
+                co += (t >> 8) * 4096;
+                co += (t & 0xFF) * 8;
+            }
+            else
             {
                 co = mp.spr_offset;
-                co += (t >> 2) * 64;
+                co += (t >> 2) * 32;
                 co += (t &  2) * 8;
                 co += (t &  1) * 8;
             }
@@ -226,38 +251,27 @@ namespace lotwtool
                 int bo1 = 0;
                 int sh = 0;
 
+                bo0 = co + py;
+                sh = (7 - px);
+                p = (mp.rom[bo0] >> sh) & 1;
                 if (!sprite)
                 {
-                    bo0 = co + (py*4) + (px/2);
-                    sh = (4-((px&1)*4));
-                    p = (mp.rom[bo0] >> sh) & 0x0F;
-                }
-                else
-                {
-                    bo0 = co+ 0+py+(px/8);
-                    bo1 = co+32+py+(px/8);
-                    sh = (7-(px&7));
-                    byte pb0 = (byte)((mp.rom[bo0] >> sh) & 0x01);
-                    byte pb1 = (byte)((mp.rom[bo1] >> sh) & 0x01);
-                    p = pb0 | (pb1 << 1);
+                    bo1 = co + py + 2048;
+                    pc[0] = mp.rom[bo1] & 0xF;
+                    pc[1] = mp.rom[bo1] >> 4;
                 }
 
                 if (e.Button == MouseButtons.Left && drawing && q == 4)
                 {
                     bool changed = false;
 
+                    byte mask = (byte)~(0x01 << sh);
+                    byte bm0 = (byte)((mp.rom[bo0] & mask) | (bit_select << sh));
+                    changed |= mp.rom_modify(bo0,bm0,true);
                     if (!sprite)
                     {
-                        byte mask = (byte)~(0x0F << sh);
-                        byte bm = (byte)((mp.rom[bo0] & mask) | ((color_select & 0xF) << sh));
-                        changed |= mp.rom_modify(bo0,bm,true);
-                    }
-                    else
-                    {
-                        byte mask = (byte)~(0x01 << sh);
-                        byte bm0 = (byte)((mp.rom[bo0] & mask) | ((color_select & 1) << sh));
-                        byte bm1 = (byte)((mp.rom[bo1] & mask) | (((color_select & 2) >> 1) << sh));
-                        changed |= mp.rom_modify(bo0,bm0,true);
+                        byte cmask = (byte)~(0x0F << (4*bit_select));
+                        byte bm1 = (byte)((mp.rom[bo1] & cmask) | (color_select[bit_select] << (4 * bit_select)));
                         changed |= mp.rom_modify(bo1,bm1,true);
                     }
 
@@ -266,15 +280,23 @@ namespace lotwtool
                         //redraw(); // refresh_chr will do this
                         mp.refresh_chr(t);
                     }
-                    p = color_select;
+                    p = bit_select;
+                    pc[bit_select] = color_select[bit_select];
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
-                    color_select = p;
+                    bit_select = p;
+                    if (!sprite)
+                    {
+                        color_select[0] = pc[0];
+                        color_select[1] = pc[1];
+                    }
                     redraw();
                 }
 
                 status = string.Format("{0:X2}:{1:X2} {2:D},{3:D}={4:D}",t/64,t%64,px,py,p);
+                if (!sprite)
+                    status += string.Format(" {0:X},{1:X}",pc[0],pc[1]);
             }
 
             toolStripStatusLabel.Text = status;
@@ -289,10 +311,8 @@ namespace lotwtool
         {
             switch (e.KeyCode)
             {
-                case Keys.D1: color_select =  0; break;
-                case Keys.D2: color_select = 13; break;
-                case Keys.D3: color_select = 14; break;
-                case Keys.D4: color_select = 15; break;
+                case Keys.D1: bit_select = 0; break;
+                case Keys.D2: bit_select = 1; break;
                 default:
                     return;
             }
@@ -309,7 +329,7 @@ namespace lotwtool
             string HELPTEXT =
                 "LMB = Draw\n" +
                 "RMB = Pick\n" +
-                "1-4 = Colour";
+                "1-2 = Bit Colour";
             MessageBox.Show(HELPTEXT,"CHR Edit Help");
         }
 
@@ -321,12 +341,13 @@ namespace lotwtool
             zoom12xToolStripMenuItem.Checked = zoom == 12;
             zoom16xToolStripMenuItem.Checked = zoom == 16;
 
-            int dspan = 8 * 24;
             int span = zoom * 24;
-            paletteBox.Top = (225-dspan)+span;
-            int w = (208-dspan)+span;
+            int bspan = zoom * 8;
+            bitBox.Top = pictureBox.Top + span + 6;
+            paletteBox.Top = bitBox.Top + bspan + 6;
+            int w = (208-bspan)+span;
             if (w < 137) w = 137; // keep Options menu visible
-            Size = new Size(w, (336-(dspan+dspan/4))+(span+span));
+            Size = new Size(w, 103 + span + bspan + span + 12);
             redraw();
         }
 
@@ -355,6 +376,12 @@ namespace lotwtool
             grid = !grid;
             default_grid = grid;
             gridToolStripMenuItem.Checked = grid;
+            redraw();
+        }
+        private void bitBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            int w = 24 * zoom;
+            bit_select = (e.X * 2 / w) & 1;
             redraw();
         }
     }

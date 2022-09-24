@@ -42,7 +42,7 @@ namespace lotwtool
         public static readonly uint[] MSX_PALETTE =
         {
             0xFF000000,
-            0xFF010101,
+            0xFF101010,
             0xFF3EB849,
             0xFF74D07D,
             0xFF5955E0,
@@ -155,7 +155,6 @@ namespace lotwtool
             buttonCredits.Enabled = rom.Length >= 0x06BE5;
             buttonDragon.Enabled = false; // rom.Length >= map_offset+0x1C000; // doesn't exist in MSX1 (instead some duplicate rooms are here?)
             buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX1 properties not yet known
-            // TODO chr editor doesn't work
 
             mapsToolStripMenuItem.Enabled = buttonMapEdit.Enabled;
             CHRToolStripMenuItem.Enabled = buttonCHREdit.Enabled;

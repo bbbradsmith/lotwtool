@@ -43,17 +43,19 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.paletteBox = new System.Windows.Forms.PictureBox();
+            this.bitBox = new System.Windows.Forms.PictureBox();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paletteBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bitBox)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 420);
+            this.statusStrip.Location = new System.Drawing.Point(0, 474);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(192, 22);
             this.statusStrip.TabIndex = 0;
@@ -175,7 +177,7 @@
             // 
             // paletteBox
             // 
-            this.paletteBox.Location = new System.Drawing.Point(0, 225);
+            this.paletteBox.Location = new System.Drawing.Point(0, 279);
             this.paletteBox.Name = "paletteBox";
             this.paletteBox.Size = new System.Drawing.Size(192, 192);
             this.paletteBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -184,11 +186,22 @@
             this.paletteBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseClick);
             this.paletteBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseMove);
             // 
+            // bitBox
+            // 
+            this.bitBox.Location = new System.Drawing.Point(0, 225);
+            this.bitBox.Name = "bitBox";
+            this.bitBox.Size = new System.Drawing.Size(192, 48);
+            this.bitBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.bitBox.TabIndex = 4;
+            this.bitBox.TabStop = false;
+            this.bitBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.bitBox_MouseClick);
+            // 
             // CHREdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(192, 442);
+            this.ClientSize = new System.Drawing.Size(192, 496);
+            this.Controls.Add(this.bitBox);
             this.Controls.Add(this.paletteBox);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.statusStrip);
@@ -205,6 +218,7 @@
             this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.paletteBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bitBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -227,5 +241,6 @@
         private System.Windows.Forms.ToolStripMenuItem zoom16xToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.PictureBox bitBox;
     }
 }

@@ -191,7 +191,7 @@ namespace lotwtool
             int co = cache_index * 64;
             if ((ro + 16) > rom.Length || ro < chr_offset)
             {
-                for (int i=0; i<16; ++i) cache[co+i] = 0;
+                for (int i=0; i<64; ++i) cache[co+i] = 0;
                 return;
             }
             for (int y = 0; y < 8; ++y)

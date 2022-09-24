@@ -1,7 +1,7 @@
 Legacy of the Wizard Tool
 
-Version 3
-2021
+Version 4
+2022
 Brad Smith
 
 https://github.com/bbbradsmith/lotwtool
@@ -10,6 +10,9 @@ http://rainwarrior.ca
 
 This is an editor for Legacy of the Wizard (NES) and Dragon Slayer IV (Famicom).
 It will allow full editing of as much of the game's content as I can provide.
+
+The MSX1 and MSX2 versions are now supported as well, through separate builds.
+These do not have quite as many features as the NES version, but the map is still fully editable.
 
 Download:
 https://github.com/bbbradsmith/lotwtool/releases
@@ -119,6 +122,9 @@ Changes
 
 3. 2021-07-26
 - Fixed description of Ctrl + Alt + LMB in help dialog.
+
+4. 2022-09-24
+- Added MSX1 and MSX2 versions.
 
 
 License

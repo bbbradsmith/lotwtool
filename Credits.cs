@@ -15,7 +15,7 @@ namespace lotwtool
         Main mp;
         Bitmap bmp;
         uint[] chr_cache = null;
-        readonly int[] CHR = { 0x21, 0x21, 0x30, 0x31 };
+        readonly int[] CHR = { 0x41, 0x41, 0x42, 0x43 };
         public string result;
 
         void cache()
@@ -33,8 +33,24 @@ namespace lotwtool
         void redraw()
         {
             int lines = 1;
+            int x = 0;
             foreach (char c in textBox.Text)
-                if (c == '\r') ++lines;
+            {
+                if (c == '\r')
+                {
+                    ++lines;
+                    x = 0;
+                }
+                else
+                {
+                    x += 1;
+                    if (x >= 32)
+                    {
+                        ++lines;
+                        x = 0;
+                    }
+                }
+            }
 
             int zoom = 1;
             int w = 256 * zoom;
@@ -46,7 +62,7 @@ namespace lotwtool
             BitmapData d = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
             Main.draw_box(d,0,0,w,h,Main.MSX_PALETTE[Main.GREY]);
 
-            int x = 0;
+            //int x = 0;
             int y = 0;
             foreach (char c in textBox.Text)
             {
@@ -67,6 +83,11 @@ namespace lotwtool
                     Main.chr_blit(d,chr_cache,tile+16,x*8,((y*2)+1)*8,zoom,15);
                 }
                 x += 1;
+                if (x >= 32)
+                {
+                    x = 0;
+                    y += 1;
+                }
             }
 
             bmp.UnlockBits(d);

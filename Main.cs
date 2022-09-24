@@ -742,7 +742,7 @@ namespace lotwtool
             int ADDRESS = 0x6B35;
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
-            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E); // TODO CHR selection
+            title_screen = new Nametable(this, ADDRESS, 0x38, 0x3A);
             title_screen.Show();
             add_refresh(title_screen);
         }
@@ -799,9 +799,9 @@ namespace lotwtool
                 int count = 0;
                 foreach (char t in c.result)
                     if (t != '\r') ++count;
-                if (count >= pos_max)
+                if (count > pos_max)
                 {
-                    MessageBox.Show(string.Format("Credits too long by {0} characters!",(count+1)-pos_max), "Credits error!");
+                    MessageBox.Show(string.Format("Credits too long by {0} characters!",count-pos_max), "Credits error!");
                     // dialog will be re-shown
                 }
                 else

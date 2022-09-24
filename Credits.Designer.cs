@@ -55,7 +55,7 @@
             this.tableLayoutPanelRows.RowCount = 2;
             this.tableLayoutPanelRows.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanelRows.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelRows.Size = new System.Drawing.Size(624, 651);
+            this.tableLayoutPanelRows.Size = new System.Drawing.Size(554, 651);
             this.tableLayoutPanelRows.TabIndex = 0;
             // 
             // tableLayoutPanelText
@@ -70,7 +70,7 @@
             this.tableLayoutPanelText.Name = "tableLayoutPanelText";
             this.tableLayoutPanelText.RowCount = 1;
             this.tableLayoutPanelText.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelText.Size = new System.Drawing.Size(618, 595);
+            this.tableLayoutPanelText.Size = new System.Drawing.Size(548, 595);
             this.tableLayoutPanelText.TabIndex = 0;
             // 
             // textBox
@@ -81,7 +81,7 @@
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox.Size = new System.Drawing.Size(317, 589);
+            this.textBox.Size = new System.Drawing.Size(247, 589);
             this.textBox.TabIndex = 0;
             this.textBox.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
@@ -90,7 +90,7 @@
             this.flowLayoutPanel.AutoScroll = true;
             this.flowLayoutPanel.Controls.Add(this.pictureBox);
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel.Location = new System.Drawing.Point(326, 3);
+            this.flowLayoutPanel.Location = new System.Drawing.Point(256, 3);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
             this.flowLayoutPanel.Size = new System.Drawing.Size(289, 589);
             this.flowLayoutPanel.TabIndex = 1;
@@ -116,7 +116,7 @@
             this.tableLayoutPanelButtons.Name = "tableLayoutPanelButtons";
             this.tableLayoutPanelButtons.RowCount = 1;
             this.tableLayoutPanelButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelButtons.Size = new System.Drawing.Size(618, 44);
+            this.tableLayoutPanelButtons.Size = new System.Drawing.Size(548, 44);
             this.tableLayoutPanelButtons.TabIndex = 1;
             // 
             // buttonOK
@@ -124,7 +124,7 @@
             this.buttonOK.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonOK.Location = new System.Drawing.Point(3, 3);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(303, 38);
+            this.buttonOK.Size = new System.Drawing.Size(268, 38);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -133,9 +133,9 @@
             // buttonCancel
             // 
             this.buttonCancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonCancel.Location = new System.Drawing.Point(312, 3);
+            this.buttonCancel.Location = new System.Drawing.Point(277, 3);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(303, 38);
+            this.buttonCancel.Size = new System.Drawing.Size(268, 38);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 651);
+            this.ClientSize = new System.Drawing.Size(554, 651);
             this.Controls.Add(this.tableLayoutPanelRows);
             this.Name = "Credits";
             this.Text = "Credits";

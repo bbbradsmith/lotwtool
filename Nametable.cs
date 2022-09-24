@@ -39,8 +39,7 @@ namespace lotwtool
                 palettes[i] = new uint[16];
                 for (int j=0; j<16; ++j)
                 {
-                    uint p = mp.rom_uint16(no+0x3C0+(j*2));
-                    palettes[i][j] = Main.msx2_palette_to_ARGB(p);
+                    palettes[i][j] = Main.MSX_PALETTE[j];
                 }
             }
             return palettes;
@@ -108,9 +107,8 @@ namespace lotwtool
                 for (int x=0; x<16; ++x)
                 {
                     int t = x+(y*16);
-                    int c = 15; // TODO colour
+                    int c = 15;
                     if (t == tile_select) c = Main.HIGHLIGHT;
-                    else                  c = Main.GREY;
                     Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
                 }
             }
@@ -309,7 +307,8 @@ namespace lotwtool
             int a = no+0x3C0+(((p*4)+c)*2);
             if (px < 0 || px >= 4 || py < 0 || py >= 2) return;
 
-            if (e.Button == MouseButtons.Right)
+            //if (e.Button == MouseButtons.Right)
+            if (false) // not editable on MSX1
             {
                 uint old = mp.rom_uint16(a);
                 PalettePick pp = new PalettePick((int)old);

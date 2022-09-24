@@ -119,10 +119,10 @@ namespace lotwtool
                 palette[i] = new uint[16];
                 for (int j = 0; j < 16; ++j)
                 {
-                    int r = ((i<<2) & 0x0C) | (j & 0x03);
-                    if ((j & 3) == 0) r = 0;
+                    int r = (((i<<2) & 0x0C ) | 0x03) & j;
+                    //if ((j & 3) == 0) r = 0;
                     palette[i][j] = base_palette[r];
-                    if (r == 0 && i >= 4) palette[i][j] = 0;
+                    //if (r == 0 && i >= 4) palette[i][j] = 0;
                 }
             }
 
@@ -315,10 +315,10 @@ namespace lotwtool
                 int y = mp.rom[ro+0x309]; // y pixel
                 int s = mp.rom[ro+0x30A]; // contents
                 //int a = (s >= 8) ? 1 : 0; // palette is selected by type
-                // (using palette 1 always instead, colour 0 is replaced by player anyway and not really valid in map data)
+                // (using 1 OR 2 palette)
                 x *= 16;
                 s += 0x20;
-                draw_sprite(d,s,0,0,x,y);
+                draw_sprite(d,s,0,0x12,x,y);
             }
         }
 

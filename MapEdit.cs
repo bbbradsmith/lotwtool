@@ -220,11 +220,11 @@ namespace lotwtool
             Main.chr_blit_mask(d, spr_cache, t+0x03, x+8, y+8, zoom_, a);
         }
 
-        public void draw_icon(BitmapData d, byte tile, int palette, uint ora, int x, int y, bool sprite, int zoom_=1) // for map properties
+        public void draw_icon(BitmapData d, byte tile, int palette, int x, int y, bool sprite, int zoom_=1) // for map properties
         {
             if (sprite)
             {
-                if (palette >= 4) palette = 3 - palette; // 4,5 = -1,-2 for draw_sprite
+                //if (palette >= 4) palette = 3 - palette; // 4,5 = -1,-2 for draw_sprite
                 draw_sprite(d,tile,palette,x,y,zoom_,false);
             }
             else
@@ -233,11 +233,11 @@ namespace lotwtool
             }
         }
 
-        public Bitmap make_icon(byte tile, int palette, uint ora, bool sprite, int zoom_=1) // for map properties
+        public Bitmap make_icon(byte tile, int palette, bool sprite, int zoom_=1) // for map properties
         {
             Bitmap b = new Bitmap(16*zoom_, 16*zoom_, PixelFormat.Format32bppArgb);
             BitmapData d = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
-            draw_icon(d,tile,palette,ora,0,0,sprite,zoom_);
+            draw_icon(d,tile,palette,0,0,sprite,zoom_);
             b.UnlockBits(d);
             return b;
         }

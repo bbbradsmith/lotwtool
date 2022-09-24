@@ -497,7 +497,7 @@ namespace lotwtool
             MapProperties mep = (MapProperties)e.Context.Instance;
             byte sprite = (byte)(0x20 + ((int)e.Value));
             if (shop) sprite += 0x08;
-            Bitmap b = mep.me.make_icon(sprite,0,0,true,1);
+            Bitmap b = mep.me.make_icon(sprite,8,true,1);
             e.Graphics.DrawImage(b,r);
         }
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
@@ -547,11 +547,11 @@ namespace lotwtool
             if (i<0 || i>=(shop?16:24)) return;
             int x = i % 8;
             int y = i / 8;
-            int palette = 4;
-            if (i == result) palette = 6;
-            if (i == hover) palette = 5;
+            int palette = Main.GREY;
+            if (i == result) palette = Main.PRESELECT;
+            if (i == hover) palette = Main.HIGHLIGHT;
             if (shop) i += 8;
-            me.draw_icon(d,(byte)(0x20+i),palette,0,x*16,y*16,true,zoom);
+            me.draw_icon(d,(byte)(0x20+i),palette,x*16,y*16,true,zoom);
         }
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -605,7 +605,7 @@ namespace lotwtool
         {
             MapProperties mep = (MapProperties)e.Context.Instance;
             byte tile = (byte)(int)e.Value;
-            Bitmap b = mep.me.make_icon(tile,grey?4:(tile>>6),0,false,1);
+            Bitmap b = mep.me.make_icon(tile,grey?Main.GREY:(tile>>6),false,1);
             e.Graphics.DrawImage(b,r);
         }
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)

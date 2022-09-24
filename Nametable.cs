@@ -75,7 +75,7 @@ namespace lotwtool
                     int t = mp.rom[no+(y*32)+x];
                     //byte ra = mp.rom[no+0x3C0+(x/4)+((y/4)*8)];
                     //int a = (ra >> ((x&2) | ((y<<1)&4))) & 3;
-                    int c = 11; // TODO colour?
+                    int c = 15;
                     Main.chr_blit(d, chr_cache, t, x*8, y*8, zoom, c);
                 }
             }

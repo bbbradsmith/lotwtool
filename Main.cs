@@ -141,7 +141,7 @@ namespace lotwtool
             if (map_offset + (map_count * 1024) > rom.Length)
                 map_count = (rom.Length - map_offset) / 1024;
             chr_offset = 0x20000;
-            chr_count = (rom.Length - chr_offset) / 1024;
+            chr_count = (0x31000 - chr_offset) / 1024;
             spr_offset = 0x31000;
             spr_count = (rom.Length - spr_offset) / 512;
 

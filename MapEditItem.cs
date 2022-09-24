@@ -32,7 +32,7 @@ namespace lotwtool
             int pw = w / 16;
             for (int i=0; i<16; ++i)
             {
-                Main.draw_box(d,i*pw,0,pw,h,me.base_palette[i]);
+                Main.draw_box(d,i*pw,0,pw,h,Main.MSX_PALETTE[i]);
             }
             bmp.UnlockBits(d);
             pictureBox.Image = bmp;
@@ -92,26 +92,27 @@ namespace lotwtool
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            int p = e.X / 16;
-            if (p >= 0 && p < 16)
-            {
-                int po = ro + 0x3E0 + (p*2);
-                uint old = mp.rom_uint16(po);
-                PalettePick pp = new PalettePick((int)old);
-                pp.StartPosition = FormStartPosition.CenterParent;
-                if (pp.ShowDialog() == DialogResult.OK)
-                {
-                    uint np = (uint)pp.picked;
-                    if (mp.rom_modify_uint16(po, np))
-                    {
-                        mp.refresh_map(me.room);
-                        me.cache();
-                        me.redraw(); // not covered by refresh_map
-                        me.redraw_info();
-                        redraw();
-                    }
-                }
-            }
+            // not editable on MSX1
+            //int p = e.X / 16;
+            //if (p >= 0 && p < 16)
+            //{
+            //    int po = ro + 0x3E0 + (p*2);
+            //    uint old = mp.rom_uint16(po);
+            //    PalettePick pp = new PalettePick((int)old);
+            //    pp.StartPosition = FormStartPosition.CenterParent;
+            //    if (pp.ShowDialog() == DialogResult.OK)
+            //    {
+            //        uint np = (uint)pp.picked;
+            //        if (mp.rom_modify_uint16(po, np))
+            //        {
+            //            mp.refresh_map(me.room);
+            //            me.cache();
+            //            me.redraw(); // not covered by refresh_map
+            //            me.redraw_info();
+            //            redraw();
+            //        }
+            //    }
+            //}
             pictureBox_MouseMove(sender,e);
         }
 
@@ -119,7 +120,7 @@ namespace lotwtool
         {
             int p = e.X / 16;
             if (p >= 0 && p < 16)
-                toolStripStatusLabel.Text = string.Format("{0}:{1} = {2:X3}",p/4,p%4,Main.msx2_0GRB_to_0RGB(mp.rom_uint16(ro+0x3E0+(p*2))));
+                toolStripStatusLabel.Text = string.Format("{0}:{1} = {2:X1}",p/4,p%4,p);
         }
     }
 
@@ -309,9 +310,8 @@ namespace lotwtool
         {
             MapItemProperties mip = (MapItemProperties)e.Context.Instance;
             byte sprite = (byte)(int)e.Value;
-            //int palette = mip.mp.rom[mip.eo+0x1] & 3;
-            uint ora = mip.mp.rom[mip.eo+0x1]; // MSX2 uses OR attributes
-            Bitmap b = mip.me.make_icon(sprite,0,ora,true,1);
+            int palette = mip.mp.rom[mip.eo+0x1] & 15;
+            Bitmap b = mip.me.make_icon(sprite,palette,true,1);
             e.Graphics.DrawImage(b,r);
         }
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
@@ -366,12 +366,12 @@ namespace lotwtool
             if (i<0 || i>=64) return;
             int x = i % 8;
             int y = i / 8;
-            int palette = 4;
-            if (i == result) palette = 6;
-            if (i == hover) palette = 5;
+            int palette = Main.GREY;
+            if (i == result) palette = Main.PRESELECT;
+            if (i == hover) palette = Main.HIGHLIGHT;
             //int s = ((i>>6)^1) | ((i & 63) << 2);
             int s = i;
-            me.draw_icon(d,(byte)s,palette,0,x*16,y*16,true,zoom);
+            me.draw_icon(d,(byte)s,palette,x*16,y*16,true,zoom);
         }
         protected override void OnPaint(PaintEventArgs e)
         {

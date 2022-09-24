@@ -150,8 +150,8 @@ namespace lotwtool
 
             buttonMapEdit.Enabled = map_count > 0;
             buttonCHREdit.Enabled = chr_count > 1;
-            buttonTitleScreen.Enabled = rom.Length >= 0x6B35 + 1024;
-            buttonUnusedScreen.Enabled = false; // rom.Length >= 16+0x19000; // don't think this exists in MSX1
+            buttonTitleScreen.Enabled = rom.Length >= 0x2F000 + 1024;
+            buttonUnusedScreen.Enabled = rom.Length >= 0x6B35 + 1024;
             buttonCredits.Enabled = rom.Length >= 0x06BE5;
             buttonDragon.Enabled = false; // rom.Length >= map_offset+0x1C000; // doesn't exist in MSX1 (instead some duplicate rooms are here?)
             buttonMisc.Enabled = false; // rom.Length >= 16+0x20000; // Global MSX1 properties not yet known
@@ -702,7 +702,7 @@ namespace lotwtool
 
         private void buttonTitleScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 0x6B35;
+            int ADDRESS = 0x2F000;
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
             title_screen = new Nametable(this, ADDRESS, 0x38, 0x3A);
@@ -712,10 +712,10 @@ namespace lotwtool
 
         private void buttonUnusedScreen_Click(object sender, EventArgs e)
         {
-            int ADDRESS = 16+0x17BCA; // don't think this exists on MSX1
+            int ADDRESS = 0x6B35;
             if (title_screen != null && title_screen.no != ADDRESS) title_screen.Close();
             if (raise_child(title_screen)) return;
-            title_screen = new Nametable(this, ADDRESS, 0x1C, 0x1E);
+            title_screen = new Nametable(this, ADDRESS, 0x38, 0x3A);
             title_screen.Show();
             add_refresh(title_screen);
         }

@@ -54,7 +54,7 @@ namespace lotwtool
         {
             int px = e.X / zoom;
             int py = e.Y / zoom;
-            int p = px + (py*zoom);
+            int p = px + (py*16);
             if (px >= 0 && px < 16 && py >= 0 && py < 4)
             {
                 picked = p;
@@ -67,7 +67,7 @@ namespace lotwtool
         {
             int px = e.X / zoom;
             int py = e.Y / zoom;
-            int p = px + (py*zoom);
+            int p = px + (py*16);
             toolStripStatusLabel.Text = string.Format("{0:X2}",p);
         }
     }

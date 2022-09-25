@@ -288,8 +288,7 @@ namespace lotwtool
                     bit_select = p;
                     if (!sprite)
                     {
-                        color_select[0] = pc[0];
-                        color_select[1] = pc[1];
+                        color_select[bit_select] = pc[bit_select];
                     }
                     redraw();
                 }

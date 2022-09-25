@@ -38,6 +38,7 @@ namespace lotwtool
         public Nametable title_screen = null;
         Stack<List<int>> undo_stack = new Stack<List<int>>();
         public bool misc_errors_shown = false;
+        public uint[] last_map_palette = new uint[16];
 
         public static readonly uint[] NES_PALETTE =
         {
@@ -771,6 +772,7 @@ namespace lotwtool
         {
             InitializeComponent();
             this.Icon = lotwtool.Properties.Resources.Icon;
+            CHREDIT.CopyTo(last_map_palette,0);
 
             // open file from the command line
             string[] args = Environment.GetCommandLineArgs();

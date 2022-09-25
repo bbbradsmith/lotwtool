@@ -30,7 +30,7 @@ namespace lotwtool
             int w = rw * 4;
             int h = rh * maph;
             bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
-            MapEdit temp_map = new MapEdit(mp, 0);
+            MapEdit temp_map = new MapEdit(mp, 0, false);
             for (int r=0; r<mp.map_count; ++r)
             {
                 int x = r & 3;

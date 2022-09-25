@@ -25,6 +25,8 @@ namespace lotwtool
         static int default_zoom = 12;
         bool grid = false;
         static bool default_grid = false;
+        bool map_palette = false;
+        static bool default_map_palette = false;
 
         void find_tiles(int tile)
         {
@@ -45,12 +47,23 @@ namespace lotwtool
 
         void redraw()
         {
+            uint[] palette = new uint[16];
+            if (!sprite)
+            {
+                if (map_palette) mp.last_map_palette.CopyTo(palette,0);
+                else             Main.CHREDIT.CopyTo(palette,0);
+            }
+            else
+            {
+                Main.GREY.CopyTo(palette,0);
+            }
+
             for (int i=0; i<9; ++i)
             {
                 if (!sprite)
-                    mp.chr_cache(tiles[i],i,chr_cache,Main.CHREDIT);
+                    mp.chr_cache(tiles[i],i,chr_cache,palette);
                 else
-                    mp.spr_cache(tiles[i],i,chr_cache,Main.GREY);
+                    mp.spr_cache(tiles[i],i,chr_cache,palette);
             }
 
             // CHR view
@@ -95,7 +108,7 @@ namespace lotwtool
             {
                 int ix = i%4;
                 int iy = i/4;
-                Main.draw_box(d,ix*h,iy*h,h,h,Main.CHREDIT[i]);
+                Main.draw_box(d,ix*h,iy*h,h,h,palette[i]);
                 if (i == color_select)
                 {
                     Main.draw_outbox(d,ix*h,iy*h,h,h,SELECT);
@@ -133,6 +146,9 @@ namespace lotwtool
             chr_cache = new uint[9 * 64];
             zoom = default_zoom;
             grid = default_grid;
+            gridToolStripMenuItem.Checked = grid;
+            map_palette = default_map_palette;
+            lastMapPaletteToolStripMenuItem.Checked = map_palette;
             updateZoom();
             //redraw(); // handled by updateZoom
         }
@@ -355,6 +371,14 @@ namespace lotwtool
             grid = !grid;
             default_grid = grid;
             gridToolStripMenuItem.Checked = grid;
+            redraw();
+        }
+
+        private void lastMapPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            map_palette = !map_palette;
+            default_map_palette = map_palette;
+            lastMapPaletteToolStripMenuItem.Checked = map_palette;
             redraw();
         }
     }

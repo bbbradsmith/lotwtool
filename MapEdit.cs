@@ -19,6 +19,7 @@ namespace lotwtool
         bool items = true;
         bool collision = false;
         bool grid = false;
+        bool use_last_palette = true;
         static bool default_grid = false;
 
         int ro;
@@ -111,6 +112,8 @@ namespace lotwtool
                 byte p1 = mp.rom[ro+0x3E0+(i*2)+1];
                 base_palette[i] = Main.msx2_palette_to_ARGB((uint)(p0 | (p1 << 8)));
             }
+            if (use_last_palette)
+                base_palette.CopyTo(mp.last_map_palette,0); // save to use in CHR edit
 
             palette = new uint[8][];
             for (int i = 0; i <  8; ++i)
@@ -666,10 +669,11 @@ namespace lotwtool
 
         public void refresh_close() { this.Close(); }
 
-        public MapEdit(Main parent, int room_)
+        public MapEdit(Main parent, int room_, bool use_last_palette_ = true)
         {
             mp = parent;
             room = room_;
+            use_last_palette = use_last_palette_;
             zoom = default_zoom;
             grid = default_grid;
             InitializeComponent();

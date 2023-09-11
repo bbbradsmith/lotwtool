@@ -1,7 +1,7 @@
 Legacy of the Wizard Tool
 
-Version 4
-2022
+Version 5
+2023
 Brad Smith
 
 https://github.com/bbbradsmith/lotwtool
@@ -126,6 +126,8 @@ Changes
 4. 2022-09-24
 - Added MSX1 and MSX2 versions.
 
+5. 2023-09-10
+- Extended music selection to 32 tracks.
 
 License
 -------

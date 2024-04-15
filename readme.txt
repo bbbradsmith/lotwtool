@@ -17,6 +17,10 @@ These do not have quite as many features as the NES version, but the map is stil
 Download:
 https://github.com/bbbradsmith/lotwtool/releases
 
+Unstable preview builds:
+https://nightly.link/bbbradsmith/binxelview/workflows/build/master
+https://nightly.link/bbbradsmith/binxelview/workflows/build/msx1
+https://nightly.link/bbbradsmith/binxelview/workflows/build/msx2
 
 Tips
 ----
@@ -79,9 +83,6 @@ This project is open source, and might be compatible with other .NET frameworks
 like Mono, which may allow use on other platforms for users that can compile
 it from source.
 
-Unstable preview builds:
-https://ci.appveyor.com/project/bbbradsmith/lotwtool/branch/master/artifacts
-
 
 Acknowledgements & Links
 ------------------------
@@ -128,6 +129,7 @@ Changes
 
 5. 2023-09-10
 - Extended music selection to 32 tracks.
+
 
 License
 -------

@@ -19,8 +19,11 @@ https://github.com/bbbradsmith/lotwtool/releases
 
 Unstable preview builds:
 https://nightly.link/bbbradsmith/binxelview/workflows/build/master
-https://nightly.link/bbbradsmith/binxelview/workflows/build/msx1
-https://nightly.link/bbbradsmith/binxelview/workflows/build/msx2
+
+Source code:
+NES: https://github.com/bbbradsmith/lotwtool/tree/master
+MSX1: https://github.com/bbbradsmith/lotwtool/tree/msx1
+MSX2: https://github.com/bbbradsmith/lotwtool/tree/msx2
 
 Tips
 ----

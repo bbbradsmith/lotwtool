@@ -7,7 +7,7 @@
     <ProjectGuid>{77101E5F-ABD8-479E-BBF1-06D89975D5E0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>lotwtool</RootNamespace>
-    <AssemblyName>lotwtool</AssemblyName>
+    <AssemblyName>lotwtool_nes</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

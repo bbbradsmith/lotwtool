@@ -378,46 +378,46 @@ namespace lotwtool
             }
         }
 
-        [DisplayName("Demo Xemn")]
-        [Category("Title Demo")]
-        [Description("314:0 - Xemn may appear in demonstrations of this room.")]
-        public bool DemoXemn
+        [DisplayName("Area Xemn")]
+        [Category("Area")]
+        [Description("314:0 - Xemn takes half damage here, may appear in demonstrations of this room.")]
+        public bool AreaXemn
         {
             get { return mp.rom_bit(ro+0x314,0); }
             set { mp.rom_modify_bit(ro+0x314,0,value); me.redraw_info(); }
         }
 
-        [DisplayName("Demo Meyna")]
-        [Category("Title Demo")]
-        [Description("314:1 - Meyna may appear in demonstrations of this room.")]
-        public bool DemoMeyna
+        [DisplayName("Area Meyna")]
+        [Category("Area")]
+        [Description("314:1 - Meyna takes half damage here, may appear in demonstrations of this room.")]
+        public bool AreaMeyna
         {
             get { return mp.rom_bit(ro+0x314,1); }
             set { mp.rom_modify_bit(ro+0x314,1,value); me.redraw_info(); }
         }
 
-        [DisplayName("Demo Roas")]
-        [Category("Title Demo")]
-        [Description("314:2 - Roas may appear in demonstrations of this room.")]
-        public bool DemoRoas
+        [DisplayName("Area Roas")]
+        [Category("Area")]
+        [Description("314:2 - Roas takes half damage here, may appear in demonstrations of this room.")]
+        public bool AreaRoas
         {
             get { return mp.rom_bit(ro+0x314,2); }
             set { mp.rom_modify_bit(ro+0x314,2,value); me.redraw_info(); }
         }
 
-        [DisplayName("Demo Lyll")]
-        [Category("Title Demo")]
-        [Description("314:3 - Lyll may appear in demonstrations of this room.")]
-        public bool DemoLyll
+        [DisplayName("Area Lyll")]
+        [Category("Area")]
+        [Description("314:3 - Lyll takes half damage here, may appear in demonstrations of this room.")]
+        public bool AreaLyll
         {
             get { return mp.rom_bit(ro+0x314,3); }
             set { mp.rom_modify_bit(ro+0x314,3,value); me.redraw_info(); }
         }
 
-        [DisplayName("Demo Pochi")]
-        [Category("Title Demo")]
-        [Description("314:4 - Pochi may appear in demonstrations of this room.")]
-        public bool DemoPochi
+        [DisplayName("Area Pochi")]
+        [Category("Area")]
+        [Description("314:4 - Pochi takes half damage here, may appear in demonstrations of this room.")]
+        public bool AreaPochi
         {
             get { return mp.rom_bit(ro+0x314,4); }
             set { mp.rom_modify_bit(ro+0x314,4,value); me.redraw_info(); }

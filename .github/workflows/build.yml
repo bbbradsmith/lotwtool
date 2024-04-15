@@ -1,0 +1,54 @@
+name: LotW Tool Builds
+on:
+  push:
+    branches: [ "master", "msx1", "msx2" ]
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-net:
+    name: LotW Tool .NET
+    runs-on: windows-2019
+    steps:
+      - name: Setup MSVC
+        uses: microsoft/setup-msbuild@v2
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: "master"
+          path: "master"
+      - name: Checkout msx1
+        uses: actions/checkout@v4
+        with:
+          ref: "msx1"
+          path: "msx1"
+      - name: Checkout msx2
+        uses: actions/checkout@v4
+        with:
+          ref: "msx2"
+          path: "msx2"
+      - name: Build NES (master)
+        run: msbuild master/lotwtool.sln -t:rebuild -property:Configuration=Release -property:Platform="Any CPU"
+      - name: Build MSX1
+        run: msbuild msx1/lotwtool.sln -t:rebuild -property:Configuration=Release -property:Platform="Any CPU"
+      - name: Build MSX2
+        run: msbuild msx2/lotwtool.sln -t:rebuild -property:Configuration=Release -property:Platform="Any CPU"
+      - name: Prepare Artifacts
+        shell: pwsh
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          mkdir artifact
+          cp master/bin/Release/lotwtool_nes.exe artifact
+          cp msx1/bin/Release/lotwtool_msx1.exe artifact
+          cp msx2/bin/Release/lotwtool_msx2.exe artifact
+          cp master/readme.txt artifact
+          cd $env:REF_NAME
+          echo "BUILD_TAG=$(git log -1 --format="%ad--%h" --date=format-local:"%Y-%m-%d-%H%M%S")" >> $env:GITHUB_ENV
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotwtool-unstable--${{ env.BUILD_TAG }}
+          path: artifact/
